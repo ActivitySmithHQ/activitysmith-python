@@ -14,14 +14,14 @@
 
 import unittest
 
-from openapi_client.api.notifications_api import NotificationsApi
+from openapi_client.api.push_notifications_api import PushNotificationsApi
 
 
-class TestNotificationsApi(unittest.TestCase):
-    """NotificationsApi unit test stubs"""
+class TestPushNotificationsApi(unittest.TestCase):
+    """PushNotificationsApi unit test stubs"""
 
     def setUp(self) -> None:
-        self.api = NotificationsApi()
+        self.api = PushNotificationsApi()
 
     def tearDown(self) -> None:
         pass

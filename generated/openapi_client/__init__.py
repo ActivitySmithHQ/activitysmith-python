@@ -18,7 +18,7 @@ __version__ = "1.0.0"
 
 # import apis into sdk package
 from openapi_client.api.live_activities_api import LiveActivitiesApi
-from openapi_client.api.notifications_api import NotificationsApi
+from openapi_client.api.push_notifications_api import PushNotificationsApi
 
 # import ApiClient
 from openapi_client.api_response import ApiResponse

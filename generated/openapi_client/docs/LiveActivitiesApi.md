@@ -18,7 +18,7 @@ Ends a Live Activity and archives its lifecycle.
 
 ### Example
 
-* Bearer (API Key) Authentication (bearerAuth):
+* Bearer (API Key) Authentication (apiKeyAuth):
 
 ```python
 import openapi_client
@@ -38,7 +38,7 @@ configuration = openapi_client.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure Bearer authorization (API Key): bearerAuth
+# Configure Bearer authorization (API Key): apiKeyAuth
 configuration = openapi_client.Configuration(
     access_token = os.environ["BEARER_TOKEN"]
 )
@@ -73,7 +73,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[apiKeyAuth](../README.md#apiKeyAuth)
 
 ### HTTP request headers
 
@@ -98,7 +98,7 @@ Starts a Live Activity on all registered devices and returns an activity_id.
 
 ### Example
 
-* Bearer (API Key) Authentication (bearerAuth):
+* Bearer (API Key) Authentication (apiKeyAuth):
 
 ```python
 import openapi_client
@@ -118,7 +118,7 @@ configuration = openapi_client.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure Bearer authorization (API Key): bearerAuth
+# Configure Bearer authorization (API Key): apiKeyAuth
 configuration = openapi_client.Configuration(
     access_token = os.environ["BEARER_TOKEN"]
 )
@@ -153,7 +153,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[apiKeyAuth](../README.md#apiKeyAuth)
 
 ### HTTP request headers
 
@@ -178,7 +178,7 @@ Updates an existing Live Activity. If the per-activity token is not registered y
 
 ### Example
 
-* Bearer (API Key) Authentication (bearerAuth):
+* Bearer (API Key) Authentication (apiKeyAuth):
 
 ```python
 import openapi_client
@@ -198,7 +198,7 @@ configuration = openapi_client.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure Bearer authorization (API Key): bearerAuth
+# Configure Bearer authorization (API Key): apiKeyAuth
 configuration = openapi_client.Configuration(
     access_token = os.environ["BEARER_TOKEN"]
 )
@@ -233,7 +233,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[apiKeyAuth](../README.md#apiKeyAuth)
 
 ### HTTP request headers
 
