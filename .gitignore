@@ -1,0 +1,14 @@
+# Python
+__pycache__/
+.pytest_cache/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Virtual env
+.venv/
+
+# Packaging/build artifacts
+*.egg-info/
+build/
+dist/
