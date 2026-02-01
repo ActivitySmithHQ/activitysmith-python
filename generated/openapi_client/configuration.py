@@ -375,7 +375,7 @@ class Configuration:
         """
         auth = {}
         if self.access_token is not None:
-            auth['bearerAuth'] = {
+            auth['apiKeyAuth'] = {
                 'type': 'bearer',
                 'in': 'header',
                 'format': 'API Key',

@@ -1,10 +1,10 @@
-# openapi_client.NotificationsApi
+# openapi_client.PushNotificationsApi
 
 All URIs are relative to *https://activitysmith.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**send_push_notification**](NotificationsApi.md#send_push_notification) | **POST** /push-notification | Send a push notification
+[**send_push_notification**](PushNotificationsApi.md#send_push_notification) | **POST** /push-notification | Send a push notification
 
 
 # **send_push_notification**
@@ -16,7 +16,7 @@ Sends a push notification to every paired device in your account.
 
 ### Example
 
-* Bearer (API Key) Authentication (bearerAuth):
+* Bearer (API Key) Authentication (apiKeyAuth):
 
 ```python
 import openapi_client
@@ -36,7 +36,7 @@ configuration = openapi_client.Configuration(
 # Examples for each auth method are provided below, use the example that
 # satisfies your auth use case.
 
-# Configure Bearer authorization (API Key): bearerAuth
+# Configure Bearer authorization (API Key): apiKeyAuth
 configuration = openapi_client.Configuration(
     access_token = os.environ["BEARER_TOKEN"]
 )
@@ -44,16 +44,16 @@ configuration = openapi_client.Configuration(
 # Enter a context with an instance of the API client
 with openapi_client.ApiClient(configuration) as api_client:
     # Create an instance of the API class
-    api_instance = openapi_client.NotificationsApi(api_client)
+    api_instance = openapi_client.PushNotificationsApi(api_client)
     push_notification_request = {"title":"Build Failed 🚨","message":"CI pipeline failed on main branch"} # PushNotificationRequest | 
 
     try:
         # Send a push notification
         api_response = api_instance.send_push_notification(push_notification_request)
-        print("The response of NotificationsApi->send_push_notification:\n")
+        print("The response of PushNotificationsApi->send_push_notification:\n")
         pprint(api_response)
     except Exception as e:
-        print("Exception when calling NotificationsApi->send_push_notification: %s\n" % e)
+        print("Exception when calling PushNotificationsApi->send_push_notification: %s\n" % e)
 ```
 
 
@@ -71,7 +71,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[bearerAuth](../README.md#bearerAuth)
+[apiKeyAuth](../README.md#apiKeyAuth)
 
 ### HTTP request headers
 
