@@ -3,10 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Optional
 
-from openapi_client.configuration import Configuration
-from openapi_client.api_client import ApiClient
-from openapi_client.api.live_activities_api import LiveActivitiesApi
-from openapi_client.api.push_notifications_api import PushNotificationsApi
+from activitysmith_openapi.configuration import Configuration
+from activitysmith_openapi.api_client import ApiClient
+
+from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
+from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
 
 @dataclass
