@@ -1,2 +1,0 @@
-activitysmith
-openapi_client
