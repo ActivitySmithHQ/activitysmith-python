@@ -1,0 +1,39 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "activitysmith"
+version = "0.1.0"
+description = "Official ActivitySmith Python SDK"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+authors = [{ name = "ActivitySmith", email = "adam@activitysmith.com" }]
+keywords = ["activitysmith", "live activities", "push notifications", "api", "sdk"]
+
+dependencies = [
+  "urllib3>=1.25.3",
+  "python-dateutil>=2.8.2",
+  "pydantic>=2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7",
+  "ruff>=0.5",
+]
+
+[project.urls]
+homepage = "https://activitysmith.com"
+documentation = "https://activitysmith.com/docs"
+source = "https://github.com/ActivitySmithHQ/activitysmith-python"
+issues = "https://github.com/ActivitySmithHQ/activitysmith-python/issues"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["activitysmith*", "openapi_client*"]
