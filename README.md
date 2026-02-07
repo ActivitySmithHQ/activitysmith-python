@@ -20,7 +20,7 @@ Alternatively, install from source with:
 python -m pip install .
 ```
 
-## Usage
+## Setup
 
 ```python
 import os
@@ -29,25 +29,92 @@ from activitysmith import ActivitySmith
 activitysmith = ActivitySmith(
     api_key=os.environ["ACTIVITYSMITH_API_KEY"],
 )
+```
 
-# Push Notifications
-activitysmith.notifications.send(
+## Usage
+
+### Send a Push Notification
+
+```python
+response = activitysmith.notifications.send(
     {
-        # See PushNotificationRequest for fields
+        "title": "Build Failed",
+        "message": "CI pipeline failed on main branch",
     }
 )
 
-# Live Activities
-activitysmith.live_activities.start(
+print(response.success)
+print(response.devices_notified)
+```
+
+### Start a Live Activity
+
+```python
+start = activitysmith.live_activities.start(
     {
-        # See LiveActivityStartRequest for fields
+        "content_state": {
+            "title": "ActivitySmith API Deployment",
+            "subtitle": "start",
+            "number_of_steps": 4,
+            "current_step": 1,
+            "type": "segmented_progress",
+            "color": "yellow",
+        }
     }
 )
+
+activity_id = start.activity_id
+```
+
+### Update a Live Activity
+
+```python
+update = activitysmith.live_activities.update(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "ActivitySmith API Deployment",
+            "subtitle": "npm i & pm2",
+            "current_step": 3,
+        }
+    }
+)
+
+print(update.devices_notified)
+```
+
+### End a Live Activity
+
+```python
+end = activitysmith.live_activities.end(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "ActivitySmith API Deployment",
+            "subtitle": "done",
+            "current_step": 4,
+            "auto_dismiss_minutes": 3,
+        }
+    }
+)
+
+print(end.success)
+```
+
+## Error Handling
+
+```python
+try:
+    activitysmith.notifications.send(
+        {
+            "title": "Build Failed",
+        }
+    )
+except Exception as err:
+    print("Request failed:", err)
 ```
 
 ## API Surface
-
-The client exposes grouped resources:
 
 - `activitysmith.live_activities`
 - `activitysmith.notifications`
