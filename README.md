@@ -31,15 +31,15 @@ client = ActivitySmith(
 )
 
 # Push Notifications
-client.notifications.send_push_notification(
-    push_notification_request={
+client.notifications.send(
+    {
         # See PushNotificationRequest for fields
     }
 )
 
 # Live Activities
-client.live_activities.start_live_activity(
-    live_activity_start_request={
+client.live_activities.start(
+    {
         # See LiveActivityStartRequest for fields
     }
 )
