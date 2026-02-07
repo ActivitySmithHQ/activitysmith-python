@@ -26,19 +26,19 @@ python -m pip install .
 import os
 from activitysmith import ActivitySmith
 
-client = ActivitySmith(
+activitysmith = ActivitySmith(
     api_key=os.environ["ACTIVITYSMITH_API_KEY"],
 )
 
 # Push Notifications
-client.notifications.send(
+activitysmith.notifications.send(
     {
         # See PushNotificationRequest for fields
     }
 )
 
 # Live Activities
-client.live_activities.start(
+activitysmith.live_activities.start(
     {
         # See LiveActivityStartRequest for fields
     }
@@ -49,8 +49,8 @@ client.live_activities.start(
 
 The client exposes grouped resources:
 
-- `client.live_activities`
-- `client.notifications`
+- `activitysmith.live_activities`
+- `activitysmith.notifications`
 
 Request/response models are included and can be imported from `activitysmith_openapi.models`.
 
