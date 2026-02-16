@@ -40,6 +40,7 @@ response = activitysmith.notifications.send(
     {
         "title": "Build Failed",
         "message": "CI pipeline failed on main branch",
+        "channels": ["devs", "ops"],  # Optional
     }
 )
 
@@ -59,7 +60,8 @@ start = activitysmith.live_activities.start(
             "current_step": 1,
             "type": "segmented_progress",
             "color": "yellow",
-        }
+        },
+        "channels": ["devs", "ops"],  # Optional
     }
 )
 

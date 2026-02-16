@@ -10,12 +10,36 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
 
+def _normalize_channels_target(request: Any) -> Any:
+    if not isinstance(request, dict):
+        return request
+
+    if "target" in request or "channels" not in request:
+        return request
+
+    normalized = dict(request)
+    raw_channels = normalized.pop("channels")
+
+    channels: list[str] = []
+    if isinstance(raw_channels, str):
+        channels = [item.strip() for item in raw_channels.split(",") if item.strip() != ""]
+    elif isinstance(raw_channels, (list, tuple)):
+        channels = [item.strip() for item in raw_channels if isinstance(item, str) and item.strip() != ""]
+
+    if channels:
+        normalized["target"] = {"channels": channels}
+
+    return normalized
+
+
 class NotificationsResource:
     def __init__(self, api: PushNotificationsApi) -> None:
         self._api = api
 
     def send(self, request: Any):
-        return self._api.send_push_notification(push_notification_request=request)
+        return self._api.send_push_notification(
+            push_notification_request=_normalize_channels_target(request)
+        )
 
     # Backward-compatible alias.
     def send_push_notification(self, push_notification_request: Any):
@@ -27,7 +51,9 @@ class LiveActivitiesResource:
         self._api = api
 
     def start(self, request: Any):
-        return self._api.start_live_activity(live_activity_start_request=request)
+        return self._api.start_live_activity(
+            live_activity_start_request=_normalize_channels_target(request)
+        )
 
     def update(self, request: Any):
         return self._api.update_live_activity(live_activity_update_request=request)

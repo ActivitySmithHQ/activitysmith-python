@@ -46,6 +46,22 @@ def test_notifications_short_and_legacy_alias(monkeypatch):
     ]
 
 
+def test_notifications_map_channels_to_target(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+    payload = {"title": "Build Failed", "channels": ["devs", "ops"]}
+
+    client.notifications.send(payload)
+    client.notifications.send_push_notification({"title": "Build Failed", "channels": "devs,ops"})
+
+    assert client.notifications._api.calls == [
+        {"push_notification_request": {"title": "Build Failed", "target": {"channels": ["devs", "ops"]}}},
+        {"push_notification_request": {"title": "Build Failed", "target": {"channels": ["devs", "ops"]}}},
+    ]
+
+
 def test_live_activities_short_and_legacy_aliases(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
@@ -83,4 +99,37 @@ def test_live_activities_short_and_legacy_aliases(monkeypatch):
         ("start", {"live_activity_start_request": start_payload}),
         ("update", {"live_activity_update_request": update_payload}),
         ("end", {"live_activity_end_request": end_payload}),
+    ]
+
+
+def test_live_activities_start_maps_channels_to_target(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+    payload = {
+        "content_state": {
+            "title": "Deploy",
+            "number_of_steps": 4,
+            "current_step": 1,
+            "type": "segmented_progress",
+        },
+        "channels": ["devs", "ops"],
+    }
+
+    client.live_activities.start(payload)
+    client.live_activities.start_live_activity(payload)
+
+    expected = {
+        "content_state": {
+            "title": "Deploy",
+            "number_of_steps": 4,
+            "current_step": 1,
+            "type": "segmented_progress",
+        },
+        "target": {"channels": ["devs", "ops"]},
+    }
+    assert client.live_activities._api.calls == [
+        ("start", {"live_activity_start_request": expected}),
+        ("start", {"live_activity_start_request": expected}),
     ]
