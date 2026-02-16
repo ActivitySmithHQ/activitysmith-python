@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
+from activitysmith_openapi.models.forbidden_error import ForbiddenError
 
-class TestLiveActivityUpdateRequest(unittest.TestCase):
-    """LiveActivityUpdateRequest unit test stubs"""
+class TestForbiddenError(unittest.TestCase):
+    """ForbiddenError unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,28 +25,28 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> LiveActivityUpdateRequest:
-        """Test LiveActivityUpdateRequest
+    def make_instance(self, include_optional) -> ForbiddenError:
+        """Test ForbiddenError
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `LiveActivityUpdateRequest`
+        # uncomment below to create an instance of `ForbiddenError`
         """
-        model = LiveActivityUpdateRequest()
+        model = ForbiddenError()
         if include_optional:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { }
+            return ForbiddenError(
+                error = '',
+                message = ''
             )
         else:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { },
+            return ForbiddenError(
+                error = '',
+                message = '',
         )
         """
 
-    def testLiveActivityUpdateRequest(self):
-        """Test LiveActivityUpdateRequest"""
+    def testForbiddenError(self):
+        """Test ForbiddenError"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

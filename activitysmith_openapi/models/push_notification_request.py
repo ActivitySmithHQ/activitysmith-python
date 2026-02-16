@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from activitysmith_openapi.models.channel_target import ChannelTarget
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,7 +30,12 @@ class PushNotificationRequest(BaseModel):
     title: StrictStr
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
-    __properties: ClassVar[List[str]] = ["title", "message", "subtitle"]
+    payload: Optional[Dict[str, Any]] = None
+    badge: Optional[StrictInt] = None
+    sound: Optional[StrictStr] = None
+    target: Optional[ChannelTarget] = None
+    additional_properties: Dict[str, Any] = {}
+    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "payload", "badge", "sound", "target"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -61,8 +67,10 @@ class PushNotificationRequest(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -70,6 +78,14 @@ class PushNotificationRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of target
+        if self.target:
+            _dict['target'] = self.target.to_dict()
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -84,8 +100,17 @@ class PushNotificationRequest(BaseModel):
         _obj = cls.model_validate({
             "title": obj.get("title"),
             "message": obj.get("message"),
-            "subtitle": obj.get("subtitle")
+            "subtitle": obj.get("subtitle"),
+            "payload": obj.get("payload"),
+            "badge": obj.get("badge"),
+            "sound": obj.get("sound"),
+            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
 
 

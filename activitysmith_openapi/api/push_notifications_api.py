@@ -56,7 +56,7 @@ class PushNotificationsApi:
     ) -> PushNotificationResponse:
         """Send a push notification
 
-        Sends a push notification to every paired device in your account.
+        Sends a push notification to devices matched by API key scope and optional target channels.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -92,6 +92,9 @@ class PushNotificationsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "PushNotificationResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -124,7 +127,7 @@ class PushNotificationsApi:
     ) -> ApiResponse[PushNotificationResponse]:
         """Send a push notification
 
-        Sends a push notification to every paired device in your account.
+        Sends a push notification to devices matched by API key scope and optional target channels.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -160,6 +163,9 @@ class PushNotificationsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "PushNotificationResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -192,7 +198,7 @@ class PushNotificationsApi:
     ) -> RESTResponseType:
         """Send a push notification
 
-        Sends a push notification to every paired device in your account.
+        Sends a push notification to devices matched by API key scope and optional target channels.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -228,6 +234,9 @@ class PushNotificationsApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "PushNotificationResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(

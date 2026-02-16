@@ -29,6 +29,7 @@ class LiveActivityEndRequest(BaseModel):
     """ # noqa: E501
     activity_id: StrictStr
     content_state: ContentStateEnd
+    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["activity_id", "content_state"]
 
     model_config = ConfigDict(
@@ -61,8 +62,10 @@ class LiveActivityEndRequest(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -73,6 +76,11 @@ class LiveActivityEndRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of content_state
         if self.content_state:
             _dict['content_state'] = self.content_state.to_dict()
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -88,6 +96,11 @@ class LiveActivityEndRequest(BaseModel):
             "activity_id": obj.get("activity_id"),
             "content_state": ContentStateEnd.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
 
 

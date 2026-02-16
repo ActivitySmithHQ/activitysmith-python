@@ -8,6 +8,10 @@ Name | Type | Description | Notes
 **title** | **str** |  | 
 **message** | **str** |  | [optional] 
 **subtitle** | **str** |  | [optional] 
+**payload** | **Dict[str, object]** |  | [optional] 
+**badge** | **int** |  | [optional] 
+**sound** | **str** |  | [optional] 
+**target** | [**ChannelTarget**](ChannelTarget.md) |  | [optional] 
 
 ## Example
 

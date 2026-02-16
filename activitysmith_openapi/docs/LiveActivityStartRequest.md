@@ -6,6 +6,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **content_state** | [**ContentStateStart**](ContentStateStart.md) |  | 
+**alert** | [**AlertPayload**](AlertPayload.md) |  | [optional] 
+**target** | [**ChannelTarget**](ChannelTarget.md) |  | [optional] 
 
 ## Example
 
