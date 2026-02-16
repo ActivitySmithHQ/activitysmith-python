@@ -25,7 +25,6 @@ jobs:
 
       - name: Verify tag matches package version
         run: |
-          TAG_VERSION="${GITHUB_REF_NAME#v}"
           PACKAGE_VERSION="$(python - <<'PY'
 import tomllib
 with open("pyproject.toml", "rb") as f:
@@ -33,9 +32,14 @@ with open("pyproject.toml", "rb") as f:
 print(data["project"]["version"])
 PY
 )"
-          if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
-            echo "Tag version ($TAG_VERSION) does not match package version ($PACKAGE_VERSION)."
-            exit 1
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            TAG_VERSION="${GITHUB_REF_NAME#v}"
+            if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+              echo "Tag version ($TAG_VERSION) does not match package version ($PACKAGE_VERSION)."
+              exit 1
+            fi
+          else
+            echo "Non-tag ref '${GITHUB_REF_NAME}', publishing package version ${PACKAGE_VERSION}."
           fi
 
       - name: Build distributions
