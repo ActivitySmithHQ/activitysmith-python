@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **success** | **bool** |  | 
 **devices_notified** | **int** |  | [optional] 
 **users_notified** | **int** |  | [optional] 
+**effective_channel_slugs** | **List[str]** |  | [optional] 
 **timestamp** | **datetime** |  | 
 
 ## Example

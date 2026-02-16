@@ -37,7 +37,11 @@ class TestPushNotificationRequest(unittest.TestCase):
             return PushNotificationRequest(
                 title = '',
                 message = '',
-                subtitle = ''
+                subtitle = '',
+                payload = { },
+                badge = 56,
+                sound = '',
+                target = { }
             )
         else:
             return PushNotificationRequest(

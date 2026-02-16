@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
+from activitysmith_openapi.models.bad_request_error import BadRequestError
 
-class TestLiveActivityUpdateRequest(unittest.TestCase):
-    """LiveActivityUpdateRequest unit test stubs"""
+class TestBadRequestError(unittest.TestCase):
+    """BadRequestError unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,28 +25,28 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> LiveActivityUpdateRequest:
-        """Test LiveActivityUpdateRequest
+    def make_instance(self, include_optional) -> BadRequestError:
+        """Test BadRequestError
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `LiveActivityUpdateRequest`
+        # uncomment below to create an instance of `BadRequestError`
         """
-        model = LiveActivityUpdateRequest()
+        model = BadRequestError()
         if include_optional:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { }
+            return BadRequestError(
+                error = '',
+                message = ''
             )
         else:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { },
+            return BadRequestError(
+                error = '',
+                message = '',
         )
         """
 
-    def testLiveActivityUpdateRequest(self):
-        """Test LiveActivityUpdateRequest"""
+    def testBadRequestError(self):
+        """Test BadRequestError"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

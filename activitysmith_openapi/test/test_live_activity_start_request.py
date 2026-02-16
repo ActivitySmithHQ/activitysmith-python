@@ -35,25 +35,13 @@ class TestLiveActivityStartRequest(unittest.TestCase):
         model = LiveActivityStartRequest()
         if include_optional:
             return LiveActivityStartRequest(
-                content_state = activitysmith_openapi.models.content_state_start.ContentStateStart(
-                    title = '', 
-                    subtitle = '', 
-                    number_of_steps = 1, 
-                    current_step = 1, 
-                    type = 'segmented_progress', 
-                    color = 'blue', 
-                    step_color = 'lime', )
+                content_state = { },
+                alert = { },
+                target = { }
             )
         else:
             return LiveActivityStartRequest(
-                content_state = activitysmith_openapi.models.content_state_start.ContentStateStart(
-                    title = '', 
-                    subtitle = '', 
-                    number_of_steps = 1, 
-                    current_step = 1, 
-                    type = 'segmented_progress', 
-                    color = 'blue', 
-                    step_color = 'lime', ),
+                content_state = { },
         )
         """
 

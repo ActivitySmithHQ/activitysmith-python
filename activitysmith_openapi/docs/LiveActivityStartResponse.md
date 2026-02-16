@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **devices_notified** | **int** |  | [optional] 
 **users_notified** | **int** |  | [optional] 
 **activity_id** | **str** |  | 
+**effective_channel_slugs** | **List[str]** |  | [optional] 
 **timestamp** | **datetime** |  | 
 
 ## Example

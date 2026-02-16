@@ -36,26 +36,12 @@ class TestLiveActivityEndRequest(unittest.TestCase):
         if include_optional:
             return LiveActivityEndRequest(
                 activity_id = '',
-                content_state = activitysmith_openapi.models.content_state_end.ContentStateEnd(
-                    title = '', 
-                    subtitle = '', 
-                    number_of_steps = 1, 
-                    current_step = 1, 
-                    color = 'blue', 
-                    step_color = 'lime', 
-                    auto_dismiss_minutes = 0, )
+                content_state = { }
             )
         else:
             return LiveActivityEndRequest(
                 activity_id = '',
-                content_state = activitysmith_openapi.models.content_state_end.ContentStateEnd(
-                    title = '', 
-                    subtitle = '', 
-                    number_of_steps = 1, 
-                    current_step = 1, 
-                    color = 'blue', 
-                    step_color = 'lime', 
-                    auto_dismiss_minutes = 0, ),
+                content_state = { },
         )
         """
 

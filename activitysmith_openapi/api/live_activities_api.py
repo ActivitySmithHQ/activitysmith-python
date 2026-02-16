@@ -96,6 +96,7 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityEndResponse",
+            '403': "ForbiddenError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -164,6 +165,7 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityEndResponse",
+            '403': "ForbiddenError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -232,6 +234,7 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityEndResponse",
+            '403': "ForbiddenError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -335,7 +338,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityStartResponse:
         """Start a Live Activity
 
-        Starts a Live Activity on all registered devices and returns an activity_id.
+        Starts a Live Activity on devices matched by API key scope and optional target channels.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -371,6 +374,9 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStartResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -403,7 +409,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityStartResponse]:
         """Start a Live Activity
 
-        Starts a Live Activity on all registered devices and returns an activity_id.
+        Starts a Live Activity on devices matched by API key scope and optional target channels.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -439,6 +445,9 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStartResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -471,7 +480,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """Start a Live Activity
 
-        Starts a Live Activity on all registered devices and returns an activity_id.
+        Starts a Live Activity on devices matched by API key scope and optional target channels.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -507,6 +516,9 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStartResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -646,6 +658,7 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityUpdateResponse",
+            '403': "ForbiddenError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -714,6 +727,7 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityUpdateResponse",
+            '403': "ForbiddenError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(
@@ -782,6 +796,7 @@ class LiveActivitiesApi:
 
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityUpdateResponse",
+            '403': "ForbiddenError",
             '429': "RateLimitError",
         }
         response_data = self.api_client.call_api(

@@ -33,6 +33,7 @@ class ContentStateUpdate(BaseModel):
     current_step: Annotated[int, Field(strict=True, ge=1)]
     color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step.")
+    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "color", "step_color"]
 
     @field_validator('color')
@@ -85,8 +86,10 @@ class ContentStateUpdate(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -94,6 +97,11 @@ class ContentStateUpdate(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -113,6 +121,11 @@ class ContentStateUpdate(BaseModel):
             "color": obj.get("color") if obj.get("color") is not None else 'blue',
             "step_color": obj.get("step_color")
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
 
 

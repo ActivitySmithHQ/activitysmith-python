@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
+from activitysmith_openapi.models.no_recipients_error import NoRecipientsError
 
-class TestLiveActivityUpdateRequest(unittest.TestCase):
-    """LiveActivityUpdateRequest unit test stubs"""
+class TestNoRecipientsError(unittest.TestCase):
+    """NoRecipientsError unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,28 +25,31 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> LiveActivityUpdateRequest:
-        """Test LiveActivityUpdateRequest
+    def make_instance(self, include_optional) -> NoRecipientsError:
+        """Test NoRecipientsError
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `LiveActivityUpdateRequest`
+        # uncomment below to create an instance of `NoRecipientsError`
         """
-        model = LiveActivityUpdateRequest()
+        model = NoRecipientsError()
         if include_optional:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { }
+            return NoRecipientsError(
+                error = '',
+                message = '',
+                effective_channel_slugs = [
+                    ''
+                    ]
             )
         else:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { },
+            return NoRecipientsError(
+                error = '',
+                message = '',
         )
         """
 
-    def testLiveActivityUpdateRequest(self):
-        """Test LiveActivityUpdateRequest"""
+    def testNoRecipientsError(self):
+        """Test NoRecipientsError"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

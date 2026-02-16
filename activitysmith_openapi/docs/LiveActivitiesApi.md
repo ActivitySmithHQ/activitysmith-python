@@ -85,6 +85,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Live Activity ended |  -  |
+**403** | Forbidden (activity not owned by this API key account) |  -  |
 **429** | Rate limit exceeded |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -94,7 +95,7 @@ Name | Type | Description  | Notes
 
 Start a Live Activity
 
-Starts a Live Activity on all registered devices and returns an activity_id.
+Starts a Live Activity on devices matched by API key scope and optional target channels.
 
 ### Example
 
@@ -165,6 +166,9 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Live Activity started |  -  |
+**400** | Bad request (invalid payload or channel targeting input) |  -  |
+**403** | Forbidden (API key scope or channel assignment violation) |  -  |
+**404** | No recipients found for effective channel target |  -  |
 **429** | Rate limit exceeded |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
@@ -245,6 +249,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Live Activity updated (or queued) |  -  |
+**403** | Forbidden (activity not owned by this API key account) |  -  |
 **429** | Rate limit exceeded |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

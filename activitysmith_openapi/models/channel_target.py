@@ -17,45 +17,19 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from typing import Any, ClassVar, Dict, List
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ContentStateEnd(BaseModel):
+class ChannelTarget(BaseModel):
     """
-    End payload. Required fields are title and current_step. number_of_steps is optional.
+    ChannelTarget
     """ # noqa: E501
-    title: StrictStr
-    subtitle: Optional[StrictStr] = None
-    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = None
-    current_step: Annotated[int, Field(strict=True, ge=1)]
-    color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
-    step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step.")
-    auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=3, description="Optional. Minutes before the ended Live Activity is dismissed. Default 3. Set 0 for immediate dismissal. iOS will dismiss ended Live Activities after ~4 hours max.")
+    channels: Annotated[List[StrictStr], Field(min_length=1)] = Field(description="Channel slugs. When omitted, API key scope determines recipients.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "color", "step_color", "auto_dismiss_minutes"]
-
-    @field_validator('color')
-    def color_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
-            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
-        return value
-
-    @field_validator('step_color')
-    def step_color_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
-            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
-        return value
+    __properties: ClassVar[List[str]] = ["channels"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -75,7 +49,7 @@ class ContentStateEnd(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ContentStateEnd from a JSON string"""
+        """Create an instance of ChannelTarget from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -107,7 +81,7 @@ class ContentStateEnd(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ContentStateEnd from a dict"""
+        """Create an instance of ChannelTarget from a dict"""
         if obj is None:
             return None
 
@@ -115,13 +89,7 @@ class ContentStateEnd(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "title": obj.get("title"),
-            "subtitle": obj.get("subtitle"),
-            "number_of_steps": obj.get("number_of_steps"),
-            "current_step": obj.get("current_step"),
-            "color": obj.get("color") if obj.get("color") is not None else 'blue',
-            "step_color": obj.get("step_color"),
-            "auto_dismiss_minutes": obj.get("auto_dismiss_minutes") if obj.get("auto_dismiss_minutes") is not None else 3
+            "channels": obj.get("channels")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

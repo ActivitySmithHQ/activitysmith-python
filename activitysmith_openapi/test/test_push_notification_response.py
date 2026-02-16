@@ -38,6 +38,9 @@ class TestPushNotificationResponse(unittest.TestCase):
                 success = True,
                 devices_notified = 56,
                 users_notified = 56,
+                effective_channel_slugs = [
+                    ''
+                    ],
                 timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
             )
         else:

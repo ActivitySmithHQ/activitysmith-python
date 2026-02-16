@@ -18,7 +18,9 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
+from activitysmith_openapi.models.alert_payload import AlertPayload
+from activitysmith_openapi.models.channel_target import ChannelTarget
 from activitysmith_openapi.models.content_state_start import ContentStateStart
 from typing import Optional, Set
 from typing_extensions import Self
@@ -28,7 +30,10 @@ class LiveActivityStartRequest(BaseModel):
     LiveActivityStartRequest
     """ # noqa: E501
     content_state: ContentStateStart
-    __properties: ClassVar[List[str]] = ["content_state"]
+    alert: Optional[AlertPayload] = None
+    target: Optional[ChannelTarget] = None
+    additional_properties: Dict[str, Any] = {}
+    __properties: ClassVar[List[str]] = ["content_state", "alert", "target"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -60,8 +65,10 @@ class LiveActivityStartRequest(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
+        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
+            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -72,6 +79,17 @@ class LiveActivityStartRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of content_state
         if self.content_state:
             _dict['content_state'] = self.content_state.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of alert
+        if self.alert:
+            _dict['alert'] = self.alert.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of target
+        if self.target:
+            _dict['target'] = self.target.to_dict()
+        # puts key-value pairs in additional_properties in the top level
+        if self.additional_properties is not None:
+            for _key, _value in self.additional_properties.items():
+                _dict[_key] = _value
+
         return _dict
 
     @classmethod
@@ -84,8 +102,15 @@ class LiveActivityStartRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "content_state": ContentStateStart.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None
+            "content_state": ContentStateStart.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
+            "alert": AlertPayload.from_dict(obj["alert"]) if obj.get("alert") is not None else None,
+            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
         })
+        # store additional fields in additional_properties
+        for _key in obj.keys():
+            if _key not in cls.__properties:
+                _obj.additional_properties[_key] = obj.get(_key)
+
         return _obj
 
 

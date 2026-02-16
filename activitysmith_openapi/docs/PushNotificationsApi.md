@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 Send a push notification
 
-Sends a push notification to every paired device in your account.
+Sends a push notification to devices matched by API key scope and optional target channels.
 
 ### Example
 
@@ -83,6 +83,9 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Push notification sent |  -  |
+**400** | Bad request (invalid payload or channel targeting input) |  -  |
+**403** | Forbidden (API key scope or channel assignment violation) |  -  |
+**404** | No recipients found for effective channel target |  -  |
 **429** | Rate limit exceeded |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)

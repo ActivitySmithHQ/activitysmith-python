@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
+from activitysmith_openapi.models.alert_payload import AlertPayload
 
-class TestLiveActivityUpdateRequest(unittest.TestCase):
-    """LiveActivityUpdateRequest unit test stubs"""
+class TestAlertPayload(unittest.TestCase):
+    """AlertPayload unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,28 +25,26 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> LiveActivityUpdateRequest:
-        """Test LiveActivityUpdateRequest
+    def make_instance(self, include_optional) -> AlertPayload:
+        """Test AlertPayload
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `LiveActivityUpdateRequest`
+        # uncomment below to create an instance of `AlertPayload`
         """
-        model = LiveActivityUpdateRequest()
+        model = AlertPayload()
         if include_optional:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { }
+            return AlertPayload(
+                title = '',
+                body = ''
             )
         else:
-            return LiveActivityUpdateRequest(
-                activity_id = '',
-                content_state = { },
+            return AlertPayload(
         )
         """
 
-    def testLiveActivityUpdateRequest(self):
-        """Test LiveActivityUpdateRequest"""
+    def testAlertPayload(self):
+        """Test AlertPayload"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 
