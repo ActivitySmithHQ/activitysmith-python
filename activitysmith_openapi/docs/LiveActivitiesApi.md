@@ -47,7 +47,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.LiveActivitiesApi(api_client)
-    live_activity_end_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"ActivitySmith API Deployment","subtitle":"done","current_step":4,"auto_dismiss_minutes":3}} # LiveActivityEndRequest | 
+    live_activity_end_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"verify restore","current_step":3,"auto_dismiss_minutes":2}} # LiveActivityEndRequest | 
 
     try:
         # End a Live Activity
@@ -128,7 +128,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.LiveActivitiesApi(api_client)
-    live_activity_start_request = {"content_state":{"title":"ActivitySmith API Deployment","subtitle":"start","number_of_steps":4,"current_step":1,"type":"segmented_progress","color":"yellow"}} # LiveActivityStartRequest | 
+    live_activity_start_request = {"content_state":{"title":"Nightly database backup","subtitle":"create snapshot","number_of_steps":3,"current_step":1,"type":"segmented_progress","color":"yellow"}} # LiveActivityStartRequest | 
 
     try:
         # Start a Live Activity
@@ -211,7 +211,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.LiveActivitiesApi(api_client)
-    live_activity_update_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"ActivitySmith API Deployment","subtitle":"npm i & pm2","current_step":3}} # LiveActivityUpdateRequest | 
+    live_activity_update_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"upload archive","current_step":2}} # LiveActivityUpdateRequest | 
 
     try:
         # Update a Live Activity
