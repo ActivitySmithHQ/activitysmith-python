@@ -45,7 +45,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.PushNotificationsApi(api_client)
-    push_notification_request = {"title":"Build Failed 🚨","message":"CI pipeline failed on main branch"} # PushNotificationRequest | 
+    push_notification_request = {"title":"New subscription 💸","message":"Customer upgraded to Pro plan"} # PushNotificationRequest | 
 
     try:
         # Send a push notification
