@@ -35,6 +35,10 @@ activitysmith = ActivitySmith(
 
 ### Send a Push Notification
 
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/new-subscription-push-notification.png" alt="Push notification example" width="680" />
+</p>
+
 ```python
 response = activitysmith.notifications.send(
     {
@@ -49,6 +53,10 @@ print(response.devices_notified)
 ```
 
 ### Start a Live Activity
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/start-live-activity.png" alt="Start live activity example" width="680" />
+</p>
 
 ```python
 start = activitysmith.live_activities.start(
@@ -70,6 +78,10 @@ activity_id = start.activity_id
 
 ### Update a Live Activity
 
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/update-live-activity.png" alt="Update live activity example" width="680" />
+</p>
+
 ```python
 update = activitysmith.live_activities.update(
     {
@@ -86,6 +98,10 @@ print(update.devices_notified)
 ```
 
 ### End a Live Activity
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/end-live-activity.png" alt="End live activity example" width="680" />
+</p>
 
 ```python
 end = activitysmith.live_activities.end(
