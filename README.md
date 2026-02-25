@@ -44,7 +44,25 @@ response = activitysmith.notifications.send(
     {
         "title": "New subscription 💸",
         "message": "Customer upgraded to Pro plan",
-        "channels": ["devs", "ops"],  # Optional
+        "redirection": "https://crm.example.com/customers/cus_9f3a1d",  # Optional
+        "actions": [  # Optional (max 4)
+            {
+                "title": "Open CRM Profile",
+                "type": "open_url",
+                "url": "https://crm.example.com/customers/cus_9f3a1d",
+            },
+            {
+                "title": "Start Onboarding Workflow",
+                "type": "webhook",
+                "url": "https://hooks.example.com/activitysmith/onboarding/start",
+                "method": "POST",
+                "body": {
+                    "customer_id": "cus_9f3a1d",
+                    "plan": "pro",
+                },
+            },
+        ],
+        "channels": ["sales", "customer-success"],  # Optional
     }
 )
 
