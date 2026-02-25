@@ -38,6 +38,12 @@ class TestPushNotificationRequest(unittest.TestCase):
                 title = '',
                 message = '',
                 subtitle = '',
+                redirection = 'https:/',
+                actions = [
+                    {
+                        'key' : null
+                        }
+                    ],
                 payload = { },
                 badge = 56,
                 sound = '',
