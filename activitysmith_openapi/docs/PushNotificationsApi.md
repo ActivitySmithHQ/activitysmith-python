@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 Send a push notification
 
-Sends a push notification to devices matched by API key scope and optional target channels.
+Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL (tap) and up to 4 interactive actions (long-press on iOS).
 
 ### Example
 

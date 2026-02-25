@@ -8,6 +8,8 @@ Name | Type | Description | Notes
 **title** | **str** |  | 
 **message** | **str** |  | [optional] 
 **subtitle** | **str** |  | [optional] 
+**redirection** | **str** | Optional HTTPS URL opened when user taps the notification body. | [optional] 
+**actions** | [**List[PushNotificationAction]**](PushNotificationAction.md) | Optional interactive actions shown on iOS long-press. | [optional] 
 **payload** | **Dict[str, object]** |  | [optional] 
 **badge** | **int** |  | [optional] 
 **sound** | **str** |  | [optional] 

@@ -17,36 +17,29 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from activitysmith_openapi.models.channel_target import ChannelTarget
-from activitysmith_openapi.models.push_notification_action import PushNotificationAction
+from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
+from activitysmith_openapi.models.push_notification_webhook_method import PushNotificationWebhookMethod
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PushNotificationRequest(BaseModel):
+class PushNotificationAction(BaseModel):
     """
-    PushNotificationRequest
+    PushNotificationAction
     """ # noqa: E501
-    title: StrictStr
-    message: Optional[StrictStr] = None
-    subtitle: Optional[StrictStr] = None
-    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL opened when user taps the notification body.")
-    actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown on iOS long-press.")
-    payload: Optional[Dict[str, Any]] = None
-    badge: Optional[StrictInt] = None
-    sound: Optional[StrictStr] = None
-    target: Optional[ChannelTarget] = None
+    title: StrictStr = Field(description="Button title displayed in iOS expanded notification UI.")
+    type: PushNotificationActionType
+    url: Annotated[str, Field(strict=True)] = Field(description="HTTPS URL. For open_url it is opened in browser. For webhook it is called by ActivitySmith backend.")
+    method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
+    body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "redirection", "actions", "payload", "badge", "sound", "target"]
+    __properties: ClassVar[List[str]] = ["title", "type", "url", "method", "body"]
 
-    @field_validator('redirection')
-    def redirection_validate_regular_expression(cls, value):
+    @field_validator('url')
+    def url_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if value is None:
-            return value
-
         if not re.match(r"^https:\/\/", value):
             raise ValueError(r"must validate the regular expression /^https:\/\//")
         return value
@@ -69,7 +62,7 @@ class PushNotificationRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PushNotificationRequest from a JSON string"""
+        """Create an instance of PushNotificationAction from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -92,16 +85,6 @@ class PushNotificationRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in actions (list)
-        _items = []
-        if self.actions:
-            for _item in self.actions:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['actions'] = _items
-        # override the default output from pydantic by calling `to_dict()` of target
-        if self.target:
-            _dict['target'] = self.target.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -111,7 +94,7 @@ class PushNotificationRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PushNotificationRequest from a dict"""
+        """Create an instance of PushNotificationAction from a dict"""
         if obj is None:
             return None
 
@@ -120,14 +103,10 @@ class PushNotificationRequest(BaseModel):
 
         _obj = cls.model_validate({
             "title": obj.get("title"),
-            "message": obj.get("message"),
-            "subtitle": obj.get("subtitle"),
-            "redirection": obj.get("redirection"),
-            "actions": [PushNotificationAction.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None,
-            "payload": obj.get("payload"),
-            "badge": obj.get("badge"),
-            "sound": obj.get("sound"),
-            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
+            "type": obj.get("type"),
+            "url": obj.get("url"),
+            "method": obj.get("method") if obj.get("method") is not None else PushNotificationWebhookMethod.POST,
+            "body": obj.get("body")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
