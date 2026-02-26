@@ -44,6 +44,21 @@ response = activitysmith.notifications.send(
     {
         "title": "New subscription 💸",
         "message": "Customer upgraded to Pro plan",
+    }
+)
+
+print(response.success)
+print(response.devices_notified)
+```
+
+Optional push features (`channels`, `redirection`, `actions`):
+
+```python
+response = activitysmith.notifications.send(
+    {
+        "title": "New subscription 💸",
+        "message": "Customer upgraded to Pro plan",
+        "channels": ["sales", "customer-success"],  # Optional
         "redirection": "https://crm.example.com/customers/cus_9f3a1d",  # Optional
         "actions": [  # Optional (max 4)
             {
@@ -62,12 +77,8 @@ response = activitysmith.notifications.send(
                 },
             },
         ],
-        "channels": ["sales", "customer-success"],  # Optional
     }
 )
-
-print(response.success)
-print(response.devices_notified)
 ```
 
 ### Start a Live Activity
