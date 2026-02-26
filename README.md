@@ -51,36 +51,6 @@ print(response.success)
 print(response.devices_notified)
 ```
 
-Optional push features (`channels`, `redirection`, `actions`):
-
-```python
-response = activitysmith.notifications.send(
-    {
-        "title": "New subscription 💸",
-        "message": "Customer upgraded to Pro plan",
-        "channels": ["sales", "customer-success"],  # Optional
-        "redirection": "https://crm.example.com/customers/cus_9f3a1d",  # Optional
-        "actions": [  # Optional (max 4)
-            {
-                "title": "Open CRM Profile",
-                "type": "open_url",
-                "url": "https://crm.example.com/customers/cus_9f3a1d",
-            },
-            {
-                "title": "Start Onboarding Workflow",
-                "type": "webhook",
-                "url": "https://hooks.example.com/activitysmith/onboarding/start",
-                "method": "POST",
-                "body": {
-                    "customer_id": "cus_9f3a1d",
-                    "plan": "pro",
-                },
-            },
-        ],
-    }
-)
-```
-
 ### Start a Live Activity
 
 <p align="center">
@@ -148,6 +118,52 @@ end = activitysmith.live_activities.end(
 print(end.success)
 ```
 
+## Channels
+
+Channels are used to target specific team members or devices. Can be used for both push notifications and live activities.
+
+```python
+response = activitysmith.notifications.send(
+    {
+        "title": "New subscription 💸",
+        "message": "Customer upgraded to Pro plan",
+        "channels": ["sales", "customer-success"],  # Optional
+    }
+)
+```
+
+## Push Notification Redirection and Actions
+
+Push notification redirection and actions are optional and can be used to redirect the user to a specific URL when they tap the notification or to trigger a specific action when they long-press the notification.
+Webhooks are executed by ActivitySmith backend.
+
+```python
+response = activitysmith.notifications.send(
+    {
+        "title": "New subscription 💸",
+        "message": "Customer upgraded to Pro plan",
+        "redirection": "https://crm.example.com/customers/cus_9f3a1d",  # Optional
+        "actions": [  # Optional (max 4)
+            {
+                "title": "Open CRM Profile",
+                "type": "open_url",
+                "url": "https://crm.example.com/customers/cus_9f3a1d",
+            },
+            {
+                "title": "Start Onboarding Workflow",
+                "type": "webhook",
+                "url": "https://hooks.example.com/activitysmith/onboarding/start",
+                "method": "POST",
+                "body": {
+                    "customer_id": "cus_9f3a1d",
+                    "plan": "pro",
+                },
+            },
+        ],
+    }
+)
+```
+
 ## Error Handling
 
 ```python
@@ -160,11 +176,6 @@ try:
 except Exception as err:
     print("Request failed:", err)
 ```
-
-## API Surface
-
-- `activitysmith.live_activities`
-- `activitysmith.notifications`
 
 Request/response models are included and can be imported from `activitysmith_openapi.models`.
 
