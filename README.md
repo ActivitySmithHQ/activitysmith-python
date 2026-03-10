@@ -75,6 +75,22 @@ start = activitysmith.live_activities.start(
 activity_id = start.activity_id
 ```
 
+For a simple progress bar, send `type: "progress"` with `percentage` or `value` plus `upper_limit`.
+
+```python
+start = activitysmith.live_activities.start(
+    {
+        "content_state": {
+            "title": "Model fine-tuning",
+            "subtitle": "uploading shards",
+            "type": "progress",
+            "percentage": 67,
+            "color": "purple",
+        }
+    }
+)
+```
+
 ### Update a Live Activity
 
 <p align="center">
@@ -94,6 +110,23 @@ update = activitysmith.live_activities.update(
 )
 
 print(update.devices_notified)
+```
+
+Progress update example:
+
+```python
+activitysmith.live_activities.update(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "Model fine-tuning",
+            "subtitle": "processing batches",
+            "type": "progress",
+            "value": 241,
+            "upper_limit": 360,
+        }
+    }
+)
 ```
 
 ### End a Live Activity

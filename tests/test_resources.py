@@ -133,3 +133,25 @@ def test_live_activities_start_maps_channels_to_target(monkeypatch):
         ("start", {"live_activity_start_request": expected}),
         ("start", {"live_activity_start_request": expected}),
     ]
+
+
+def test_live_activities_support_progress_payloads(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+    payload = {
+        "content_state": {
+            "title": "Render export",
+            "subtitle": "encoding frames",
+            "type": "progress",
+            "percentage": 67,
+            "color": "purple",
+        }
+    }
+
+    client.live_activities.start(payload)
+
+    assert client.live_activities._api.calls == [
+        ("start", {"live_activity_start_request": payload}),
+    ]
