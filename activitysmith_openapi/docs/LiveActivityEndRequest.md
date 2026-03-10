@@ -1,5 +1,6 @@
 # LiveActivityEndRequest
 
+End an existing Live Activity by activity_id.
 
 ## Properties
 

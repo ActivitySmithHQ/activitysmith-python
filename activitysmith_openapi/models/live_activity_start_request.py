@@ -27,7 +27,7 @@ from typing_extensions import Self
 
 class LiveActivityStartRequest(BaseModel):
     """
-    LiveActivityStartRequest
+    Start a new Live Activity. The response includes activity_id for later update and end calls.
     """ # noqa: E501
     content_state: ContentStateStart
     alert: Optional[AlertPayload] = None

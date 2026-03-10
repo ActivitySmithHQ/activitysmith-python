@@ -1,5 +1,6 @@
 # LiveActivityStartResponse
 
+Returned after a Live Activity starts. Save activity_id and use it for all later updates and for the final end call.
 
 ## Properties
 

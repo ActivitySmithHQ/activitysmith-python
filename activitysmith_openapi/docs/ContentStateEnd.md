@@ -1,6 +1,6 @@
 # ContentStateEnd
 
-End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. Type is optional when ending an existing activity.
+End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
 
 ## Properties
 
@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **title** | **str** |  | 
 **subtitle** | **str** |  | [optional] 
-**number_of_steps** | **int** | Total number of steps. Use for type&#x3D;segmented_progress. | [optional] 
+**number_of_steps** | **int** | Total number of steps. Use for type&#x3D;segmented_progress. Optional on end, and safe to change if the final workflow used more or fewer steps than originally planned. | [optional] 
 **current_step** | **int** | Current step. Use for type&#x3D;segmented_progress. | [optional] 
 **percentage** | **float** | Progress percentage (0–100). Use for type&#x3D;progress. Takes precedence over value/upper_limit if both are provided. | [optional] 
 **value** | **float** | Current progress value. Use with upper_limit for type&#x3D;progress. | [optional] 

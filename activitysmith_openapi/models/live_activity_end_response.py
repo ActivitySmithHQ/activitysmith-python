@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class LiveActivityEndResponse(BaseModel):
     """
-    LiveActivityEndResponse
+    Returned after a Live Activity end event is sent or queued.
     """ # noqa: E501
     success: StrictBool
     activity_id: StrictStr

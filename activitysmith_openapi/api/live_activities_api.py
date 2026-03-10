@@ -60,7 +60,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityEndResponse:
         """End a Live Activity
 
-        Ends a Live Activity and archives its lifecycle.
+        Ends a Live Activity and archives its lifecycle. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
         :param live_activity_end_request: (required)
         :type live_activity_end_request: LiveActivityEndRequest
@@ -129,7 +129,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityEndResponse]:
         """End a Live Activity
 
-        Ends a Live Activity and archives its lifecycle.
+        Ends a Live Activity and archives its lifecycle. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
         :param live_activity_end_request: (required)
         :type live_activity_end_request: LiveActivityEndRequest
@@ -198,7 +198,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """End a Live Activity
 
-        Ends a Live Activity and archives its lifecycle.
+        Ends a Live Activity and archives its lifecycle. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
         :param live_activity_end_request: (required)
         :type live_activity_end_request: LiveActivityEndRequest
@@ -338,7 +338,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityStartResponse:
         """Start a Live Activity
 
-        Starts a Live Activity on devices matched by API key scope and optional target channels.
+        Starts a Live Activity on devices matched by API key scope and optional target channels. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -409,7 +409,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityStartResponse]:
         """Start a Live Activity
 
-        Starts a Live Activity on devices matched by API key scope and optional target channels.
+        Starts a Live Activity on devices matched by API key scope and optional target channels. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -480,7 +480,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """Start a Live Activity
 
-        Starts a Live Activity on devices matched by API key scope and optional target channels.
+        Starts a Live Activity on devices matched by API key scope and optional target channels. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -622,7 +622,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityUpdateResponse:
         """Update a Live Activity
 
-        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued.
+        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
         :param live_activity_update_request: (required)
         :type live_activity_update_request: LiveActivityUpdateRequest
@@ -691,7 +691,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityUpdateResponse]:
         """Update a Live Activity
 
-        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued.
+        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
         :param live_activity_update_request: (required)
         :type live_activity_update_request: LiveActivityUpdateRequest
@@ -760,7 +760,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """Update a Live Activity
 
-        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued.
+        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
         :param live_activity_update_request: (required)
         :type live_activity_update_request: LiveActivityUpdateRequest

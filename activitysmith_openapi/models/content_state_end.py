@@ -25,11 +25,11 @@ from typing_extensions import Self
 
 class ContentStateEnd(BaseModel):
     """
-    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. Type is optional when ending an existing activity.
+    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
-    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress.")
+    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. Optional on end, and safe to change if the final workflow used more or fewer steps than originally planned.")
     current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Current step. Use for type=segmented_progress.")
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")

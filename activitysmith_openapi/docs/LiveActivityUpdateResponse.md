@@ -1,5 +1,6 @@
 # LiveActivityUpdateResponse
 
+Returned after a Live Activity update is sent or queued.
 
 ## Properties
 
