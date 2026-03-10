@@ -39,6 +39,9 @@ class TestContentStateStart(unittest.TestCase):
                 subtitle = '',
                 number_of_steps = 1,
                 current_step = 1,
+                percentage = 0,
+                value = 1.337,
+                upper_limit = 1.337,
                 type = 'segmented_progress',
                 color = 'blue',
                 step_color = 'lime'
@@ -46,8 +49,6 @@ class TestContentStateStart(unittest.TestCase):
         else:
             return ContentStateStart(
                 title = '',
-                number_of_steps = 1,
-                current_step = 1,
                 type = 'segmented_progress',
         )
         """

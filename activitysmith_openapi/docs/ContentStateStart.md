@@ -1,6 +1,6 @@
 # ContentStateStart
 
-Start payload requires title, number_of_steps, current_step, and type.
+Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit.
 
 ## Properties
 
@@ -8,11 +8,14 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **title** | **str** |  | 
 **subtitle** | **str** |  | [optional] 
-**number_of_steps** | **int** |  | 
-**current_step** | **int** |  | 
+**number_of_steps** | **int** | Total number of steps. Use for type&#x3D;segmented_progress. | [optional] 
+**current_step** | **int** | Current step. Use for type&#x3D;segmented_progress. | [optional] 
+**percentage** | **float** | Progress percentage (0–100). Use for type&#x3D;progress. Takes precedence over value/upper_limit if both are provided. | [optional] 
+**value** | **float** | Current progress value. Use with upper_limit for type&#x3D;progress. | [optional] 
+**upper_limit** | **float** | Maximum progress value. Use with value for type&#x3D;progress. | [optional] 
 **type** | **str** |  | 
 **color** | **str** | Optional. Accent color for the Live Activity. Defaults to blue. | [optional] [default to 'blue']
-**step_color** | **str** | Optional. Overrides color for the current step. | [optional] 
+**step_color** | **str** | Optional. Overrides color for the current step. Only applies to type&#x3D;segmented_progress. | [optional] 
 
 ## Example
 
