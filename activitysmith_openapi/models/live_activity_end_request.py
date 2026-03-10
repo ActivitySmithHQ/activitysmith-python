@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class LiveActivityEndRequest(BaseModel):
     """
-    LiveActivityEndRequest
+    End an existing Live Activity by activity_id.
     """ # noqa: E501
     activity_id: StrictStr
     content_state: ContentStateEnd

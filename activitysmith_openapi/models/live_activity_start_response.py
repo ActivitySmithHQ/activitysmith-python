@@ -25,7 +25,7 @@ from typing_extensions import Self
 
 class LiveActivityStartResponse(BaseModel):
     """
-    LiveActivityStartResponse
+    Returned after a Live Activity starts. Save activity_id and use it for all later updates and for the final end call.
     """ # noqa: E501
     success: StrictBool
     devices_notified: Optional[StrictInt] = None

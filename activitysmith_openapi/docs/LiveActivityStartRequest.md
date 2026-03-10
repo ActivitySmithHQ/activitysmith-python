@@ -1,5 +1,6 @@
 # LiveActivityStartRequest
 
+Start a new Live Activity. The response includes activity_id for later update and end calls.
 
 ## Properties
 

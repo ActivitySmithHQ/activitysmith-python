@@ -1,5 +1,6 @@
 # LiveActivityEndResponse
 
+Returned after a Live Activity end event is sent or queued.
 
 ## Properties
 
