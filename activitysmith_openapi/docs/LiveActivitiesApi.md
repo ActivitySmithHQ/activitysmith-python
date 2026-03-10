@@ -47,7 +47,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.LiveActivitiesApi(api_client)
-    live_activity_end_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"verify restore","current_step":3,"auto_dismiss_minutes":2}} # LiveActivityEndRequest | 
+    live_activity_end_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"verify restore","number_of_steps":3,"current_step":3,"auto_dismiss_minutes":2}} # LiveActivityEndRequest | 
 
     try:
         # End a Live Activity

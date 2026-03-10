@@ -17,31 +17,34 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
 class ContentStateStart(BaseModel):
     """
-    Start payload requires title, number_of_steps, current_step, and type.
+    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
-    number_of_steps: Annotated[int, Field(strict=True, ge=1)]
-    current_step: Annotated[int, Field(strict=True, ge=1)]
+    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress.")
+    current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Current step. Use for type=segmented_progress.")
+    percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
+    value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")
+    upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
     type: StrictStr
     color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
-    step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step.")
+    step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "type", "color", "step_color"]
+    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "type", "color", "step_color"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['segmented_progress']):
-            raise ValueError("must be one of enum values ('segmented_progress')")
+        if value not in set(['segmented_progress', 'progress']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress')")
         return value
 
     @field_validator('color')
@@ -126,6 +129,9 @@ class ContentStateStart(BaseModel):
             "subtitle": obj.get("subtitle"),
             "number_of_steps": obj.get("number_of_steps"),
             "current_step": obj.get("current_step"),
+            "percentage": obj.get("percentage"),
+            "value": obj.get("value"),
+            "upper_limit": obj.get("upper_limit"),
             "type": obj.get("type"),
             "color": obj.get("color") if obj.get("color") is not None else 'blue',
             "step_color": obj.get("step_color")
