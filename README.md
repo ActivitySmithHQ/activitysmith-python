@@ -51,10 +51,34 @@ print(response.success)
 print(response.devices_notified)
 ```
 
-### Start a Live Activity
+## Live Activities
+
+Live Activities come in two UI types, but the lifecycle stays the same:
+start the activity, keep the returned `activity_id`, update it as state
+changes, then end it when the work is done.
+
+- `segmented_progress`: best for jobs tracked in steps
+- `progress`: best for jobs tracked as a percentage or numeric range
+
+### Shared flow
+
+1. Call `activitysmith.live_activities.start(...)`.
+2. Save the returned `activity_id`.
+3. Call `activitysmith.live_activities.update(...)` as progress changes.
+4. Call `activitysmith.live_activities.end(...)` when the work is finished.
+
+### Segmented Progress Type
+
+Use `segmented_progress` when progress is easier to follow as steps instead of a
+raw percentage. It fits jobs like backups, deployments, ETL pipelines, and
+checklists where "step 2 of 3" is more useful than "67%".
+`number_of_steps` is dynamic, so you can increase or decrease it later if the
+workflow changes.
+
+#### Start
 
 <p align="center">
-  <img src="https://cdn.activitysmith.com/features/start-live-activity.png" alt="Start live activity example" width="680" />
+  <img src="https://cdn.activitysmith.com/features/start-live-activity.png" alt="Segmented progress start example" width="680" />
 </p>
 
 ```python
@@ -75,26 +99,10 @@ start = activitysmith.live_activities.start(
 activity_id = start.activity_id
 ```
 
-For a simple progress bar, send `type: "progress"` with `percentage` or `value` plus `upper_limit`.
-
-```python
-start = activitysmith.live_activities.start(
-    {
-        "content_state": {
-            "title": "Model fine-tuning",
-            "subtitle": "uploading shards",
-            "type": "progress",
-            "percentage": 67,
-            "color": "purple",
-        }
-    }
-)
-```
-
-### Update a Live Activity
+#### Update
 
 <p align="center">
-  <img src="https://cdn.activitysmith.com/features/update-live-activity.png" alt="Update live activity example" width="680" />
+  <img src="https://cdn.activitysmith.com/features/update-live-activity.png" alt="Segmented progress update example" width="680" />
 </p>
 
 ```python
@@ -104,6 +112,7 @@ update = activitysmith.live_activities.update(
         "content_state": {
             "title": "Nightly database backup",
             "subtitle": "upload archive",
+            "number_of_steps": 4,
             "current_step": 2,
         }
     }
@@ -112,27 +121,10 @@ update = activitysmith.live_activities.update(
 print(update.devices_notified)
 ```
 
-Progress update example:
-
-```python
-activitysmith.live_activities.update(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Model fine-tuning",
-            "subtitle": "processing batches",
-            "type": "progress",
-            "value": 241,
-            "upper_limit": 360,
-        }
-    }
-)
-```
-
-### End a Live Activity
+#### End
 
 <p align="center">
-  <img src="https://cdn.activitysmith.com/features/end-live-activity.png" alt="End live activity example" width="680" />
+  <img src="https://cdn.activitysmith.com/features/end-live-activity.png" alt="Segmented progress end example" width="680" />
 </p>
 
 ```python
@@ -142,13 +134,81 @@ end = activitysmith.live_activities.end(
         "content_state": {
             "title": "Nightly database backup",
             "subtitle": "verify restore",
-            "current_step": 3,
+            "number_of_steps": 4,
+            "current_step": 4,
             "auto_dismiss_minutes": 2,
         }
     }
 )
 
 print(end.success)
+```
+
+### Progress Type
+
+Use `progress` when the state is naturally continuous. It fits charging,
+downloads, sync jobs, uploads, timers, and any flow where a percentage or
+numeric range is the clearest signal.
+
+#### Start
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/progress-live-activity-start.png" alt="Progress start example" width="680" />
+</p>
+
+```python
+start = activitysmith.live_activities.start(
+    {
+        "content_state": {
+            "title": "EV Charging",
+            "subtitle": "Added 30 mi range",
+            "type": "progress",
+            "percentage": 15,
+            "color": "lime",
+        }
+    }
+)
+
+activity_id = start.activity_id
+```
+
+#### Update
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/progress-live-activity-update.png" alt="Progress update example" width="680" />
+</p>
+
+```python
+activitysmith.live_activities.update(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "EV Charging",
+            "subtitle": "Added 120 mi range",
+            "percentage": 60,
+        }
+    }
+)
+```
+
+#### End
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/progress-live-activity-end.png" alt="Progress end example" width="680" />
+</p>
+
+```python
+activitysmith.live_activities.end(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "EV Charging",
+            "subtitle": "Added 200 mi range",
+            "percentage": 100,
+            "auto_dismiss_minutes": 2,
+        }
+    }
+)
 ```
 
 ## Channels
