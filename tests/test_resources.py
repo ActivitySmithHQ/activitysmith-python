@@ -62,6 +62,44 @@ def test_notifications_map_channels_to_target(monkeypatch):
     ]
 
 
+def test_notifications_preserve_media_and_redirection(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+    payload = {
+        "title": "Voice Over Generated",
+        "media": "https://cdn.activitysmith.com/voice_over.mp3",
+        "redirection": "https://studio.acme.com/voice-overs/482/review",
+    }
+
+    client.notifications.send(payload)
+
+    assert client.notifications._api.calls == [
+        {"push_notification_request": payload},
+    ]
+
+
+def test_notifications_reject_media_and_actions(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+
+    try:
+        client.notifications.send(
+            {
+                "title": "Voice Over Generated",
+                "media": "https://cdn.activitysmith.com/voice_over.mp3",
+                "actions": [{"title": "Open", "type": "open_url", "url": "https://example.com"}],
+            }
+        )
+    except ValueError as exc:
+        assert str(exc) == "ActivitySmith: media cannot be combined with actions"
+    else:
+        raise AssertionError("Expected ValueError for media + actions")
+
+
 def test_live_activities_short_and_legacy_aliases(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)

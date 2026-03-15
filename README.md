@@ -225,6 +225,36 @@ response = activitysmith.notifications.send(
 )
 ```
 
+## Rich Push Notifications with Media
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/rich-push-notification-with-image.png" alt="Rich push notification with image" width="680" />
+</p>
+
+```python
+response = activitysmith.notifications.send(
+    {
+        "title": "Homepage ready",
+        "message": "Your agent finished the redesign.",
+        "media": "https://cdn.example.com/output/homepage-v2.png",
+        "redirection": "https://github.com/acme/web/pull/482",
+    }
+)
+```
+
+Send images, videos, or audio with your push notifications, press and hold to preview media directly from the notification, then tap through to open the linked content.
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/rich-push-notification-with-audio.png" alt="Rich push notification with audio" width="680" />
+</p>
+
+What will work:
+
+- direct image URL: `.jpg`, `.png`, `.gif`, etc.
+- direct audio file URL: `.mp3`, `.m4a`, etc.
+- direct video file URL: `.mp4`, `.mov`, etc.
+- URL that responds with a proper media `Content-Type`, even if the path has no extension
+
 ## Push Notification Redirection and Actions
 
 Push notification redirection and actions are optional and can be used to redirect the user to a specific URL when they tap the notification or to trigger a specific action when they long-press the notification.
