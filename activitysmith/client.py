@@ -10,6 +10,35 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
 
+def _request_value(request: Any, key: str) -> Any:
+    if isinstance(request, dict):
+        return request.get(key)
+
+    return getattr(request, key, None)
+
+
+def _has_media(request: Any) -> bool:
+    media = _request_value(request, "media")
+    if isinstance(media, str):
+        return media.strip() != ""
+    return media is not None
+
+
+def _has_actions(request: Any) -> bool:
+    actions = _request_value(request, "actions")
+    if actions is None:
+        return False
+    if isinstance(actions, (list, tuple, set, dict)):
+        return len(actions) > 0
+    return True
+
+
+def _validate_push_request(request: Any) -> Any:
+    if _has_media(request) and _has_actions(request):
+        raise ValueError("ActivitySmith: media cannot be combined with actions")
+    return request
+
+
 def _normalize_channels_target(request: Any) -> Any:
     if not isinstance(request, dict):
         return request
@@ -37,8 +66,9 @@ class NotificationsResource:
         self._api = api
 
     def send(self, request: Any):
+        normalized = _validate_push_request(_normalize_channels_target(request))
         return self._api.send_push_notification(
-            push_notification_request=_normalize_channels_target(request)
+            push_notification_request=normalized
         )
 
     # Backward-compatible alias.
