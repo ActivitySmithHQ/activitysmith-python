@@ -32,14 +32,25 @@ class PushNotificationRequest(BaseModel):
     title: StrictStr
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
-    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL opened when user taps the notification body.")
-    actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown on iOS long-press.")
+    media: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If `redirection` is omitted, tapping the notification opens this URL. Cannot be combined with `actions`.")
+    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL opened when user taps the notification body. Overrides the default tap target from `media` when both are provided.")
+    actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
     payload: Optional[Dict[str, Any]] = None
     badge: Optional[StrictInt] = None
     sound: Optional[StrictStr] = None
     target: Optional[ChannelTarget] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "redirection", "actions", "payload", "badge", "sound", "target"]
+    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "media", "redirection", "actions", "payload", "badge", "sound", "target"]
+
+    @field_validator('media')
+    def media_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"^https:\/\/", value):
+            raise ValueError(r"must validate the regular expression /^https:\/\//")
+        return value
 
     @field_validator('redirection')
     def redirection_validate_regular_expression(cls, value):
@@ -122,6 +133,7 @@ class PushNotificationRequest(BaseModel):
             "title": obj.get("title"),
             "message": obj.get("message"),
             "subtitle": obj.get("subtitle"),
+            "media": obj.get("media"),
             "redirection": obj.get("redirection"),
             "actions": [PushNotificationAction.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None,
             "payload": obj.get("payload"),

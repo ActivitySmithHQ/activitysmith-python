@@ -38,6 +38,7 @@ class TestPushNotificationRequest(unittest.TestCase):
                 title = '',
                 message = '',
                 subtitle = '',
+                media = 'https:/',
                 redirection = 'https:/',
                 actions = [
                     {
