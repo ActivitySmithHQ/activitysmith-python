@@ -56,7 +56,7 @@ class PushNotificationsApi:
     ) -> PushNotificationResponse:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL (tap) and up to 4 interactive actions (long-press on iOS).
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -127,7 +127,7 @@ class PushNotificationsApi:
     ) -> ApiResponse[PushNotificationResponse]:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL (tap) and up to 4 interactive actions (long-press on iOS).
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -198,7 +198,7 @@ class PushNotificationsApi:
     ) -> RESTResponseType:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL (tap) and up to 4 interactive actions (long-press on iOS).
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
