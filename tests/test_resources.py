@@ -193,3 +193,67 @@ def test_live_activities_support_progress_payloads(monkeypatch):
     assert client.live_activities._api.calls == [
         ("start", {"live_activity_start_request": payload}),
     ]
+
+
+def test_live_activities_pass_action_payloads_through(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+
+    start_payload = {
+        "content_state": {
+            "title": "Deploying payments-api",
+            "subtitle": "Running database migrations",
+            "number_of_steps": 5,
+            "current_step": 3,
+            "type": "segmented_progress",
+        },
+        "action": {
+            "title": "Open Workflow",
+            "type": "open_url",
+            "url": "https://github.com/acme/payments-api/actions/runs/1234567890",
+        },
+    }
+
+    update_payload = {
+        "activity_id": "act-1",
+        "content_state": {
+            "title": "Reindexing product search",
+            "subtitle": "Shard 7 of 12",
+            "number_of_steps": 12,
+            "current_step": 7,
+        },
+        "action": {
+            "title": "Pause Reindex",
+            "type": "webhook",
+            "url": "https://ops.example.com/hooks/search/reindex/pause",
+            "method": "POST",
+            "body": {"job_id": "reindex-2026-03-19"},
+        },
+    }
+
+    end_payload = {
+        "activity_id": "act-1",
+        "content_state": {
+            "title": "Deploying payments-api",
+            "subtitle": "Production rollout complete",
+            "number_of_steps": 5,
+            "current_step": 5,
+        },
+        "action": {
+            "title": "Open Workflow",
+            "type": "open_url",
+            "url": "https://github.com/acme/payments-api/actions/runs/1234567890",
+        },
+    }
+
+    client.live_activities.start(start_payload)
+    client.live_activities.update(update_payload)
+    client.live_activities.end(end_payload)
+
+    assert client.live_activities._api.calls == [
+        ("start", {"live_activity_start_request": start_payload}),
+        ("update", {"live_activity_update_request": update_payload}),
+        ("end", {"live_activity_end_request": end_payload}),
+    ]
