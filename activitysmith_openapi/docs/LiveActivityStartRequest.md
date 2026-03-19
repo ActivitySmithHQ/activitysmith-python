@@ -7,6 +7,7 @@ Start a new Live Activity. The response includes activity_id for later update an
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **content_state** | [**ContentStateStart**](ContentStateStart.md) |  | 
+**action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
 **alert** | [**AlertPayload**](AlertPayload.md) |  | [optional] 
 **target** | [**ChannelTarget**](ChannelTarget.md) |  | [optional] 
 

@@ -36,7 +36,8 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
         if include_optional:
             return LiveActivityUpdateRequest(
                 activity_id = '',
-                content_state = { }
+                content_state = { },
+                action = { }
             )
         else:
             return LiveActivityUpdateRequest(

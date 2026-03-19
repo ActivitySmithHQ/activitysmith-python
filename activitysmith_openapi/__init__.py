@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "0.1.7"
+__version__ = "0.1.8"
 
 # import apis into sdk package
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
@@ -39,6 +39,8 @@ from activitysmith_openapi.models.content_state_end import ContentStateEnd
 from activitysmith_openapi.models.content_state_start import ContentStateStart
 from activitysmith_openapi.models.content_state_update import ContentStateUpdate
 from activitysmith_openapi.models.forbidden_error import ForbiddenError
+from activitysmith_openapi.models.live_activity_action import LiveActivityAction
+from activitysmith_openapi.models.live_activity_action_type import LiveActivityActionType
 from activitysmith_openapi.models.live_activity_end_request import LiveActivityEndRequest
 from activitysmith_openapi.models.live_activity_end_response import LiveActivityEndResponse
 from activitysmith_openapi.models.live_activity_limit_error import LiveActivityLimitError
@@ -46,6 +48,7 @@ from activitysmith_openapi.models.live_activity_start_request import LiveActivit
 from activitysmith_openapi.models.live_activity_start_response import LiveActivityStartResponse
 from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
 from activitysmith_openapi.models.live_activity_update_response import LiveActivityUpdateResponse
+from activitysmith_openapi.models.live_activity_webhook_method import LiveActivityWebhookMethod
 from activitysmith_openapi.models.no_recipients_error import NoRecipientsError
 from activitysmith_openapi.models.push_notification_action import PushNotificationAction
 from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType

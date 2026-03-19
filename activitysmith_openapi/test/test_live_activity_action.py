@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.live_activity_end_request import LiveActivityEndRequest
+from activitysmith_openapi.models.live_activity_action import LiveActivityAction
 
-class TestLiveActivityEndRequest(unittest.TestCase):
-    """LiveActivityEndRequest unit test stubs"""
+class TestLiveActivityAction(unittest.TestCase):
+    """LiveActivityAction unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,29 +25,32 @@ class TestLiveActivityEndRequest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> LiveActivityEndRequest:
-        """Test LiveActivityEndRequest
+    def make_instance(self, include_optional) -> LiveActivityAction:
+        """Test LiveActivityAction
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `LiveActivityEndRequest`
+        # uncomment below to create an instance of `LiveActivityAction`
         """
-        model = LiveActivityEndRequest()
+        model = LiveActivityAction()
         if include_optional:
-            return LiveActivityEndRequest(
-                activity_id = '',
-                content_state = { },
-                action = { }
+            return LiveActivityAction(
+                title = '',
+                type = 'open_url',
+                url = 'https:/',
+                method = 'POST',
+                body = { }
             )
         else:
-            return LiveActivityEndRequest(
-                activity_id = '',
-                content_state = { },
+            return LiveActivityAction(
+                title = '',
+                type = 'open_url',
+                url = 'https:/',
         )
         """
 
-    def testLiveActivityEndRequest(self):
-        """Test LiveActivityEndRequest"""
+    def testLiveActivityAction(self):
+        """Test LiveActivityAction"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

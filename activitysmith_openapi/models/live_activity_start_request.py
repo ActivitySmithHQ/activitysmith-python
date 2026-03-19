@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from activitysmith_openapi.models.alert_payload import AlertPayload
 from activitysmith_openapi.models.channel_target import ChannelTarget
 from activitysmith_openapi.models.content_state_start import ContentStateStart
+from activitysmith_openapi.models.live_activity_action import LiveActivityAction
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -30,10 +31,11 @@ class LiveActivityStartRequest(BaseModel):
     Start a new Live Activity. The response includes activity_id for later update and end calls.
     """ # noqa: E501
     content_state: ContentStateStart
+    action: Optional[LiveActivityAction] = None
     alert: Optional[AlertPayload] = None
     target: Optional[ChannelTarget] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["content_state", "alert", "target"]
+    __properties: ClassVar[List[str]] = ["content_state", "action", "alert", "target"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -79,6 +81,9 @@ class LiveActivityStartRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of content_state
         if self.content_state:
             _dict['content_state'] = self.content_state.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of action
+        if self.action:
+            _dict['action'] = self.action.to_dict()
         # override the default output from pydantic by calling `to_dict()` of alert
         if self.alert:
             _dict['alert'] = self.alert.to_dict()
@@ -103,6 +108,7 @@ class LiveActivityStartRequest(BaseModel):
 
         _obj = cls.model_validate({
             "content_state": ContentStateStart.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
+            "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
             "alert": AlertPayload.from_dict(obj["alert"]) if obj.get("alert") is not None else None,
             "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
         })

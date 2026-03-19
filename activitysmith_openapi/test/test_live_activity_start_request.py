@@ -36,6 +36,7 @@ class TestLiveActivityStartRequest(unittest.TestCase):
         if include_optional:
             return LiveActivityStartRequest(
                 content_state = { },
+                action = { },
                 alert = { },
                 target = { }
             )

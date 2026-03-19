@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **activity_id** | **str** |  | 
 **content_state** | [**ContentStateEnd**](ContentStateEnd.md) |  | 
+**action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
 
 ## Example
 
