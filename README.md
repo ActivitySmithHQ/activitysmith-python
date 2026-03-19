@@ -270,6 +270,63 @@ activitysmith.live_activities.end(
 )
 ```
 
+### Live Activity Action
+
+Just like Actionable Push Notifications, Live Activities can have a button that opens provided URL in a browser or triggers a webhook. Webhooks are executed by the ActivitySmith backend.
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/live-activity-with-action.png?v=20260319-1" alt="Live Activity with action" width="680" />
+</p>
+
+#### Open URL action
+
+```python
+start = activitysmith.live_activities.start(
+    {
+        "content_state": {
+            "title": "Deploying payments-api",
+            "subtitle": "Running database migrations",
+            "number_of_steps": 5,
+            "current_step": 3,
+            "type": "segmented_progress",
+        },
+        "action": {
+            "title": "Open Workflow",
+            "type": "open_url",
+            "url": "https://github.com/acme/payments-api/actions/runs/1234567890",
+        },
+    }
+)
+
+activity_id = start.activity_id
+```
+
+#### Webhook action
+
+```python
+activitysmith.live_activities.update(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "Reindexing product search",
+            "subtitle": "Shard 7 of 12",
+            "number_of_steps": 12,
+            "current_step": 7,
+        },
+        "action": {
+            "title": "Pause Reindex",
+            "type": "webhook",
+            "url": "https://ops.example.com/hooks/search/reindex/pause",
+            "method": "POST",
+            "body": {
+                "job_id": "reindex-2026-03-19",
+                "requested_by": "activitysmith-python",
+            },
+        },
+    }
+)
+```
+
 ## Channels
 
 Channels are used to target specific team members or devices. Can be used for both push notifications and live activities.

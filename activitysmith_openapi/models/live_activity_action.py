@@ -17,22 +17,32 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from activitysmith_openapi.models.content_state_update import ContentStateUpdate
-from activitysmith_openapi.models.live_activity_action import LiveActivityAction
+from typing_extensions import Annotated
+from activitysmith_openapi.models.live_activity_action_type import LiveActivityActionType
+from activitysmith_openapi.models.live_activity_webhook_method import LiveActivityWebhookMethod
 from typing import Optional, Set
 from typing_extensions import Self
 
-class LiveActivityUpdateRequest(BaseModel):
+class LiveActivityAction(BaseModel):
     """
-    Update an existing Live Activity by activity_id.
+    Optional single action button shown in the Live Activity UI.
     """ # noqa: E501
-    activity_id: StrictStr
-    content_state: ContentStateUpdate
-    action: Optional[LiveActivityAction] = None
+    title: StrictStr = Field(description="Button title displayed in the Live Activity UI.")
+    type: LiveActivityActionType
+    url: Annotated[str, Field(strict=True)] = Field(description="HTTPS URL. For open_url it is opened in browser. For webhook it is called by ActivitySmith backend.")
+    method: Optional[LiveActivityWebhookMethod] = Field(default=LiveActivityWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
+    body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["activity_id", "content_state", "action"]
+    __properties: ClassVar[List[str]] = ["title", "type", "url", "method", "body"]
+
+    @field_validator('url')
+    def url_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if not re.match(r"^https:\/\/", value):
+            raise ValueError(r"must validate the regular expression /^https:\/\//")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +62,7 @@ class LiveActivityUpdateRequest(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of LiveActivityUpdateRequest from a JSON string"""
+        """Create an instance of LiveActivityAction from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,12 +85,6 @@ class LiveActivityUpdateRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of content_state
-        if self.content_state:
-            _dict['content_state'] = self.content_state.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of action
-        if self.action:
-            _dict['action'] = self.action.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -90,7 +94,7 @@ class LiveActivityUpdateRequest(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of LiveActivityUpdateRequest from a dict"""
+        """Create an instance of LiveActivityAction from a dict"""
         if obj is None:
             return None
 
@@ -98,9 +102,11 @@ class LiveActivityUpdateRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "activity_id": obj.get("activity_id"),
-            "content_state": ContentStateUpdate.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
-            "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None
+            "title": obj.get("title"),
+            "type": obj.get("type"),
+            "url": obj.get("url"),
+            "method": obj.get("method") if obj.get("method") is not None else LiveActivityWebhookMethod.POST,
+            "body": obj.get("body")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
