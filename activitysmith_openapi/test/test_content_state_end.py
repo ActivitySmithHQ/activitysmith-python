@@ -42,9 +42,15 @@ class TestContentStateEnd(unittest.TestCase):
                 percentage = 0,
                 value = 1.337,
                 upper_limit = 1.337,
+                metrics = [
+                    { }
+                    ],
                 type = 'segmented_progress',
                 color = 'blue',
                 step_color = 'lime',
+                step_colors = [
+                    'lime'
+                    ],
                 auto_dismiss_minutes = 0
             )
         else:

@@ -33,6 +33,20 @@ class TestLiveActivitiesApi(unittest.TestCase):
         """
         pass
 
+    def test_end_live_activity_stream(self) -> None:
+        """Test case for end_live_activity_stream
+
+        End a stream
+        """
+        pass
+
+    def test_reconcile_live_activity_stream(self) -> None:
+        """Test case for reconcile_live_activity_stream
+
+        Send a stream update
+        """
+        pass
+
     def test_start_live_activity(self) -> None:
         """Test case for start_live_activity
 
