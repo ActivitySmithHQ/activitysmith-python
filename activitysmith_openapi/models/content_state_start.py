@@ -20,12 +20,13 @@ import json
 from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
+from activitysmith_openapi.models.activity_metric import ActivityMetric
 from typing import Optional, Set
 from typing_extensions import Self
 
 class ContentStateStart(BaseModel):
     """
-    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
+    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Legacy counter/timer/countdown types also use current_step and number_of_steps. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -34,17 +35,19 @@ class ContentStateStart(BaseModel):
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
+    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1)]] = Field(default=None, description="Use for type=metrics.")
     type: StrictStr
     color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
+    step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "type", "color", "step_color"]
+    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "metrics", "type", "color", "step_color", "step_colors"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['segmented_progress', 'progress']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress')")
+        if value not in set(['segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown')")
         return value
 
     @field_validator('color')
@@ -65,6 +68,17 @@ class ContentStateStart(BaseModel):
 
         if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
             raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
+        return value
+
+    @field_validator('step_colors')
+    def step_colors_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        for i in value:
+            if i not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
+                raise ValueError("each list item must be one of ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
         return value
 
     model_config = ConfigDict(
@@ -108,6 +122,13 @@ class ContentStateStart(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each item in metrics (list)
+        _items = []
+        if self.metrics:
+            for _item in self.metrics:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['metrics'] = _items
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -132,9 +153,11 @@ class ContentStateStart(BaseModel):
             "percentage": obj.get("percentage"),
             "value": obj.get("value"),
             "upper_limit": obj.get("upper_limit"),
+            "metrics": [ActivityMetric.from_dict(_item) for _item in obj["metrics"]] if obj.get("metrics") is not None else None,
             "type": obj.get("type"),
             "color": obj.get("color") if obj.get("color") is not None else 'blue',
-            "step_color": obj.get("step_color")
+            "step_color": obj.get("step_color"),
+            "step_colors": obj.get("step_colors")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

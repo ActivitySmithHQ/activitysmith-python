@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.content_state_start import ContentStateStart
+from activitysmith_openapi.models.stream_content_state import StreamContentState
 
-class TestContentStateStart(unittest.TestCase):
-    """ContentStateStart unit test stubs"""
+class TestStreamContentState(unittest.TestCase):
+    """StreamContentState unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,16 +25,16 @@ class TestContentStateStart(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> ContentStateStart:
-        """Test ContentStateStart
+    def make_instance(self, include_optional) -> StreamContentState:
+        """Test StreamContentState
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `ContentStateStart`
+        # uncomment below to create an instance of `StreamContentState`
         """
-        model = ContentStateStart()
+        model = StreamContentState()
         if include_optional:
-            return ContentStateStart(
+            return StreamContentState(
                 title = '',
                 subtitle = '',
                 number_of_steps = 1,
@@ -42,25 +42,26 @@ class TestContentStateStart(unittest.TestCase):
                 percentage = 0,
                 value = 1.337,
                 upper_limit = 1.337,
-                metrics = [
-                    { }
-                    ],
                 type = 'segmented_progress',
                 color = 'blue',
                 step_color = 'lime',
                 step_colors = [
                     'lime'
-                    ]
+                    ],
+                metrics = [
+                    { }
+                    ],
+                auto_dismiss_seconds = 0,
+                auto_dismiss_minutes = 0
             )
         else:
-            return ContentStateStart(
+            return StreamContentState(
                 title = '',
-                type = 'segmented_progress',
         )
         """
 
-    def testContentStateStart(self):
-        """Test ContentStateStart"""
+    def testStreamContentState(self):
+        """Test StreamContentState"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

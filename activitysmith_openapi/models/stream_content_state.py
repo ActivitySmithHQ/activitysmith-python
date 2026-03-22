@@ -24,25 +24,26 @@ from activitysmith_openapi.models.activity_metric import ActivityMetric
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ContentStateEnd(BaseModel):
+class StreamContentState(BaseModel):
     """
-    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Legacy counter/timer/countdown types also use current_step and number_of_steps. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
+    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based types.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
-    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. Optional on end, and safe to change if the final workflow used more or fewer steps than originally planned.")
-    current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Current step. Use for type=segmented_progress.")
-    percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
-    value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")
-    upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
-    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1)]] = Field(default=None, description="Use for type=metrics.")
-    type: Optional[StrictStr] = Field(default=None, description="Optional. When omitted, the API uses the existing Live Activity type.")
+    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress, counter, timer, and countdown.")
+    current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress, counter, timer, and countdown.")
+    percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Use for progress. Takes precedence over value/upper_limit if both are provided.")
+    value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for progress.")
+    upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for progress.")
+    type: Optional[StrictStr] = Field(default=None, description="Required on the first PUT or whenever the stream cannot infer the current activity type.")
     color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
-    step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
+    step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
-    auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=3, description="Optional. Minutes before the ended Live Activity is dismissed. Default 3. Set 0 for immediate dismissal. iOS will dismiss ended Live Activities after ~4 hours max.")
+    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1)]] = Field(default=None, description="Use for metrics activities.")
+    auto_dismiss_seconds: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Seconds before the ended Live Activity is dismissed.")
+    auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Minutes before the ended Live Activity is dismissed.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "metrics", "type", "color", "step_color", "step_colors", "auto_dismiss_minutes"]
+    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "type", "color", "step_color", "step_colors", "metrics", "auto_dismiss_seconds", "auto_dismiss_minutes"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -103,7 +104,7 @@ class ContentStateEnd(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ContentStateEnd from a JSON string"""
+        """Create an instance of StreamContentState from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -142,7 +143,7 @@ class ContentStateEnd(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ContentStateEnd from a dict"""
+        """Create an instance of StreamContentState from a dict"""
         if obj is None:
             return None
 
@@ -157,12 +158,13 @@ class ContentStateEnd(BaseModel):
             "percentage": obj.get("percentage"),
             "value": obj.get("value"),
             "upper_limit": obj.get("upper_limit"),
-            "metrics": [ActivityMetric.from_dict(_item) for _item in obj["metrics"]] if obj.get("metrics") is not None else None,
             "type": obj.get("type"),
             "color": obj.get("color") if obj.get("color") is not None else 'blue',
             "step_color": obj.get("step_color"),
             "step_colors": obj.get("step_colors"),
-            "auto_dismiss_minutes": obj.get("auto_dismiss_minutes") if obj.get("auto_dismiss_minutes") is not None else 3
+            "metrics": [ActivityMetric.from_dict(_item) for _item in obj["metrics"]] if obj.get("metrics") is not None else None,
+            "auto_dismiss_seconds": obj.get("auto_dismiss_seconds"),
+            "auto_dismiss_minutes": obj.get("auto_dismiss_minutes")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

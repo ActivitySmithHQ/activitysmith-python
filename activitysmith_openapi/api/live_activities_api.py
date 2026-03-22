@@ -16,10 +16,17 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
+from pydantic import Field, field_validator
+from typing import Optional
+from typing_extensions import Annotated
 from activitysmith_openapi.models.live_activity_end_request import LiveActivityEndRequest
 from activitysmith_openapi.models.live_activity_end_response import LiveActivityEndResponse
 from activitysmith_openapi.models.live_activity_start_request import LiveActivityStartRequest
 from activitysmith_openapi.models.live_activity_start_response import LiveActivityStartResponse
+from activitysmith_openapi.models.live_activity_stream_delete_request import LiveActivityStreamDeleteRequest
+from activitysmith_openapi.models.live_activity_stream_delete_response import LiveActivityStreamDeleteResponse
+from activitysmith_openapi.models.live_activity_stream_put_response import LiveActivityStreamPutResponse
+from activitysmith_openapi.models.live_activity_stream_request import LiveActivityStreamRequest
 from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
 from activitysmith_openapi.models.live_activity_update_response import LiveActivityUpdateResponse
 
@@ -60,7 +67,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityEndResponse:
         """End a Live Activity
 
-        Ends a Live Activity and archives its lifecycle. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
+        Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
         :param live_activity_end_request: (required)
         :type live_activity_end_request: LiveActivityEndRequest
@@ -129,7 +136,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityEndResponse]:
         """End a Live Activity
 
-        Ends a Live Activity and archives its lifecycle. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
+        Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
         :param live_activity_end_request: (required)
         :type live_activity_end_request: LiveActivityEndRequest
@@ -198,7 +205,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """End a Live Activity
 
-        Ends a Live Activity and archives its lifecycle. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
+        Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
         :param live_activity_end_request: (required)
         :type live_activity_end_request: LiveActivityEndRequest
@@ -320,6 +327,601 @@ class LiveActivitiesApi:
 
 
     @validate_call
+    def end_live_activity_stream(
+        self,
+        stream_key: Annotated[str, Field(strict=True, max_length=255, description="Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens.")],
+        live_activity_stream_delete_request: Optional[LiveActivityStreamDeleteRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> LiveActivityStreamDeleteResponse:
+        """End a stream
+
+        Use this endpoint when the process you are tracking is finished and you no longer want the Live Activity on your devices. ActivitySmith ends the current Live Activity for this stream and dismisses it from devices. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead.
+
+        :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
+        :type stream_key: str
+        :param live_activity_stream_delete_request:
+        :type live_activity_stream_delete_request: LiveActivityStreamDeleteRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._end_live_activity_stream_serialize(
+            stream_key=stream_key,
+            live_activity_stream_delete_request=live_activity_stream_delete_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LiveActivityStreamDeleteResponse",
+            '400': "BadRequestError",
+            '404': "NotFoundError",
+            '429': "RateLimitError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def end_live_activity_stream_with_http_info(
+        self,
+        stream_key: Annotated[str, Field(strict=True, max_length=255, description="Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens.")],
+        live_activity_stream_delete_request: Optional[LiveActivityStreamDeleteRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[LiveActivityStreamDeleteResponse]:
+        """End a stream
+
+        Use this endpoint when the process you are tracking is finished and you no longer want the Live Activity on your devices. ActivitySmith ends the current Live Activity for this stream and dismisses it from devices. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead.
+
+        :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
+        :type stream_key: str
+        :param live_activity_stream_delete_request:
+        :type live_activity_stream_delete_request: LiveActivityStreamDeleteRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._end_live_activity_stream_serialize(
+            stream_key=stream_key,
+            live_activity_stream_delete_request=live_activity_stream_delete_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LiveActivityStreamDeleteResponse",
+            '400': "BadRequestError",
+            '404': "NotFoundError",
+            '429': "RateLimitError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def end_live_activity_stream_without_preload_content(
+        self,
+        stream_key: Annotated[str, Field(strict=True, max_length=255, description="Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens.")],
+        live_activity_stream_delete_request: Optional[LiveActivityStreamDeleteRequest] = None,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """End a stream
+
+        Use this endpoint when the process you are tracking is finished and you no longer want the Live Activity on your devices. ActivitySmith ends the current Live Activity for this stream and dismisses it from devices. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead.
+
+        :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
+        :type stream_key: str
+        :param live_activity_stream_delete_request:
+        :type live_activity_stream_delete_request: LiveActivityStreamDeleteRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._end_live_activity_stream_serialize(
+            stream_key=stream_key,
+            live_activity_stream_delete_request=live_activity_stream_delete_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LiveActivityStreamDeleteResponse",
+            '400': "BadRequestError",
+            '404': "NotFoundError",
+            '429': "RateLimitError",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _end_live_activity_stream_serialize(
+        self,
+        stream_key,
+        live_activity_stream_delete_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if stream_key is not None:
+            _path_params['stream_key'] = stream_key
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if live_activity_stream_delete_request is not None:
+            _body_params = live_activity_stream_delete_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'apiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='DELETE',
+            resource_path='/live-activity/stream/{stream_key}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
+    def reconcile_live_activity_stream(
+        self,
+        stream_key: Annotated[str, Field(strict=True, max_length=255, description="Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens.")],
+        live_activity_stream_request: LiveActivityStreamRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> LiveActivityStreamPutResponse:
+        """Send a stream update
+
+        Use this endpoint when you want the easiest, stateless way to trigger Live Activities. You do not need to store activity_id or manage the Live Activity lifecycle yourself. Send the latest state for a stable stream_key and ActivitySmith will handle the rest for you: if there is no Live Activity yet, it starts one; if there is already one for this stream, it updates it. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead.
+
+        :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
+        :type stream_key: str
+        :param live_activity_stream_request: (required)
+        :type live_activity_stream_request: LiveActivityStreamRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._reconcile_live_activity_stream_serialize(
+            stream_key=stream_key,
+            live_activity_stream_request=live_activity_stream_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LiveActivityStreamPutResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
+            '429': "SendPushNotification429Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def reconcile_live_activity_stream_with_http_info(
+        self,
+        stream_key: Annotated[str, Field(strict=True, max_length=255, description="Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens.")],
+        live_activity_stream_request: LiveActivityStreamRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[LiveActivityStreamPutResponse]:
+        """Send a stream update
+
+        Use this endpoint when you want the easiest, stateless way to trigger Live Activities. You do not need to store activity_id or manage the Live Activity lifecycle yourself. Send the latest state for a stable stream_key and ActivitySmith will handle the rest for you: if there is no Live Activity yet, it starts one; if there is already one for this stream, it updates it. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead.
+
+        :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
+        :type stream_key: str
+        :param live_activity_stream_request: (required)
+        :type live_activity_stream_request: LiveActivityStreamRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._reconcile_live_activity_stream_serialize(
+            stream_key=stream_key,
+            live_activity_stream_request=live_activity_stream_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LiveActivityStreamPutResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
+            '429': "SendPushNotification429Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def reconcile_live_activity_stream_without_preload_content(
+        self,
+        stream_key: Annotated[str, Field(strict=True, max_length=255, description="Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens.")],
+        live_activity_stream_request: LiveActivityStreamRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Send a stream update
+
+        Use this endpoint when you want the easiest, stateless way to trigger Live Activities. You do not need to store activity_id or manage the Live Activity lifecycle yourself. Send the latest state for a stable stream_key and ActivitySmith will handle the rest for you: if there is no Live Activity yet, it starts one; if there is already one for this stream, it updates it. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead.
+
+        :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
+        :type stream_key: str
+        :param live_activity_stream_request: (required)
+        :type live_activity_stream_request: LiveActivityStreamRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._reconcile_live_activity_stream_serialize(
+            stream_key=stream_key,
+            live_activity_stream_request=live_activity_stream_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "LiveActivityStreamPutResponse",
+            '400': "BadRequestError",
+            '403': "ForbiddenError",
+            '404': "NoRecipientsError",
+            '429': "SendPushNotification429Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _reconcile_live_activity_stream_serialize(
+        self,
+        stream_key,
+        live_activity_stream_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if stream_key is not None:
+            _path_params['stream_key'] = stream_key
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if live_activity_stream_request is not None:
+            _body_params = live_activity_stream_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'apiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/live-activity/stream/{stream_key}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def start_live_activity(
         self,
         live_activity_start_request: LiveActivityStartRequest,
@@ -338,7 +940,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityStartResponse:
         """Start a Live Activity
 
-        Starts a Live Activity on devices matched by API key scope and optional target channels. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
+        Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -409,7 +1011,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityStartResponse]:
         """Start a Live Activity
 
-        Starts a Live Activity on devices matched by API key scope and optional target channels. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
+        Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -480,7 +1082,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """Start a Live Activity
 
-        Starts a Live Activity on devices matched by API key scope and optional target channels. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
+        Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
         :param live_activity_start_request: (required)
         :type live_activity_start_request: LiveActivityStartRequest
@@ -622,7 +1224,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityUpdateResponse:
         """Update a Live Activity
 
-        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
+        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
         :param live_activity_update_request: (required)
         :type live_activity_update_request: LiveActivityUpdateRequest
@@ -691,7 +1293,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityUpdateResponse]:
         """Update a Live Activity
 
-        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
+        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
         :param live_activity_update_request: (required)
         :type live_activity_update_request: LiveActivityUpdateRequest
@@ -760,7 +1362,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """Update a Live Activity
 
-        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
+        Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
         :param live_activity_update_request: (required)
         :type live_activity_update_request: LiveActivityUpdateRequest
