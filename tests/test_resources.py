@@ -27,6 +27,14 @@ class FakeLiveActivitiesApi:
         self.calls.append(("end", kwargs))
         return kwargs
 
+    def reconcile_live_activity_stream(self, **kwargs):
+        self.calls.append(("stream", kwargs))
+        return kwargs
+
+    def end_live_activity_stream(self, **kwargs):
+        self.calls.append(("end_stream", kwargs))
+        return kwargs
+
 
 def test_notifications_short_and_legacy_alias(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
@@ -192,6 +200,76 @@ def test_live_activities_support_progress_payloads(monkeypatch):
 
     assert client.live_activities._api.calls == [
         ("start", {"live_activity_start_request": payload}),
+    ]
+
+
+def test_live_activities_stream_short_and_legacy_aliases(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+
+    client = ActivitySmith(api_key="x")
+    stream_payload = {
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 9, "unit": "%"},
+                {"label": "MEM", "value": 45, "unit": "%"},
+            ],
+        },
+        "channels": ["ops"],
+    }
+    end_payload = {
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 7, "unit": "%"},
+                {"label": "MEM", "value": 38, "unit": "%"},
+            ],
+        }
+    }
+
+    client.live_activities.stream("prod-web-1", stream_payload)
+    client.live_activities.end_stream("prod-web-1", end_payload)
+    client.live_activities.reconcile_live_activity_stream("prod-web-1", stream_payload)
+    client.live_activities.end_live_activity_stream("prod-web-1", end_payload)
+
+    expected_stream = {
+        "content_state": stream_payload["content_state"],
+        "target": {"channels": ["ops"]},
+    }
+    assert client.live_activities._api.calls == [
+        (
+            "stream",
+            {
+                "stream_key": "prod-web-1",
+                "live_activity_stream_request": expected_stream,
+            },
+        ),
+        (
+            "end_stream",
+            {
+                "stream_key": "prod-web-1",
+                "live_activity_stream_delete_request": end_payload,
+            },
+        ),
+        (
+            "stream",
+            {
+                "stream_key": "prod-web-1",
+                "live_activity_stream_request": expected_stream,
+            },
+        ),
+        (
+            "end_stream",
+            {
+                "stream_key": "prod-web-1",
+                "live_activity_stream_delete_request": end_payload,
+            },
+        ),
     ]
 
 

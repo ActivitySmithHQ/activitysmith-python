@@ -116,27 +116,230 @@ activitysmith.notifications.send(
 
 ## Live Activities
 
-Live Activities come in two UI types, but the lifecycle stays the same:
-start the activity, keep the returned `activity_id`, update it as state
-changes, then end it when the work is done.
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-action.png" alt="Live Activities example" width="680" />
+</p>
 
-- `segmented_progress`: best for jobs tracked in steps
-- `progress`: best for jobs tracked as a percentage or numeric range
+ActivitySmith supports two ways to drive Live Activities:
 
-### Shared flow
+- Recommended: stream updates with `activitysmith.live_activities.stream(...)`
+- Advanced: manual lifecycle control with `start`, `update`, and `end`
+
+Use stream updates when you want the easiest, stateless flow. You don't need to
+store `activity_id` or manage lifecycle state yourself. Send the latest state
+for a stable `stream_key` and ActivitySmith will start or update the Live
+Activity for you. When the tracked process is over, call `end_stream(...)`.
+
+Use the manual lifecycle methods when you need direct control over a specific
+Live Activity instance.
+
+Live Activity UI types:
+
+- `metrics`: best for live operational stats like server CPU and memory, queue depth, or replica lag
+- `segmented_progress`: best for step-based workflows like deployments, backups, and ETL pipelines
+- `progress`: best for continuous jobs like uploads, reindexes, and long-running migrations tracked as a percentage
+
+### Recommended: Stream updates
+
+Use a stable `stream_key` to identify the system or workflow you are tracking,
+such as a server, deployment, build pipeline, cron job, or charging session.
+This is especially useful for cron jobs and other scheduled tasks where you do
+not want to store `activity_id` between runs.
+
+#### Metrics
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-start.png" alt="Metrics stream example" width="680" />
+</p>
+
+```python
+status = activitysmith.live_activities.stream(
+    "prod-web-1",
+    {
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 9, "unit": "%"},
+                {"label": "MEM", "value": 45, "unit": "%"},
+            ],
+        },
+    },
+)
+```
+
+#### Segmented progress
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/update-live-activity.png" alt="Segmented progress stream example" width="680" />
+</p>
+
+```python
+activitysmith.live_activities.stream(
+    "nightly-backup",
+    {
+        "content_state": {
+            "title": "Nightly Backup",
+            "subtitle": "upload archive",
+            "type": "segmented_progress",
+            "number_of_steps": 3,
+            "current_step": 2,
+        },
+    },
+)
+```
+
+#### Progress
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/progress-live-activity.png" alt="Progress stream example" width="680" />
+</p>
+
+```python
+activitysmith.live_activities.stream(
+    "search-reindex",
+    {
+        "content_state": {
+            "title": "Search Reindex",
+            "subtitle": "catalog-v2",
+            "type": "progress",
+            "percentage": 42,
+        },
+    },
+)
+```
+
+Call `stream(...)` again with the same `stream_key` whenever the state changes.
+
+#### End a stream
+
+Use this when the tracked process is finished and you no longer want the Live
+Activity on devices. `content_state` is optional here; include it if you want
+to end the stream with a final state.
+
+```python
+activitysmith.live_activities.end_stream(
+    "prod-web-1",
+    {
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 7, "unit": "%"},
+                {"label": "MEM", "value": 38, "unit": "%"},
+            ],
+        },
+    },
+)
+```
+
+If you later send another `stream(...)` request with the same `stream_key`,
+ActivitySmith starts a new Live Activity for that stream again.
+
+Stream responses include an `operation` field:
+
+- `started`: ActivitySmith started a new Live Activity for this `stream_key`
+- `updated`: ActivitySmith updated the current Live Activity
+- `rotated`: ActivitySmith ended the previous Live Activity and started a new one
+- `noop`: the incoming state matched the current state, so no update was sent
+- `paused`: the stream is paused, so no Live Activity was started or updated
+- `ended`: returned by `end_stream(...)` after the stream is ended
+
+### Advanced: Manual lifecycle control
+
+Use these methods when you want to manage the Live Activity lifecycle yourself.
+
+#### Shared flow
 
 1. Call `activitysmith.live_activities.start(...)`.
 2. Save the returned `activity_id`.
 3. Call `activitysmith.live_activities.update(...)` as progress changes.
 4. Call `activitysmith.live_activities.end(...)` when the work is finished.
 
+### Metrics Type
+
+Use `metrics` when you want to keep a small set of live stats visible, such as
+server health, queue pressure, or database load.
+
+#### Start
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-start.png" alt="Metrics start example" width="680" />
+</p>
+
+```python
+start = activitysmith.live_activities.start(
+    {
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 9, "unit": "%"},
+                {"label": "MEM", "value": 45, "unit": "%"},
+            ],
+        },
+    }
+)
+
+activity_id = start.activity_id
+```
+
+#### Update
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-update.png" alt="Metrics update example" width="680" />
+</p>
+
+```python
+activitysmith.live_activities.update(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 76, "unit": "%"},
+                {"label": "MEM", "value": 52, "unit": "%"},
+            ],
+        },
+    }
+)
+```
+
+#### End
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-end.png" alt="Metrics end example" width="680" />
+</p>
+
+```python
+activitysmith.live_activities.end(
+    {
+        "activity_id": activity_id,
+        "content_state": {
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 7, "unit": "%"},
+                {"label": "MEM", "value": 38, "unit": "%"},
+            ],
+            "auto_dismiss_minutes": 2,
+        },
+    }
+)
+```
+
 ### Segmented Progress Type
 
 Use `segmented_progress` when progress is easier to follow as steps instead of a
 raw percentage. It fits jobs like backups, deployments, ETL pipelines, and
-checklists where "step 2 of 3" is more useful than "67%".
-`number_of_steps` is dynamic, so you can increase or decrease it later if the
-workflow changes.
+checklists where "step 2 of 3" is more useful than "67%". `number_of_steps` is
+dynamic, so you can increase or decrease it later if the workflow changes.
 
 #### Start
 
@@ -155,7 +358,6 @@ start = activitysmith.live_activities.start(
             "type": "segmented_progress",
             "color": "yellow",
         },
-        "channels": ["devs", "ops"],  # Optional
     }
 )
 
@@ -175,9 +377,9 @@ activitysmith.live_activities.update(
         "content_state": {
             "title": "Nightly database backup",
             "subtitle": "upload archive",
-            "number_of_steps": 4,
+            "number_of_steps": 3,
             "current_step": 2,
-        }
+        },
     }
 )
 ```
@@ -195,10 +397,10 @@ activitysmith.live_activities.end(
         "content_state": {
             "title": "Nightly database backup",
             "subtitle": "verify restore",
-            "number_of_steps": 4,
-            "current_step": 4,
+            "number_of_steps": 3,
+            "current_step": 3,
             "auto_dismiss_minutes": 2,
-        }
+        },
     }
 )
 ```
@@ -223,7 +425,6 @@ start = activitysmith.live_activities.start(
             "subtitle": "Added 30 mi range",
             "type": "progress",
             "percentage": 15,
-            "color": "lime",
         }
     }
 )
@@ -272,10 +473,10 @@ activitysmith.live_activities.end(
 
 ### Live Activity Action
 
-Just like Actionable Push Notifications, Live Activities can have a button that opens provided URL in a browser or triggers a webhook. Webhooks are executed by the ActivitySmith backend.
+Just like Actionable Push Notifications, Live Activities can have a button that opens a URL in a browser or triggers a webhook. Webhooks are executed by the ActivitySmith backend.
 
 <p align="center">
-  <img src="https://cdn.activitysmith.com/features/live-activity-with-action.png?v=20260319-1" alt="Live Activity with action" width="680" />
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-action.png" alt="Metrics Live Activity with action" width="680" />
 </p>
 
 #### Open URL action
@@ -284,16 +485,18 @@ Just like Actionable Push Notifications, Live Activities can have a button that 
 start = activitysmith.live_activities.start(
     {
         "content_state": {
-            "title": "Deploying payments-api",
-            "subtitle": "Running database migrations",
-            "number_of_steps": 5,
-            "current_step": 3,
-            "type": "segmented_progress",
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 76, "unit": "%"},
+                {"label": "MEM", "value": 52, "unit": "%"},
+            ],
         },
         "action": {
-            "title": "Open Workflow",
+            "title": "Open Dashboard",
             "type": "open_url",
-            "url": "https://github.com/acme/payments-api/actions/runs/1234567890",
+            "url": "https://ops.example.com/servers/prod-web-1",
         },
     }
 )
@@ -308,18 +511,21 @@ activitysmith.live_activities.update(
     {
         "activity_id": activity_id,
         "content_state": {
-            "title": "Reindexing product search",
-            "subtitle": "Shard 7 of 12",
-            "number_of_steps": 12,
-            "current_step": 7,
+            "title": "Server Health",
+            "subtitle": "prod-web-1",
+            "type": "metrics",
+            "metrics": [
+                {"label": "CPU", "value": 91, "unit": "%"},
+                {"label": "MEM", "value": 57, "unit": "%"},
+            ],
         },
         "action": {
-            "title": "Pause Reindex",
+            "title": "Restart Service",
             "type": "webhook",
-            "url": "https://ops.example.com/hooks/search/reindex/pause",
+            "url": "https://ops.example.com/hooks/servers/prod-web-1/restart",
             "method": "POST",
             "body": {
-                "job_id": "reindex-2026-03-19",
+                "server_id": "prod-web-1",
                 "requested_by": "activitysmith-python",
             },
         },

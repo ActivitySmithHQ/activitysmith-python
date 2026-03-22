@@ -91,6 +91,18 @@ class LiveActivitiesResource:
     def end(self, request: Any):
         return self._api.end_live_activity(live_activity_end_request=request)
 
+    def stream(self, stream_key: str, request: Any):
+        return self._api.reconcile_live_activity_stream(
+            stream_key=stream_key,
+            live_activity_stream_request=_normalize_channels_target(request),
+        )
+
+    def end_stream(self, stream_key: str, request: Any | None = None):
+        return self._api.end_live_activity_stream(
+            stream_key=stream_key,
+            live_activity_stream_delete_request=request,
+        )
+
     # Backward-compatible aliases.
     def start_live_activity(self, live_activity_start_request: Any):
         return self.start(live_activity_start_request)
@@ -100,6 +112,12 @@ class LiveActivitiesResource:
 
     def end_live_activity(self, live_activity_end_request: Any):
         return self.end(live_activity_end_request)
+
+    def reconcile_live_activity_stream(self, stream_key: str, live_activity_stream_request: Any):
+        return self.stream(stream_key, live_activity_stream_request)
+
+    def end_live_activity_stream(self, stream_key: str, live_activity_stream_delete_request: Any | None = None):
+        return self.end_stream(stream_key, live_activity_stream_delete_request)
 
 
 @dataclass

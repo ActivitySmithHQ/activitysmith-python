@@ -10,3 +10,5 @@ def test_client_constructs():
     assert hasattr(client.live_activities, "start")
     assert hasattr(client.live_activities, "update")
     assert hasattr(client.live_activities, "end")
+    assert hasattr(client.live_activities, "stream")
+    assert hasattr(client.live_activities, "end_stream")
