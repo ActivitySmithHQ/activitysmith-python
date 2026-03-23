@@ -117,29 +117,31 @@ activitysmith.notifications.send(
 ## Live Activities
 
 <p align="center">
-  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-action.png" alt="Live Activities example" width="680" />
+  <img src="https://cdn.activitysmith.com/features/metrics-live-activity-action.png" alt="Metrics Live Activity screenshot" width="680" />
 </p>
 
-ActivitySmith supports two ways to drive Live Activities:
-
-- Simple: stream updates with `activitysmith.live_activities.stream(...)`
-- Advanced: manual lifecycle control with `start`, `update`, and `end`
-
-Use stream updates when you want the easiest, stateless flow. You don't need to
-store `activity_id` or manage lifecycle state yourself. Send the latest state
-for a stable `stream_key` and ActivitySmith will start or update the Live
-Activity for you. When the tracked process is over, call `end_stream(...)`.
-
-Use the manual lifecycle methods when you need direct control over a specific
-Live Activity instance.
-
-Live Activity UI types:
+There are three types of Live Activities:
 
 - `metrics`: best for live operational stats like server CPU and memory, queue depth, or replica lag
 - `segmented_progress`: best for step-based workflows like deployments, backups, and ETL pipelines
 - `progress`: best for continuous jobs like uploads, reindexes, and long-running migrations tracked as a percentage
 
-### Simple: Stream updates
+When working with Live Activities via our API, you have two approaches tailored
+to different needs. First, the stateless mode is the simplest path - one API
+call can initiate or update an activity, and another ends it - no state
+tracking on your side.
+
+This is ideal if you want minimal complexity, perfect for automated workflows
+like cron jobs.
+
+In contrast, if you need precise lifecycle control, the classic approach offers
+distinct calls for start, updates, and end, giving you full control over the
+activity's state.
+
+In the following sections, we'll break down how to implement each method so you
+can choose what fits your use case best.
+
+### Simple: Let ActivitySmith manage the Live Activity for you.
 
 Use a stable `stream_key` to identify the system or workflow you are tracking,
 such as a server, deployment, build pipeline, cron job, or charging session.
@@ -247,11 +249,9 @@ Stream responses include an `operation` field:
 - `paused`: the stream is paused, so no Live Activity was started or updated
 - `ended`: returned by `end_stream(...)` after the stream is ended
 
-### Advanced: Manual lifecycle control
+### Advanced: Full lifecycle control
 
-Use these methods when you want to manage the Live Activity lifecycle yourself.
-
-#### Shared flow
+Use these methods when you want to manage the Live Activity lifecycle yourself:
 
 1. Call `activitysmith.live_activities.start(...)`.
 2. Save the returned `activity_id`.
@@ -336,10 +336,10 @@ activitysmith.live_activities.end(
 
 ### Segmented Progress Type
 
-Use `segmented_progress` when progress is easier to follow as steps instead of a
-raw percentage. It fits jobs like backups, deployments, ETL pipelines, and
-checklists where "step 2 of 3" is more useful than "67%". `number_of_steps` is
-dynamic, so you can increase or decrease it later if the workflow changes.
+Use `segmented_progress` for jobs and workflows that move through clear steps or
+phases. It fits jobs like backups, deployments, ETL pipelines, and checklists.
+`number_of_steps` is dynamic, so you can increase or decrease it later if the
+workflow changes.
 
 #### Start
 
