@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class ContentStateStart(BaseModel):
     """
-    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Legacy counter/timer/countdown types also use current_step and number_of_steps. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
+    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -46,8 +46,8 @@ class ContentStateStart(BaseModel):
     @field_validator('type')
     def type_validate_enum(cls, value):
         """Validates the enum"""
-        if value not in set(['segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown')")
+        if value not in set(['segmented_progress', 'progress', 'metrics']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics')")
         return value
 
     @field_validator('color')

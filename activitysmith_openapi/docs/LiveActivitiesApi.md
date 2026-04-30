@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 End a Live Activity
 
-Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
+Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, and metrics activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
 ### Example
 
@@ -49,7 +49,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.LiveActivitiesApi(api_client)
-    live_activity_end_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"verify restore","number_of_steps":4,"current_step":4,"auto_dismiss_minutes":2}} # LiveActivityEndRequest | 
+    live_activity_end_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"verify restore","number_of_steps":3,"current_step":3,"auto_dismiss_minutes":2}} # LiveActivityEndRequest | 
 
     try:
         # End a Live Activity
@@ -266,7 +266,7 @@ Name | Type | Description  | Notes
 
 Start a Live Activity
 
-Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
+Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, and metrics activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
 ### Example
 
@@ -349,7 +349,7 @@ Name | Type | Description  | Notes
 
 Update a Live Activity
 
-Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
+Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, and metrics activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
 ### Example
 
@@ -382,7 +382,7 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.LiveActivitiesApi(api_client)
-    live_activity_update_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"upload archive","number_of_steps":4,"current_step":2}} # LiveActivityUpdateRequest | 
+    live_activity_update_request = {"activity_id":"pLAr-Hnq9ZFW4sxlk43Lhbuok4GLh7UW","content_state":{"title":"Nightly database backup","subtitle":"upload archive","number_of_steps":3,"current_step":2}} # LiveActivityUpdateRequest | 
 
     try:
         # Update a Live Activity

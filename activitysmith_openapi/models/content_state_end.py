@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class ContentStateEnd(BaseModel):
     """
-    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Legacy counter/timer/countdown types also use current_step and number_of_steps. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
+    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -50,8 +50,8 @@ class ContentStateEnd(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown')")
+        if value not in set(['segmented_progress', 'progress', 'metrics']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics')")
         return value
 
     @field_validator('color')
