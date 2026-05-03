@@ -12,7 +12,7 @@ Method | HTTP request | Description
 
 Update a widget metric value
 
-Updates the latest value for a metric configured in ActivitySmith widgets. Create the metric in the web app first, then write values using its key. Numeric metric formats accept finite numbers. String metrics accept non-empty text up to 64 characters.
+Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key.
 
 ### Example
 

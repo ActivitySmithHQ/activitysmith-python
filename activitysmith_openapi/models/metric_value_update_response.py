@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, StrictBool
 from typing import Any, ClassVar, Dict, List
-from activitysmith_openapi.models.widget_metric import WidgetMetric
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,9 +26,9 @@ class MetricValueUpdateResponse(BaseModel):
     """
     MetricValueUpdateResponse
     """ # noqa: E501
-    metric: WidgetMetric
+    success: StrictBool
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metric"]
+    __properties: ClassVar[List[str]] = ["success"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -72,9 +71,6 @@ class MetricValueUpdateResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of metric
-        if self.metric:
-            _dict['metric'] = self.metric.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -92,7 +88,7 @@ class MetricValueUpdateResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "metric": WidgetMetric.from_dict(obj["metric"]) if obj.get("metric") is not None else None
+            "success": obj.get("success")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
