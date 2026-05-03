@@ -4,6 +4,7 @@ import activitysmith.client as client_module
 
 class FakePushNotificationsApi:
     def __init__(self, _api_client):
+        self._api_client = _api_client
         self.calls = []
 
     def send_push_notification(self, **kwargs):
@@ -13,6 +14,7 @@ class FakePushNotificationsApi:
 
 class FakeLiveActivitiesApi:
     def __init__(self, _api_client):
+        self._api_client = _api_client
         self.calls = []
 
     def start_live_activity(self, **kwargs):
@@ -36,9 +38,32 @@ class FakeLiveActivitiesApi:
         return kwargs
 
 
+class FakeMetricsApi:
+    def __init__(self, _api_client):
+        self._api_client = _api_client
+        self.calls = []
+
+    def update_metric_value(self, **kwargs):
+        self.calls.append(kwargs)
+        return kwargs
+
+
+def test_sdk_header_and_user_agent_are_configured(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+    api_client = client.metrics._api._api_client
+
+    assert api_client.default_headers["X-ActivitySmith-SDK"] == "python-v1.2.0"
+    assert api_client.default_headers["User-Agent"] == "activitysmith-python/1.2.0"
+
+
 def test_notifications_short_and_legacy_alias(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     payload = {"title": "Build Failed"}
@@ -57,6 +82,7 @@ def test_notifications_short_and_legacy_alias(monkeypatch):
 def test_notifications_map_channels_to_target(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     payload = {"title": "Build Failed", "channels": ["devs", "ops"]}
@@ -73,6 +99,7 @@ def test_notifications_map_channels_to_target(monkeypatch):
 def test_notifications_preserve_media_and_redirection(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     payload = {
@@ -91,6 +118,7 @@ def test_notifications_preserve_media_and_redirection(monkeypatch):
 def test_notifications_reject_media_and_actions(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
 
@@ -111,6 +139,7 @@ def test_notifications_reject_media_and_actions(monkeypatch):
 def test_live_activities_short_and_legacy_aliases(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     start_payload = {
@@ -151,6 +180,7 @@ def test_live_activities_short_and_legacy_aliases(monkeypatch):
 def test_live_activities_start_maps_channels_to_target(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     payload = {
@@ -184,6 +214,7 @@ def test_live_activities_start_maps_channels_to_target(monkeypatch):
 def test_live_activities_support_progress_payloads(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     payload = {
@@ -206,6 +237,7 @@ def test_live_activities_support_progress_payloads(monkeypatch):
 def test_live_activities_stream_short_and_legacy_aliases(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
     stream_payload = {
@@ -276,6 +308,7 @@ def test_live_activities_stream_short_and_legacy_aliases(monkeypatch):
 def test_live_activities_pass_action_payloads_through(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
 
     client = ActivitySmith(api_key="x")
 
@@ -334,4 +367,38 @@ def test_live_activities_pass_action_payloads_through(monkeypatch):
         ("start", {"live_activity_start_request": start_payload}),
         ("update", {"live_activity_update_request": update_payload}),
         ("end", {"live_activity_end_request": end_payload}),
+    ]
+
+
+def test_metrics_short_and_legacy_aliases(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    client.metrics.update(
+        "deploy.success_rate",
+        99.9,
+        timestamp="2026-05-03T12:30:00.000Z",
+    )
+    client.metrics.update("prod.status", {"value": "healthy"})
+    client.metrics.update_metric_value("deploy.success_rate", {"value": 42})
+
+    assert client.metrics._api.calls == [
+        {
+            "key": "deploy.success_rate",
+            "metric_value_update_request": {
+                "value": 99.9,
+                "timestamp": "2026-05-03T12:30:00.000Z",
+            },
+        },
+        {
+            "key": "prod.status",
+            "metric_value_update_request": {"value": "healthy"},
+        },
+        {
+            "key": "deploy.success_rate",
+            "metric_value_update_request": {"value": 42},
+        },
     ]

@@ -7,7 +7,12 @@ from activitysmith_openapi.configuration import Configuration
 from activitysmith_openapi.api_client import ApiClient
 
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
+from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
+
+SDK_VERSION = "1.2.0"
+SDK_HEADER_NAME = "X-ActivitySmith-SDK"
+SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
 
 def _request_value(request: Any, key: str) -> Any:
@@ -36,6 +41,22 @@ def _has_actions(request: Any) -> bool:
 def _validate_push_request(request: Any) -> Any:
     if _has_media(request) and _has_actions(request):
         raise ValueError("ActivitySmith: media cannot be combined with actions")
+    return request
+
+
+def _metric_value_request(value_or_request: Any, timestamp: Any | None = None) -> Any:
+    if isinstance(value_or_request, dict) and "value" in value_or_request:
+        if timestamp is None:
+            return value_or_request
+
+        request = dict(value_or_request)
+        request["timestamp"] = timestamp
+        return request
+
+    request = {"value": value_or_request}
+    if timestamp is not None:
+        request["timestamp"] = timestamp
+
     return request
 
 
@@ -120,6 +141,24 @@ class LiveActivitiesResource:
         return self.end_stream(stream_key, live_activity_stream_delete_request)
 
 
+class MetricsResource:
+    def __init__(self, api: MetricsApi) -> None:
+        self._api = api
+
+    def update(self, key: str, value_or_request: Any, timestamp: Any | None = None):
+        return self._api.update_metric_value(
+            key=key,
+            metric_value_update_request=_metric_value_request(value_or_request, timestamp),
+        )
+
+    # Backward-compatible generated-style alias.
+    def update_metric_value(self, key: str, metric_value_update_request: Any):
+        return self._api.update_metric_value(
+            key=key,
+            metric_value_update_request=metric_value_update_request,
+        )
+
+
 @dataclass
 class ActivitySmith:
     api_key: str
@@ -131,6 +170,9 @@ class ActivitySmith:
         config = Configuration(access_token=self.api_key)
 
         api_client = ApiClient(configuration=config)
+        api_client.user_agent = f"activitysmith-python/{SDK_VERSION}"
+        api_client.set_default_header(SDK_HEADER_NAME, SDK_HEADER_VALUE)
 
         self.notifications = NotificationsResource(PushNotificationsApi(api_client))
         self.live_activities = LiveActivitiesResource(LiveActivitiesApi(api_client))
+        self.metrics = MetricsResource(MetricsApi(api_client))

@@ -6,6 +6,24 @@ The ActivitySmith Python library provides convenient access to the ActivitySmith
 
 See the [API reference](https://activitysmith.com/docs/api-reference/introduction).
 
+## Table of Contents
+
+- [Installation](#installation)
+- [Setup](#setup)
+- [Push Notifications](#push-notifications)
+  - [Send a Push Notification](#send-a-push-notification)
+  - [Rich Push Notifications with Media](#rich-push-notifications-with-media)
+  - [Actionable Push Notifications](#actionable-push-notifications)
+- [Live Activities](#live-activities)
+  - [Simple: Let ActivitySmith manage the Live Activity for you](#simple-let-activitysmith-manage-the-live-activity-for-you)
+  - [Advanced: Full lifecycle control](#advanced-full-lifecycle-control)
+  - [Metrics Type](#metrics-type)
+  - [Segmented Progress Type](#segmented-progress-type)
+  - [Progress Type](#progress-type)
+  - [Live Activity Action](#live-activity-action)
+- [Channels](#channels)
+- [Widgets](#widgets)
+
 ## Installation
 
 This package is available on PyPI:
@@ -141,7 +159,7 @@ activity's state.
 In the following sections, we'll break down how to implement each method so you
 can choose what fits your use case best.
 
-### Simple: Let ActivitySmith manage the Live Activity for you.
+### Simple: Let ActivitySmith manage the Live Activity for you
 
 Use a stable `stream_key` to identify the system or workflow you are tracking,
 such as a server, deployment, build pipeline, cron job, or charging session.
@@ -546,6 +564,28 @@ activitysmith.notifications.send(
         "channels": ["sales", "customer-success"],  # Optional
     }
 )
+```
+
+## Widgets
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/lock-screen-widgets.png" alt="Lock screen widgets" width="680" />
+</p>
+
+ActivitySmith lets you display any value on your Lock Screen with widgets - SaaS metrics, revenue, signups, uptime, habits, or anything else you want to track. Create a metric in the web app, then update the metric value using our API, add a widget to your lock screen and it will fetch the latest update automatically.
+
+<p align="center">
+  <img src="https://cdn.activitysmith.com/features/create-widget-metric.png" alt="Create widget metric" width="680" />
+</p>
+
+```python
+activitysmith.metrics.update("deploy.success_rate", 99.9)
+```
+
+String metric values work too.
+
+```python
+activitysmith.metrics.update("prod.status", "healthy")
 ```
 
 ## Error Handling
