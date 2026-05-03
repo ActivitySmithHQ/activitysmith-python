@@ -18,12 +18,11 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Union
 from typing_extensions import Annotated
 from activitysmith_openapi.models.metric_format import MetricFormat
 from activitysmith_openapi.models.metric_unit_spacing import MetricUnitSpacing
-from activitysmith_openapi.models.widget_metric_latest_value import WidgetMetricLatestValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -34,12 +33,12 @@ class WidgetMetric(BaseModel):
     public_id: StrictStr
     key: Annotated[str, Field(min_length=1, strict=True, max_length=64)]
     label: Annotated[str, Field(min_length=1, strict=True, max_length=80)]
-    currency_code: Optional[Annotated[str, Field(min_length=3, strict=True, max_length=3)]] = Field(description="Present when format is currency.")
-    unit: Optional[Annotated[str, Field(strict=True, max_length=16)]] = Field(description="Present when format is unit.")
+    currency_code: Annotated[str, Field(min_length=3, strict=True, max_length=3)] = Field(description="Present when format is currency.")
+    unit: Annotated[str, Field(strict=True, max_length=16)] = Field(description="Present when format is unit.")
     unit_spacing: MetricUnitSpacing
     format: MetricFormat
-    latest_value: Optional[WidgetMetricLatestValue]
-    latest_value_at: Optional[datetime]
+    latest_value: Union[StrictFloat, StrictInt] = Field(description="Latest metric value. Numeric formats return a number. String metrics return text.")
+    latest_value_at: datetime
     created_at: datetime
     updated_at: datetime
     additional_properties: Dict[str, Any] = {}
@@ -55,9 +54,6 @@ class WidgetMetric(BaseModel):
     @field_validator('currency_code')
     def currency_code_validate_regular_expression(cls, value):
         """Validates the regular expression"""
-        if value is None:
-            return value
-
         if not re.match(r"^[A-Z]{3}$", value):
             raise ValueError(r"must validate the regular expression /^[A-Z]{3}$/")
         return value
@@ -103,33 +99,10 @@ class WidgetMetric(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of latest_value
-        if self.latest_value:
-            _dict['latest_value'] = self.latest_value.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
                 _dict[_key] = _value
-
-        # set to None if currency_code (nullable) is None
-        # and model_fields_set contains the field
-        if self.currency_code is None and "currency_code" in self.model_fields_set:
-            _dict['currency_code'] = None
-
-        # set to None if unit (nullable) is None
-        # and model_fields_set contains the field
-        if self.unit is None and "unit" in self.model_fields_set:
-            _dict['unit'] = None
-
-        # set to None if latest_value (nullable) is None
-        # and model_fields_set contains the field
-        if self.latest_value is None and "latest_value" in self.model_fields_set:
-            _dict['latest_value'] = None
-
-        # set to None if latest_value_at (nullable) is None
-        # and model_fields_set contains the field
-        if self.latest_value_at is None and "latest_value_at" in self.model_fields_set:
-            _dict['latest_value_at'] = None
 
         return _dict
 
@@ -150,7 +123,7 @@ class WidgetMetric(BaseModel):
             "unit": obj.get("unit"),
             "unit_spacing": obj.get("unit_spacing"),
             "format": obj.get("format"),
-            "latest_value": WidgetMetricLatestValue.from_dict(obj["latest_value"]) if obj.get("latest_value") is not None else None,
+            "latest_value": obj.get("latest_value"),
             "latest_value_at": obj.get("latest_value_at"),
             "created_at": obj.get("created_at"),
             "updated_at": obj.get("updated_at")

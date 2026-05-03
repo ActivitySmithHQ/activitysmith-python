@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **unit** | **str** | Present when format is unit. | 
 **unit_spacing** | [**MetricUnitSpacing**](MetricUnitSpacing.md) |  | 
 **format** | [**MetricFormat**](MetricFormat.md) |  | 
-**latest_value** | [**WidgetMetricLatestValue**](WidgetMetricLatestValue.md) |  | 
+**latest_value** | **float** | Latest metric value. Numeric formats return a number. String metrics return text. | 
 **latest_value_at** | **datetime** |  | 
 **created_at** | **datetime** |  | 
 **updated_at** | **datetime** |  | 

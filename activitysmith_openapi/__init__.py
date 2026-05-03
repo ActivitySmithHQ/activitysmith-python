@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 # import apis into sdk package
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
@@ -72,4 +72,3 @@ from activitysmith_openapi.models.rate_limit_error import RateLimitError
 from activitysmith_openapi.models.send_push_notification429_response import SendPushNotification429Response
 from activitysmith_openapi.models.stream_content_state import StreamContentState
 from activitysmith_openapi.models.widget_metric import WidgetMetric
-from activitysmith_openapi.models.widget_metric_latest_value import WidgetMetricLatestValue

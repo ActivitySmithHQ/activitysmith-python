@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**metric** | [**WidgetMetric**](WidgetMetric.md) |  | 
+**success** | **bool** |  | 
 
 ## Example
 
