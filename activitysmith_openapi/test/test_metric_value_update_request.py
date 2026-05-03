@@ -35,8 +35,7 @@ class TestMetricValueUpdateRequest(unittest.TestCase):
         model = MetricValueUpdateRequest()
         if include_optional:
             return MetricValueUpdateRequest(
-                value = None,
-                timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                value = None
             )
         else:
             return MetricValueUpdateRequest(
