@@ -35,11 +35,11 @@ class TestMetricValueUpdateResponse(unittest.TestCase):
         model = MetricValueUpdateResponse()
         if include_optional:
             return MetricValueUpdateResponse(
-                metric = { }
+                success = True
             )
         else:
             return MetricValueUpdateResponse(
-                metric = { },
+                success = True,
         )
         """
 
