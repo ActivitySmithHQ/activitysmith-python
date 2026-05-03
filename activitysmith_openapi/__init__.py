@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 # import apis into sdk package
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
