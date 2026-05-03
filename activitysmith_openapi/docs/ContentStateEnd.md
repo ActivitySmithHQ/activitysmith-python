@@ -1,6 +1,6 @@
 # ContentStateEnd
 
-End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Legacy counter/timer/countdown types also use current_step and number_of_steps. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
+End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
 
 ## Properties
 

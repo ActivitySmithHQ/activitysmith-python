@@ -26,12 +26,12 @@ from typing_extensions import Self
 
 class StreamContentState(BaseModel):
     """
-    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based types.
+    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, and metrics types.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
-    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress, counter, timer, and countdown.")
-    current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress, counter, timer, and countdown.")
+    number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress.")
+    current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress.")
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Use for progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for progress.")
@@ -51,8 +51,8 @@ class StreamContentState(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'counter', 'timer', 'countdown')")
+        if value not in set(['segmented_progress', 'progress', 'metrics']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics')")
         return value
 
     @field_validator('color')

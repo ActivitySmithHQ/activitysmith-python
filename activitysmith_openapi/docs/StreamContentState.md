@@ -1,6 +1,6 @@
 # StreamContentState
 
-Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and the legacy counter/timer/countdown step-based types.
+Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, and metrics types.
 
 ## Properties
 
@@ -8,8 +8,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **title** | **str** |  | 
 **subtitle** | **str** |  | [optional] 
-**number_of_steps** | **int** | Use for segmented_progress, counter, timer, and countdown. | [optional] 
-**current_step** | **int** | Use for segmented_progress, counter, timer, and countdown. | [optional] 
+**number_of_steps** | **int** | Use for segmented_progress. | [optional] 
+**current_step** | **int** | Use for segmented_progress. | [optional] 
 **percentage** | **float** | Use for progress. Takes precedence over value/upper_limit if both are provided. | [optional] 
 **value** | **float** | Current progress value. Use with upper_limit for progress. | [optional] 
 **upper_limit** | **float** | Maximum progress value. Use with value for progress. | [optional] 
