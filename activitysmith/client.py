@@ -10,7 +10,7 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
-SDK_VERSION = "1.2.0"
+SDK_VERSION = "1.2.2"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 

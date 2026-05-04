@@ -1,3 +1,5 @@
+from importlib.metadata import version
+
 from activitysmith.client import ActivitySmith
 import activitysmith.client as client_module
 
@@ -56,8 +58,9 @@ def test_sdk_header_and_user_agent_are_configured(monkeypatch):
     client = ActivitySmith(api_key="x")
     api_client = client.metrics._api._api_client
 
-    assert api_client.default_headers["X-ActivitySmith-SDK"] == "python-v1.2.0"
-    assert api_client.default_headers["User-Agent"] == "activitysmith-python/1.2.0"
+    package_version = version("activitysmith")
+    assert api_client.default_headers["X-ActivitySmith-SDK"] == f"python-v{package_version}"
+    assert api_client.default_headers["User-Agent"] == f"activitysmith-python/{package_version}"
 
 
 def test_notifications_short_and_legacy_alias(monkeypatch):
