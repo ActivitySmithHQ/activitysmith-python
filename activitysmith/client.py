@@ -98,6 +98,11 @@ class NotificationsResource:
 
 
 class LiveActivitiesResource:
+    TYPE_SEGMENTED_PROGRESS = "segmented_progress"
+    TYPE_PROGRESS = "progress"
+    TYPE_METRICS = "metrics"
+    TYPE_STATS = "stats"
+
     def __init__(self, api: LiveActivitiesApi) -> None:
         self._api = api
 

@@ -237,6 +237,32 @@ def test_live_activities_support_progress_payloads(monkeypatch):
     ]
 
 
+def test_live_activities_support_stats_payloads(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+    payload = {
+        "content_state": {
+            "title": "Sales",
+            "subtitle": "last hour",
+            "type": client.live_activities.TYPE_STATS,
+            "metrics": [
+                {"label": "Revenue", "value": "$2430", "color": "blue"},
+                {"label": "Orders", "value": "37", "color": "green"},
+                {"label": "Conversion", "value": "4.8%", "color": "magenta"},
+            ],
+        }
+    }
+
+    client.live_activities.start(payload)
+
+    assert client.live_activities._api.calls == [
+        ("start", {"live_activity_start_request": payload}),
+    ]
+
+
 def test_live_activities_stream_short_and_legacy_aliases(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
