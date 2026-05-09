@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.activity_metric import ActivityMetric
+from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 
-class TestActivityMetric(unittest.TestCase):
-    """ActivityMetric unit test stubs"""
+class TestActivityMetricValue(unittest.TestCase):
+    """ActivityMetricValue unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,30 +25,24 @@ class TestActivityMetric(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> ActivityMetric:
-        """Test ActivityMetric
+    def make_instance(self, include_optional) -> ActivityMetricValue:
+        """Test ActivityMetricValue
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `ActivityMetric`
+        # uncomment below to create an instance of `ActivityMetricValue`
         """
-        model = ActivityMetric()
+        model = ActivityMetricValue()
         if include_optional:
-            return ActivityMetric(
-                label = '0',
-                value = None,
-                unit = '',
-                color = 'lime'
+            return ActivityMetricValue(
             )
         else:
-            return ActivityMetric(
-                label = '0',
-                value = None,
+            return ActivityMetricValue(
         )
         """
 
-    def testActivityMetric(self):
-        """Test ActivityMetric"""
+    def testActivityMetricValue(self):
+        """Test ActivityMetricValue"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

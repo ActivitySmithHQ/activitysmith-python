@@ -34,6 +34,7 @@ from activitysmith_openapi.exceptions import ApiException
 
 # import models into sdk package
 from activitysmith_openapi.models.activity_metric import ActivityMetric
+from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from activitysmith_openapi.models.alert_payload import AlertPayload
 from activitysmith_openapi.models.bad_request_error import BadRequestError
 from activitysmith_openapi.models.channel_target import ChannelTarget
