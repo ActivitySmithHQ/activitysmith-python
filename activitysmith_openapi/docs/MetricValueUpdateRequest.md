@@ -7,7 +7,6 @@ Latest metric value to display in widgets.
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **value** | [**MetricValueUpdateRequestValue**](MetricValueUpdateRequestValue.md) |  | 
-**timestamp** | **datetime** | Optional ISO timestamp for when the metric value was measured. Defaults to the server receive time. | [optional] 
 
 ## Example
 

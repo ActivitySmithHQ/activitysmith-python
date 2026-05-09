@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class StreamContentState(BaseModel):
     """
-    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, and metrics types.
+    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and stats types.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -39,7 +39,7 @@ class StreamContentState(BaseModel):
     color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
-    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1)]] = Field(default=None, description="Use for metrics activities.")
+    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for metrics and stats activities.")
     auto_dismiss_seconds: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Seconds before the ended Live Activity is dismissed.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Minutes before the ended Live Activity is dismissed.")
     additional_properties: Dict[str, Any] = {}
@@ -51,8 +51,8 @@ class StreamContentState(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics')")
+        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats')")
         return value
 
     @field_validator('color')

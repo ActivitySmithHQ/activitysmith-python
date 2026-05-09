@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
 from activitysmith_openapi.models.metric_value_update_request_value import MetricValueUpdateRequestValue
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,9 +28,8 @@ class MetricValueUpdateRequest(BaseModel):
     Latest metric value to display in widgets.
     """ # noqa: E501
     value: MetricValueUpdateRequestValue
-    timestamp: Optional[datetime] = Field(default=None, description="Optional ISO timestamp for when the metric value was measured. Defaults to the server receive time.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["value", "timestamp"]
+    __properties: ClassVar[List[str]] = ["value"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,8 +92,7 @@ class MetricValueUpdateRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "value": MetricValueUpdateRequestValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
-            "timestamp": obj.get("timestamp")
+            "value": MetricValueUpdateRequestValue.from_dict(obj["value"]) if obj.get("value") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

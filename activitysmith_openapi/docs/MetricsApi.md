@@ -85,7 +85,7 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | Metric value updated |  -  |
-**400** | Bad request (invalid key, value, or timestamp) |  -  |
+**400** | Bad request (invalid key or value) |  -  |
 **404** | Metric not found |  -  |
 **429** | Rate limit exceeded |  -  |
 

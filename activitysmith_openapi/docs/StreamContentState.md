@@ -1,6 +1,6 @@
 # StreamContentState
 
-Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, and metrics types.
+Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and stats types.
 
 ## Properties
 
@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **color** | **str** | Optional. Accent color for the Live Activity. Defaults to blue. | [optional] [default to 'blue']
 **step_color** | **str** | Optional. Overrides color for the current step. Only applies to segmented_progress. | [optional] 
 **step_colors** | **List[str]** | Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step. | [optional] 
-**metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for metrics activities. | [optional] 
+**metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for metrics and stats activities. | [optional] 
 **auto_dismiss_seconds** | **int** | Optional. Seconds before the ended Live Activity is dismissed. | [optional] 
 **auto_dismiss_minutes** | **int** | Optional. Minutes before the ended Live Activity is dismissed. | [optional] 
 

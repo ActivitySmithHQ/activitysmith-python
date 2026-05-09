@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class ContentStateEnd(BaseModel):
     """
-    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
+    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -35,7 +35,7 @@ class ContentStateEnd(BaseModel):
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
-    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1)]] = Field(default=None, description="Use for type=metrics.")
+    metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for type=metrics or type=stats.")
     type: Optional[StrictStr] = Field(default=None, description="Optional. When omitted, the API uses the existing Live Activity type.")
     color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
@@ -50,8 +50,8 @@ class ContentStateEnd(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics')")
+        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats')")
         return value
 
     @field_validator('color')

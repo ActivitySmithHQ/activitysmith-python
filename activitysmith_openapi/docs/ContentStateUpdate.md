@@ -1,6 +1,6 @@
 # ContentStateUpdate
 
-Update payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics include a non-empty metrics array. Type is optional when updating an existing activity. You can increase or decrease number_of_steps during updates.
+Update payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. Type is optional when updating an existing activity. You can increase or decrease number_of_steps during updates.
 
 ## Properties
 
@@ -13,7 +13,7 @@ Name | Type | Description | Notes
 **percentage** | **float** | Progress percentage (0–100). Use for type&#x3D;progress. Takes precedence over value/upper_limit if both are provided. | [optional] 
 **value** | **float** | Current progress value. Use with upper_limit for type&#x3D;progress. | [optional] 
 **upper_limit** | **float** | Maximum progress value. Use with value for type&#x3D;progress. | [optional] 
-**metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for type&#x3D;metrics. | [optional] 
+**metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for type&#x3D;metrics or type&#x3D;stats. | [optional] 
 **type** | **str** | Optional. When omitted, the API uses the existing Live Activity type. | [optional] 
 **color** | **str** | Optional. Accent color for the Live Activity. Defaults to blue. | [optional] [default to 'blue']
 **step_color** | **str** | Optional. Overrides color for the current step. Only applies to type&#x3D;segmented_progress. | [optional] 
