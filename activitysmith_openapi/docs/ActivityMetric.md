@@ -6,8 +6,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **label** | **str** |  | 
-**value** | **float** |  | 
+**value** | [**ActivityMetricValue**](ActivityMetricValue.md) |  | 
 **unit** | **str** |  | [optional] 
+**color** | **str** | Optional per-metric accent color for metrics and stats activities. | [optional] 
 
 ## Example
 

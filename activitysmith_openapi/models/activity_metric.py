@@ -17,9 +17,10 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional, Union
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
+from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,10 +29,21 @@ class ActivityMetric(BaseModel):
     ActivityMetric
     """ # noqa: E501
     label: Annotated[str, Field(min_length=1, strict=True)]
-    value: Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]
+    value: ActivityMetricValue
     unit: Optional[StrictStr] = None
+    color: Optional[StrictStr] = Field(default=None, description="Optional per-metric accent color for metrics and stats activities.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["label", "value", "unit"]
+    __properties: ClassVar[List[str]] = ["label", "value", "unit", "color"]
+
+    @field_validator('color')
+    def color_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
+            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,6 +86,9 @@ class ActivityMetric(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of value
+        if self.value:
+            _dict['value'] = self.value.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -92,8 +107,9 @@ class ActivityMetric(BaseModel):
 
         _obj = cls.model_validate({
             "label": obj.get("label"),
-            "value": obj.get("value"),
-            "unit": obj.get("unit")
+            "value": ActivityMetricValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
+            "unit": obj.get("unit"),
+            "color": obj.get("color")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():
