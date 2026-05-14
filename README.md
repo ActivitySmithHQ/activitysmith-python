@@ -171,21 +171,19 @@ not want to store `activity_id` between runs.
 ```python
 status = activitysmith.live_activities.stream(
     "sales-hourly",
-    {
-        "content_state": {
-            "title": "Sales",
-            "subtitle": "last hour",
-            "type": "stats",
-            "metrics": [
-                metric(label="Revenue", value="$2430", color="blue"),
-                metric(label="Orders", value="37", color="green"),
-                metric(label="Conversion", value="4.8%", color="magenta"),
-                metric(label="Avg Order", value="$65.68", color="yellow"),
-                metric(label="Refunds", value="$84", color="red"),
-                metric(label="New Buyers", value="18", color="cyan"),
-            ],
-        },
-    },
+    content_state=content_state(
+        title="Sales",
+        subtitle="last hour",
+        type="stats",
+        metrics=[
+            metric(label="Revenue", value="$2430", color="blue"),
+            metric(label="Orders", value="37", color="green"),
+            metric(label="Conversion", value="4.8%", color="magenta"),
+            metric(label="Avg Order", value="$65.68", color="yellow"),
+            metric(label="Refunds", value="$84", color="red"),
+            metric(label="New Buyers", value="18", color="cyan"),
+        ],
+    ),
 )
 ```
 
@@ -198,17 +196,15 @@ status = activitysmith.live_activities.stream(
 ```python
 status = activitysmith.live_activities.stream(
     "prod-web-1",
-    {
-        "content_state": {
-            "title": "Server Health",
-            "subtitle": "prod-web-1",
-            "type": "metrics",
-            "metrics": [
-                metric(label="CPU", value=9, unit="%"),
-                metric(label="MEM", value=45, unit="%"),
-            ],
-        },
-    },
+    content_state=content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type="metrics",
+        metrics=[
+            metric(label="CPU", value=9, unit="%"),
+            metric(label="MEM", value=45, unit="%"),
+        ],
+    ),
 )
 ```
 
@@ -221,15 +217,13 @@ status = activitysmith.live_activities.stream(
 ```python
 activitysmith.live_activities.stream(
     "nightly-backup",
-    {
-        "content_state": {
-            "title": "Nightly Backup",
-            "subtitle": "upload archive",
-            "type": "segmented_progress",
-            "number_of_steps": 3,
-            "current_step": 2,
-        },
-    },
+    content_state=content_state(
+        title="Nightly Backup",
+        subtitle="upload archive",
+        type="segmented_progress",
+        number_of_steps=3,
+        current_step=2,
+    ),
 )
 ```
 
@@ -242,14 +236,12 @@ activitysmith.live_activities.stream(
 ```python
 activitysmith.live_activities.stream(
     "search-reindex",
-    {
-        "content_state": {
-            "title": "Search Reindex",
-            "subtitle": "catalog-v2",
-            "type": "progress",
-            "percentage": 42,
-        },
-    },
+    content_state=content_state(
+        title="Search Reindex",
+        subtitle="catalog-v2",
+        type="progress",
+        percentage=42,
+    ),
 )
 ```
 
@@ -264,13 +256,15 @@ to end the stream with a final state.
 ```python
 activitysmith.live_activities.end_stream(
     "prod-web-1",
-    title="Server Health",
-    subtitle="prod-web-1",
-    type="metrics",
-    metrics=[
-        metric(label="CPU", value=7, unit="%"),
-        metric(label="MEM", value=38, unit="%"),
-    ],
+    content_state=content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type="metrics",
+        metrics=[
+            metric(label="CPU", value=7, unit="%"),
+            metric(label="MEM", value=38, unit="%"),
+        ],
+    ),
 )
 ```
 
@@ -310,12 +304,12 @@ omit `color` to show the label without a dot.
 </p>
 
 ```python
-start = activitysmith.live_activities.start({
-    "content_state": {
-        "title": "Sales",
-        "subtitle": "last hour",
-        "type": "stats",
-        "metrics": [
+start = activitysmith.live_activities.start(
+    content_state=content_state(
+        title="Sales",
+        subtitle="last hour",
+        type="stats",
+        metrics=[
             metric(label="Revenue", value="$2430", color="blue"),
             metric(label="Orders", value="37", color="green"),
             metric(label="Conversion", value="4.8%", color="magenta"),
@@ -323,8 +317,8 @@ start = activitysmith.live_activities.start({
             metric(label="Refunds", value="$84", color="red"),
             metric(label="New Buyers", value="18", color="cyan"),
         ],
-    },
-})
+    ),
+)
 
 activity_id = start.activity_id
 ```
@@ -332,13 +326,13 @@ activity_id = start.activity_id
 #### Update
 
 ```python
-activitysmith.live_activities.update({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "Sales",
-        "subtitle": "last hour",
-        "type": "stats",
-        "metrics": [
+activitysmith.live_activities.update(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Sales",
+        subtitle="last hour",
+        type="stats",
+        metrics=[
             metric(label="Revenue", value="$3180", color="blue"),
             metric(label="Orders", value="51", color="green"),
             metric(label="Conversion", value="5.2%", color="magenta"),
@@ -346,20 +340,20 @@ activitysmith.live_activities.update({
             metric(label="Refunds", value="$126", color="red"),
             metric(label="New Buyers", value="24", color="cyan"),
         ],
-    },
-})
+    ),
+)
 ```
 
 #### End
 
 ```python
-activitysmith.live_activities.end({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "Sales",
-        "subtitle": "last hour",
-        "type": "stats",
-        "metrics": [
+activitysmith.live_activities.end(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Sales",
+        subtitle="last hour",
+        type="stats",
+        metrics=[
             metric(label="Revenue", value="$3460", color="blue"),
             metric(label="Orders", value="58", color="green"),
             metric(label="Conversion", value="5.4%", color="magenta"),
@@ -367,9 +361,9 @@ activitysmith.live_activities.end({
             metric(label="Refunds", value="$92", color="red"),
             metric(label="New Buyers", value="31", color="cyan"),
         ],
-        "auto_dismiss_minutes": 2,
-    },
-})
+        auto_dismiss_minutes=2,
+    ),
+)
 ```
 
 ### Metrics Type
@@ -384,17 +378,17 @@ server health, queue pressure, or database load.
 </p>
 
 ```python
-start = activitysmith.live_activities.start({
-    "content_state": {
-        "title": "Server Health",
-        "subtitle": "prod-web-1",
-        "type": "metrics",
-        "metrics": [
+start = activitysmith.live_activities.start(
+    content_state=content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type="metrics",
+        metrics=[
             metric(label="CPU", value=9, unit="%"),
             metric(label="MEM", value=45, unit="%"),
         ],
-    },
-})
+    ),
+)
 
 activity_id = start.activity_id
 ```
@@ -406,18 +400,18 @@ activity_id = start.activity_id
 </p>
 
 ```python
-activitysmith.live_activities.update({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "Server Health",
-        "subtitle": "prod-web-1",
-        "type": "metrics",
-        "metrics": [
+activitysmith.live_activities.update(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type="metrics",
+        metrics=[
             metric(label="CPU", value=76, unit="%"),
             metric(label="MEM", value=52, unit="%"),
         ],
-    },
-})
+    ),
+)
 ```
 
 #### End
@@ -427,19 +421,19 @@ activitysmith.live_activities.update({
 </p>
 
 ```python
-activitysmith.live_activities.end({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "Server Health",
-        "subtitle": "prod-web-1",
-        "type": "metrics",
-        "metrics": [
+activitysmith.live_activities.end(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type="metrics",
+        metrics=[
             metric(label="CPU", value=7, unit="%"),
             metric(label="MEM", value=38, unit="%"),
         ],
-        "auto_dismiss_minutes": 2,
-    },
-})
+        auto_dismiss_minutes=2,
+    ),
+)
 ```
 
 ### Segmented Progress Type
@@ -456,16 +450,16 @@ workflow changes.
 </p>
 
 ```python
-start = activitysmith.live_activities.start({
-    "content_state": {
-        "title": "Nightly database backup",
-        "subtitle": "create snapshot",
-        "type": "segmented_progress",
-        "number_of_steps": 3,
-        "current_step": 1,
-        "color": "yellow",
-    },
-})
+start = activitysmith.live_activities.start(
+    content_state=content_state(
+        title="Nightly database backup",
+        subtitle="create snapshot",
+        type="segmented_progress",
+        number_of_steps=3,
+        current_step=1,
+        color="yellow",
+    ),
+)
 
 activity_id = start.activity_id
 ```
@@ -477,15 +471,15 @@ activity_id = start.activity_id
 </p>
 
 ```python
-activitysmith.live_activities.update({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "Nightly database backup",
-        "subtitle": "upload archive",
-        "number_of_steps": 3,
-        "current_step": 2,
-    },
-})
+activitysmith.live_activities.update(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Nightly database backup",
+        subtitle="upload archive",
+        number_of_steps=3,
+        current_step=2,
+    ),
+)
 ```
 
 #### End
@@ -495,16 +489,16 @@ activitysmith.live_activities.update({
 </p>
 
 ```python
-activitysmith.live_activities.end({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "Nightly database backup",
-        "subtitle": "verify restore",
-        "number_of_steps": 3,
-        "current_step": 3,
-        "auto_dismiss_minutes": 2,
-    },
-})
+activitysmith.live_activities.end(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Nightly database backup",
+        subtitle="verify restore",
+        number_of_steps=3,
+        current_step=3,
+        auto_dismiss_minutes=2,
+    ),
+)
 ```
 
 ### Progress Type
@@ -520,14 +514,14 @@ numeric range is the clearest signal.
 </p>
 
 ```python
-start = activitysmith.live_activities.start({
-    "content_state": {
-        "title": "EV Charging",
-        "subtitle": "Added 30 mi range",
-        "type": "progress",
-        "percentage": 15,
-    },
-})
+start = activitysmith.live_activities.start(
+    content_state=content_state(
+        title="EV Charging",
+        subtitle="Added 30 mi range",
+        type="progress",
+        percentage=15,
+    ),
+)
 
 activity_id = start.activity_id
 ```
@@ -539,14 +533,14 @@ activity_id = start.activity_id
 </p>
 
 ```python
-activitysmith.live_activities.update({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "EV Charging",
-        "subtitle": "Added 120 mi range",
-        "percentage": 60,
-    },
-})
+activitysmith.live_activities.update(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="EV Charging",
+        subtitle="Added 120 mi range",
+        percentage=60,
+    ),
+)
 ```
 
 #### End
@@ -556,15 +550,15 @@ activitysmith.live_activities.update({
 </p>
 
 ```python
-activitysmith.live_activities.end({
-    "activity_id": activity_id,
-    "content_state": {
-        "title": "EV Charging",
-        "subtitle": "Added 200 mi range",
-        "percentage": 100,
-        "auto_dismiss_minutes": 2,
-    },
-})
+activitysmith.live_activities.end(
+    activity_id=activity_id,
+    content_state=content_state(
+        title="EV Charging",
+        subtitle="Added 200 mi range",
+        percentage=100,
+        auto_dismiss_minutes=2,
+    ),
+)
 ```
 
 ### Live Activity Action
