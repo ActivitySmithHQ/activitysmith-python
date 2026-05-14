@@ -1,6 +1,6 @@
 from importlib.metadata import version
 
-from activitysmith.client import ActivitySmith
+from activitysmith.client import ActivitySmith, action, content_state, metric
 import activitysmith.client as client_module
 
 
@@ -79,6 +79,64 @@ def test_notifications_short_and_legacy_alias(monkeypatch):
     assert client.notifications._api.calls == [
         {"push_notification_request": payload},
         {"push_notification_request": payload},
+    ]
+
+
+def test_notifications_named_fields(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    client.notifications.send(
+        title="New subscription 💸",
+        message="Customer upgraded to Pro plan",
+        channels="sales,customer-success",
+    )
+
+    assert client.notifications._api.calls == [
+        {
+            "push_notification_request": {
+                "title": "New subscription 💸",
+                "message": "Customer upgraded to Pro plan",
+                "target": {"channels": ["sales", "customer-success"]},
+            }
+        },
+    ]
+
+
+def test_push_action_helper(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    client.notifications.send(
+        title="New subscription 💸",
+        actions=[
+            action(
+                title="Open CRM Profile",
+                type="open_url",
+                url="https://crm.example.com/customers/cus_9f3a1d",
+            )
+        ],
+    )
+
+    assert client.notifications._api.calls == [
+        {
+            "push_notification_request": {
+                "title": "New subscription 💸",
+                "actions": [
+                    {
+                        "title": "Open CRM Profile",
+                        "type": "open_url",
+                        "url": "https://crm.example.com/customers/cus_9f3a1d",
+                    }
+                ],
+            }
+        },
     ]
 
 
@@ -260,6 +318,97 @@ def test_live_activities_support_stats_payloads(monkeypatch):
 
     assert client.live_activities._api.calls == [
         ("start", {"live_activity_start_request": payload}),
+    ]
+
+
+def test_live_activities_build_requests_from_named_fields(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+    metrics = [
+        metric(label="CPU", value=9, unit="%"),
+        client.live_activities.metric(label="MEM", value=45, unit="%"),
+    ]
+    action_payload = action(
+        title="Open Dashboard",
+        type="open_url",
+        url="https://ops.example.com/servers/prod-web-1",
+    )
+    state_payload = content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type=client.live_activities.TYPE_METRICS,
+        metrics=metrics,
+    )
+
+    client.live_activities.start(
+        content_state=state_payload,
+        action=action_payload,
+        channels=["ops"],
+    )
+    client.live_activities.update(
+        activity_id="act-1",
+        title="Server Health",
+        subtitle="prod-web-1",
+        type=client.live_activities.TYPE_METRICS,
+        metrics=metrics,
+    )
+    client.live_activities.end(
+        activity_id="act-1",
+        title="Server Health",
+        subtitle="prod-web-1",
+        type=client.live_activities.TYPE_METRICS,
+        metrics=metrics,
+        auto_dismiss_minutes=2,
+    )
+
+    assert client.live_activities._api.calls == [
+        (
+            "start",
+            {
+                "live_activity_start_request": {
+                    "content_state": {
+                        "title": "Server Health",
+                        "subtitle": "prod-web-1",
+                        "type": client.live_activities.TYPE_METRICS,
+                        "metrics": metrics,
+                    },
+                    "action": action_payload,
+                    "target": {"channels": ["ops"]},
+                }
+            },
+        ),
+        (
+            "update",
+            {
+                "live_activity_update_request": {
+                    "activity_id": "act-1",
+                    "content_state": {
+                        "title": "Server Health",
+                        "subtitle": "prod-web-1",
+                        "type": client.live_activities.TYPE_METRICS,
+                        "metrics": metrics,
+                    },
+                }
+            },
+        ),
+        (
+            "end",
+            {
+                "live_activity_end_request": {
+                    "activity_id": "act-1",
+                    "content_state": {
+                        "title": "Server Health",
+                        "subtitle": "prod-web-1",
+                        "type": client.live_activities.TYPE_METRICS,
+                        "metrics": metrics,
+                        "auto_dismiss_minutes": 2,
+                    },
+                }
+            },
+        ),
     ]
 
 

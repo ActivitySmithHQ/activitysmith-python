@@ -43,7 +43,7 @@ python -m pip install .
 
 ```python
 import os
-from activitysmith import ActivitySmith
+from activitysmith import ActivitySmith, action, content_state, metric
 
 activitysmith = ActivitySmith(
     api_key=os.environ["ACTIVITYSMITH_API_KEY"],
@@ -60,10 +60,8 @@ activitysmith = ActivitySmith(
 
 ```python
 activitysmith.notifications.send(
-    {
-        "title": "New subscription 💸",
-        "message": "Customer upgraded to Pro plan",
-    }
+    title="New subscription 💸",
+    message="Customer upgraded to Pro plan",
 )
 ```
 
@@ -75,12 +73,10 @@ activitysmith.notifications.send(
 
 ```python
 activitysmith.notifications.send(
-    {
-        "title": "Homepage ready",
-        "message": "Your agent finished the redesign.",
-        "media": "https://cdn.example.com/output/homepage-v2.png",
-        "redirection": "https://github.com/acme/web/pull/482",
-    }
+    title="Homepage ready",
+    message="Your agent finished the redesign.",
+    media="https://cdn.example.com/output/homepage-v2.png",
+    redirection="https://github.com/acme/web/pull/482",
 )
 ```
 
@@ -108,28 +104,26 @@ Webhooks are executed by the ActivitySmith backend.
 
 ```python
 activitysmith.notifications.send(
-    {
-        "title": "New subscription 💸",
-        "message": "Customer upgraded to Pro plan",
-        "redirection": "https://crm.example.com/customers/cus_9f3a1d",  # Optional
-        "actions": [  # Optional (max 4)
-            {
-                "title": "Open CRM Profile",
-                "type": "open_url",
-                "url": "https://crm.example.com/customers/cus_9f3a1d",
+    title="New subscription 💸",
+    message="Customer upgraded to Pro plan",
+    redirection="https://crm.example.com/customers/cus_9f3a1d",  # Optional
+    actions=[  # Optional (max 4)
+        action(
+            title="Open CRM Profile",
+            type="open_url",
+            url="https://crm.example.com/customers/cus_9f3a1d",
+        ),
+        action(
+            title="Start Onboarding Workflow",
+            type="webhook",
+            url="https://hooks.example.com/activitysmith/onboarding/start",
+            method="POST",
+            body={
+                "customer_id": "cus_9f3a1d",
+                "plan": "pro",
             },
-            {
-                "title": "Start Onboarding Workflow",
-                "type": "webhook",
-                "url": "https://hooks.example.com/activitysmith/onboarding/start",
-                "method": "POST",
-                "body": {
-                    "customer_id": "cus_9f3a1d",
-                    "plan": "pro",
-                },
-            },
-        ],
-    }
+        ),
+    ],
 )
 ```
 
@@ -183,12 +177,12 @@ status = activitysmith.live_activities.stream(
             "subtitle": "last hour",
             "type": "stats",
             "metrics": [
-                {"label": "Revenue", "value": "$2430", "color": "blue"},
-                {"label": "Orders", "value": "37", "color": "green"},
-                {"label": "Conversion", "value": "4.8%", "color": "magenta"},
-                {"label": "Avg Order", "value": "$65.68", "color": "yellow"},
-                {"label": "Refunds", "value": "$84", "color": "red"},
-                {"label": "New Buyers", "value": "18", "color": "cyan"},
+                metric(label="Revenue", value="$2430", color="blue"),
+                metric(label="Orders", value="37", color="green"),
+                metric(label="Conversion", value="4.8%", color="magenta"),
+                metric(label="Avg Order", value="$65.68", color="yellow"),
+                metric(label="Refunds", value="$84", color="red"),
+                metric(label="New Buyers", value="18", color="cyan"),
             ],
         },
     },
@@ -210,8 +204,8 @@ status = activitysmith.live_activities.stream(
             "subtitle": "prod-web-1",
             "type": "metrics",
             "metrics": [
-                {"label": "CPU", "value": 9, "unit": "%"},
-                {"label": "MEM", "value": 45, "unit": "%"},
+                metric(label="CPU", value=9, unit="%"),
+                metric(label="MEM", value=45, unit="%"),
             ],
         },
     },
@@ -270,17 +264,13 @@ to end the stream with a final state.
 ```python
 activitysmith.live_activities.end_stream(
     "prod-web-1",
-    {
-        "content_state": {
-            "title": "Server Health",
-            "subtitle": "prod-web-1",
-            "type": "metrics",
-            "metrics": [
-                {"label": "CPU", "value": 7, "unit": "%"},
-                {"label": "MEM", "value": 38, "unit": "%"},
-            ],
-        },
-    },
+    title="Server Health",
+    subtitle="prod-web-1",
+    type="metrics",
+    metrics=[
+        metric(label="CPU", value=7, unit="%"),
+        metric(label="MEM", value=38, unit="%"),
+    ],
 )
 ```
 
@@ -307,7 +297,7 @@ Use these methods when you want to manage the Live Activity lifecycle yourself:
 
 ### Stats Type
 
-Keep your key numbers on your Lock Screen. `stats` fits 1 to 8 labeled values,
+Keep your key numbers on your Lock Screen. `stats` fits up to 8 labeled values,
 such as revenue, orders, conversion, uptime, or any other business metric you
 want visible at a glance. Each metric can use a formatted string or number as
 its `value`. Add `color` to a metric to show an accent dot next to its label;
@@ -320,23 +310,21 @@ omit `color` to show the label without a dot.
 </p>
 
 ```python
-start = activitysmith.live_activities.start(
-    {
-        "content_state": {
-            "title": "Sales",
-            "subtitle": "last hour",
-            "type": "stats",
-            "metrics": [
-                {"label": "Revenue", "value": "$2430", "color": "blue"},
-                {"label": "Orders", "value": "37", "color": "green"},
-                {"label": "Conversion", "value": "4.8%", "color": "magenta"},
-                {"label": "Avg Order", "value": "$65.68", "color": "yellow"},
-                {"label": "Refunds", "value": "$84", "color": "red"},
-                {"label": "New Buyers", "value": "18", "color": "cyan"},
-            ],
-        },
-    }
-)
+start = activitysmith.live_activities.start({
+    "content_state": {
+        "title": "Sales",
+        "subtitle": "last hour",
+        "type": "stats",
+        "metrics": [
+            metric(label="Revenue", value="$2430", color="blue"),
+            metric(label="Orders", value="37", color="green"),
+            metric(label="Conversion", value="4.8%", color="magenta"),
+            metric(label="Avg Order", value="$65.68", color="yellow"),
+            metric(label="Refunds", value="$84", color="red"),
+            metric(label="New Buyers", value="18", color="cyan"),
+        ],
+    },
+})
 
 activity_id = start.activity_id
 ```
@@ -344,48 +332,44 @@ activity_id = start.activity_id
 #### Update
 
 ```python
-activitysmith.live_activities.update(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Sales",
-            "subtitle": "last hour",
-            "type": "stats",
-            "metrics": [
-                {"label": "Revenue", "value": "$3180", "color": "blue"},
-                {"label": "Orders", "value": "51", "color": "green"},
-                {"label": "Conversion", "value": "5.2%", "color": "magenta"},
-                {"label": "Avg Order", "value": "$62.35", "color": "yellow"},
-                {"label": "Refunds", "value": "$126", "color": "red"},
-                {"label": "New Buyers", "value": "24", "color": "cyan"},
-            ],
-        },
-    }
-)
+activitysmith.live_activities.update({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "Sales",
+        "subtitle": "last hour",
+        "type": "stats",
+        "metrics": [
+            metric(label="Revenue", value="$3180", color="blue"),
+            metric(label="Orders", value="51", color="green"),
+            metric(label="Conversion", value="5.2%", color="magenta"),
+            metric(label="Avg Order", value="$62.35", color="yellow"),
+            metric(label="Refunds", value="$126", color="red"),
+            metric(label="New Buyers", value="24", color="cyan"),
+        ],
+    },
+})
 ```
 
 #### End
 
 ```python
-activitysmith.live_activities.end(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Sales",
-            "subtitle": "last hour",
-            "type": "stats",
-            "metrics": [
-                {"label": "Revenue", "value": "$3460", "color": "blue"},
-                {"label": "Orders", "value": "58", "color": "green"},
-                {"label": "Conversion", "value": "5.4%", "color": "magenta"},
-                {"label": "Avg Order", "value": "$59.66", "color": "yellow"},
-                {"label": "Refunds", "value": "$92", "color": "red"},
-                {"label": "New Buyers", "value": "31", "color": "cyan"},
-            ],
-            "auto_dismiss_minutes": 2,
-        },
-    }
-)
+activitysmith.live_activities.end({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "Sales",
+        "subtitle": "last hour",
+        "type": "stats",
+        "metrics": [
+            metric(label="Revenue", value="$3460", color="blue"),
+            metric(label="Orders", value="58", color="green"),
+            metric(label="Conversion", value="5.4%", color="magenta"),
+            metric(label="Avg Order", value="$59.66", color="yellow"),
+            metric(label="Refunds", value="$92", color="red"),
+            metric(label="New Buyers", value="31", color="cyan"),
+        ],
+        "auto_dismiss_minutes": 2,
+    },
+})
 ```
 
 ### Metrics Type
@@ -400,19 +384,17 @@ server health, queue pressure, or database load.
 </p>
 
 ```python
-start = activitysmith.live_activities.start(
-    {
-        "content_state": {
-            "title": "Server Health",
-            "subtitle": "prod-web-1",
-            "type": "metrics",
-            "metrics": [
-                {"label": "CPU", "value": 9, "unit": "%"},
-                {"label": "MEM", "value": 45, "unit": "%"},
-            ],
-        },
-    }
-)
+start = activitysmith.live_activities.start({
+    "content_state": {
+        "title": "Server Health",
+        "subtitle": "prod-web-1",
+        "type": "metrics",
+        "metrics": [
+            metric(label="CPU", value=9, unit="%"),
+            metric(label="MEM", value=45, unit="%"),
+        ],
+    },
+})
 
 activity_id = start.activity_id
 ```
@@ -424,20 +406,18 @@ activity_id = start.activity_id
 </p>
 
 ```python
-activitysmith.live_activities.update(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Server Health",
-            "subtitle": "prod-web-1",
-            "type": "metrics",
-            "metrics": [
-                {"label": "CPU", "value": 76, "unit": "%"},
-                {"label": "MEM", "value": 52, "unit": "%"},
-            ],
-        },
-    }
-)
+activitysmith.live_activities.update({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "Server Health",
+        "subtitle": "prod-web-1",
+        "type": "metrics",
+        "metrics": [
+            metric(label="CPU", value=76, unit="%"),
+            metric(label="MEM", value=52, unit="%"),
+        ],
+    },
+})
 ```
 
 #### End
@@ -447,21 +427,19 @@ activitysmith.live_activities.update(
 </p>
 
 ```python
-activitysmith.live_activities.end(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Server Health",
-            "subtitle": "prod-web-1",
-            "type": "metrics",
-            "metrics": [
-                {"label": "CPU", "value": 7, "unit": "%"},
-                {"label": "MEM", "value": 38, "unit": "%"},
-            ],
-            "auto_dismiss_minutes": 2,
-        },
-    }
-)
+activitysmith.live_activities.end({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "Server Health",
+        "subtitle": "prod-web-1",
+        "type": "metrics",
+        "metrics": [
+            metric(label="CPU", value=7, unit="%"),
+            metric(label="MEM", value=38, unit="%"),
+        ],
+        "auto_dismiss_minutes": 2,
+    },
+})
 ```
 
 ### Segmented Progress Type
@@ -478,18 +456,16 @@ workflow changes.
 </p>
 
 ```python
-start = activitysmith.live_activities.start(
-    {
-        "content_state": {
-            "title": "Nightly database backup",
-            "subtitle": "create snapshot",
-            "number_of_steps": 3,
-            "current_step": 1,
-            "type": "segmented_progress",
-            "color": "yellow",
-        },
-    }
-)
+start = activitysmith.live_activities.start({
+    "content_state": {
+        "title": "Nightly database backup",
+        "subtitle": "create snapshot",
+        "type": "segmented_progress",
+        "number_of_steps": 3,
+        "current_step": 1,
+        "color": "yellow",
+    },
+})
 
 activity_id = start.activity_id
 ```
@@ -501,17 +477,15 @@ activity_id = start.activity_id
 </p>
 
 ```python
-activitysmith.live_activities.update(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Nightly database backup",
-            "subtitle": "upload archive",
-            "number_of_steps": 3,
-            "current_step": 2,
-        },
-    }
-)
+activitysmith.live_activities.update({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "Nightly database backup",
+        "subtitle": "upload archive",
+        "number_of_steps": 3,
+        "current_step": 2,
+    },
+})
 ```
 
 #### End
@@ -521,18 +495,16 @@ activitysmith.live_activities.update(
 </p>
 
 ```python
-activitysmith.live_activities.end(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Nightly database backup",
-            "subtitle": "verify restore",
-            "number_of_steps": 3,
-            "current_step": 3,
-            "auto_dismiss_minutes": 2,
-        },
-    }
-)
+activitysmith.live_activities.end({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "Nightly database backup",
+        "subtitle": "verify restore",
+        "number_of_steps": 3,
+        "current_step": 3,
+        "auto_dismiss_minutes": 2,
+    },
+})
 ```
 
 ### Progress Type
@@ -548,16 +520,14 @@ numeric range is the clearest signal.
 </p>
 
 ```python
-start = activitysmith.live_activities.start(
-    {
-        "content_state": {
-            "title": "EV Charging",
-            "subtitle": "Added 30 mi range",
-            "type": "progress",
-            "percentage": 15,
-        }
-    }
-)
+start = activitysmith.live_activities.start({
+    "content_state": {
+        "title": "EV Charging",
+        "subtitle": "Added 30 mi range",
+        "type": "progress",
+        "percentage": 15,
+    },
+})
 
 activity_id = start.activity_id
 ```
@@ -569,16 +539,14 @@ activity_id = start.activity_id
 </p>
 
 ```python
-activitysmith.live_activities.update(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "EV Charging",
-            "subtitle": "Added 120 mi range",
-            "percentage": 60,
-        }
-    }
-)
+activitysmith.live_activities.update({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "EV Charging",
+        "subtitle": "Added 120 mi range",
+        "percentage": 60,
+    },
+})
 ```
 
 #### End
@@ -588,17 +556,15 @@ activitysmith.live_activities.update(
 </p>
 
 ```python
-activitysmith.live_activities.end(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "EV Charging",
-            "subtitle": "Added 200 mi range",
-            "percentage": 100,
-            "auto_dismiss_minutes": 2,
-        }
-    }
-)
+activitysmith.live_activities.end({
+    "activity_id": activity_id,
+    "content_state": {
+        "title": "EV Charging",
+        "subtitle": "Added 200 mi range",
+        "percentage": 100,
+        "auto_dismiss_minutes": 2,
+    },
+})
 ```
 
 ### Live Activity Action
@@ -613,22 +579,20 @@ Just like Actionable Push Notifications, Live Activities can have a button that 
 
 ```python
 start = activitysmith.live_activities.start(
-    {
-        "content_state": {
-            "title": "Server Health",
-            "subtitle": "prod-web-1",
-            "type": "metrics",
-            "metrics": [
-                {"label": "CPU", "value": 76, "unit": "%"},
-                {"label": "MEM", "value": 52, "unit": "%"},
-            ],
-        },
-        "action": {
-            "title": "Open Dashboard",
-            "type": "open_url",
-            "url": "https://ops.example.com/servers/prod-web-1",
-        },
-    }
+    content_state=content_state(
+        title="Server Health",
+        subtitle="prod-web-1",
+        type="metrics",
+        metrics=[
+            metric(label="CPU", value=76, unit="%"),
+            metric(label="MEM", value=52, unit="%"),
+        ],
+    ),
+    action=action(
+        title="Open Dashboard",
+        type="open_url",
+        url="https://ops.example.com/servers/prod-web-1",
+    ),
 )
 
 activity_id = start.activity_id
@@ -642,25 +606,23 @@ activity_id = start.activity_id
 
 ```python
 activitysmith.live_activities.update(
-    {
-        "activity_id": activity_id,
-        "content_state": {
-            "title": "Reindexing product search",
-            "subtitle": "Shard 7 of 12",
-            "number_of_steps": 12,
-            "current_step": 7,
+    activity_id=activity_id,
+    content_state=content_state(
+        title="Reindexing product search",
+        subtitle="Shard 7 of 12",
+        number_of_steps=12,
+        current_step=7,
+    ),
+    action=action(
+        title="Pause Reindex",
+        type="webhook",
+        url="https://ops.example.com/hooks/search/reindex/pause",
+        method="POST",
+        body={
+            "job_id": "reindex-2026-03-19",
+            "requested_by": "activitysmith-python",
         },
-        "action": {
-            "title": "Pause Reindex",
-            "type": "webhook",
-            "url": "https://ops.example.com/hooks/search/reindex/pause",
-            "method": "POST",
-            "body": {
-                "job_id": "reindex-2026-03-19",
-                "requested_by": "activitysmith-python",
-            },
-        },
-    }
+    ),
 )
 ```
 
@@ -670,11 +632,9 @@ Channels are used to target specific team members or devices. Can be used for bo
 
 ```python
 activitysmith.notifications.send(
-    {
-        "title": "New subscription 💸",
-        "message": "Customer upgraded to Pro plan",
-        "channels": ["sales", "customer-success"],  # Optional
-    }
+    title="New subscription 💸",
+    message="Customer upgraded to Pro plan",
+    channels=["sales", "customer-success"],  # Optional
 )
 ```
 
@@ -705,9 +665,7 @@ activitysmith.metrics.update("prod.status", "healthy")
 ```python
 try:
     activitysmith.notifications.send(
-        {
-            "title": "New subscription 💸",
-        }
+        title="New subscription 💸",
     )
 except Exception as err:
     print("Request failed:", err)
