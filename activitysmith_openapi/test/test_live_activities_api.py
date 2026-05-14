@@ -29,7 +29,7 @@ class TestLiveActivitiesApi(unittest.TestCase):
     def test_end_live_activity(self) -> None:
         """Test case for end_live_activity
 
-        End a Live Activity
+        End a Live Activity (legacy manual lifecycle)
         """
         pass
 
@@ -43,21 +43,21 @@ class TestLiveActivitiesApi(unittest.TestCase):
     def test_reconcile_live_activity_stream(self) -> None:
         """Test case for reconcile_live_activity_stream
 
-        Send a stream update
+        Start a new Live Activity or update an existing one
         """
         pass
 
     def test_start_live_activity(self) -> None:
         """Test case for start_live_activity
 
-        Start a Live Activity
+        Start a Live Activity (legacy manual lifecycle)
         """
         pass
 
     def test_update_live_activity(self) -> None:
         """Test case for update_live_activity
 
-        Update a Live Activity
+        Update a Live Activity (legacy manual lifecycle)
         """
         pass
 
