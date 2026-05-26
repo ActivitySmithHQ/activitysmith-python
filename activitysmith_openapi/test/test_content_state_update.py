@@ -45,8 +45,11 @@ class TestContentStateUpdate(unittest.TestCase):
                 metrics = [
                     { }
                     ],
+                message = '0',
+                icon = { },
+                badge = { },
                 type = 'segmented_progress',
-                color = 'blue',
+                color = 'lime',
                 step_color = 'lime',
                 step_colors = [
                     'lime'
