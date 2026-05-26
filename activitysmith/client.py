@@ -10,7 +10,7 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
-SDK_VERSION = "1.4.1"
+SDK_VERSION = "1.4.2"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -122,11 +122,50 @@ def action(
     )
 
 
+def alert_icon(
+    symbol: str,
+    *,
+    color: str | None = None,
+) -> dict[str, Any]:
+    return _compact_dict(
+        {
+            "symbol": symbol,
+            "color": color,
+        }
+    )
+
+
+def alert_badge(
+    title: str,
+    *,
+    color: str | None = None,
+) -> dict[str, Any]:
+    return _compact_dict(
+        {
+            "title": title,
+            "color": color,
+        }
+    )
+
+
+def _normalize_live_activity_content_state(content_state: Any) -> Any:
+    if not isinstance(content_state, dict):
+        return content_state
+
+    normalized = dict(content_state)
+    if normalized.get("type") == "alert":
+        normalized.pop("color", None)
+    return normalized
+
+
 def content_state(
     title: str,
     *,
     type: str | None = None,
     subtitle: str | None = None,
+    message: str | None = None,
+    icon: Any | None = None,
+    badge: Any | None = None,
     metrics: Any | None = None,
     number_of_steps: int | None = None,
     current_step: int | None = None,
@@ -138,11 +177,14 @@ def content_state(
     auto_dismiss_seconds: int | None = None,
     auto_dismiss_minutes: int | None = None,
 ) -> dict[str, Any]:
-    return _compact_dict(
+    state = _compact_dict(
         {
             "title": title,
             "subtitle": subtitle,
             "type": type,
+            "message": message,
+            "icon": icon,
+            "badge": badge,
             "metrics": metrics,
             "number_of_steps": number_of_steps,
             "current_step": current_step,
@@ -155,6 +197,7 @@ def content_state(
             "auto_dismiss_minutes": auto_dismiss_minutes,
         }
     )
+    return _normalize_live_activity_content_state(state)
 
 
 def _build_push_request(
@@ -208,6 +251,7 @@ class LiveActivityColor:
     RED = "red"
     ORANGE = "orange"
     YELLOW = "yellow"
+    GRAY = "gray"
 
 
 def _build_live_activity_request(
@@ -218,6 +262,9 @@ def _build_live_activity_request(
     title: Any | None = None,
     subtitle: Any | None = None,
     type: Any | None = None,
+    message: Any | None = None,
+    icon: Any | None = None,
+    badge: Any | None = None,
     metrics: Any | None = None,
     number_of_steps: Any | None = None,
     current_step: Any | None = None,
@@ -238,6 +285,9 @@ def _build_live_activity_request(
             "title": title,
             "subtitle": subtitle,
             "type": type,
+            "message": message,
+            "icon": icon,
+            "badge": badge,
             "metrics": metrics,
             "number_of_steps": number_of_steps,
             "current_step": current_step,
@@ -250,6 +300,7 @@ def _build_live_activity_request(
             "auto_dismiss_minutes": auto_dismiss_minutes,
         }
     )
+    content_state_fields = _normalize_live_activity_content_state(content_state_fields)
     request_fields = _compact_dict(
         {
             "activity_id": activity_id,
@@ -273,6 +324,7 @@ def _build_live_activity_request(
         )
 
     if content_state is not None:
+        content_state = _normalize_live_activity_content_state(content_state)
         existing_content_state = normalized.get("content_state")
         if existing_content_state is None:
             normalized["content_state"] = content_state
@@ -289,6 +341,9 @@ def _build_live_activity_request(
             normalized["content_state"] = {**existing_content_state, **content_state_fields}
         else:
             raise TypeError("ActivitySmith: content_state must be a dict")
+        normalized["content_state"] = _normalize_live_activity_content_state(
+            normalized["content_state"]
+        )
 
     normalized.update(request_fields)
     return normalized
@@ -337,6 +392,7 @@ class LiveActivitiesResource:
     TYPE_PROGRESS = "progress"
     TYPE_METRICS = "metrics"
     TYPE_STATS = "stats"
+    TYPE_ALERT = "alert"
 
     def __init__(self, api: LiveActivitiesApi) -> None:
         self._api = api
@@ -351,6 +407,22 @@ class LiveActivitiesResource:
     ) -> dict[str, Any]:
         return metric(label, value, unit=unit, color=color)
 
+    @staticmethod
+    def alert_icon(
+        symbol: str,
+        *,
+        color: str | None = None,
+    ) -> dict[str, Any]:
+        return alert_icon(symbol, color=color)
+
+    @staticmethod
+    def alert_badge(
+        title: str,
+        *,
+        color: str | None = None,
+    ) -> dict[str, Any]:
+        return alert_badge(title, color=color)
+
     def start(
         self,
         request: Any | None = None,
@@ -359,6 +431,9 @@ class LiveActivitiesResource:
         title: Any | None = None,
         subtitle: Any | None = None,
         type: Any | None = None,
+        message: Any | None = None,
+        icon: Any | None = None,
+        badge: Any | None = None,
         metrics: Any | None = None,
         number_of_steps: Any | None = None,
         current_step: Any | None = None,
@@ -378,6 +453,9 @@ class LiveActivitiesResource:
             title=title,
             subtitle=subtitle,
             type=type,
+            message=message,
+            icon=icon,
+            badge=badge,
             metrics=metrics,
             number_of_steps=number_of_steps,
             current_step=current_step,
@@ -404,6 +482,9 @@ class LiveActivitiesResource:
         title: Any | None = None,
         subtitle: Any | None = None,
         type: Any | None = None,
+        message: Any | None = None,
+        icon: Any | None = None,
+        badge: Any | None = None,
         metrics: Any | None = None,
         number_of_steps: Any | None = None,
         current_step: Any | None = None,
@@ -421,6 +502,9 @@ class LiveActivitiesResource:
             title=title,
             subtitle=subtitle,
             type=type,
+            message=message,
+            icon=icon,
+            badge=badge,
             metrics=metrics,
             number_of_steps=number_of_steps,
             current_step=current_step,
@@ -442,6 +526,9 @@ class LiveActivitiesResource:
         title: Any | None = None,
         subtitle: Any | None = None,
         type: Any | None = None,
+        message: Any | None = None,
+        icon: Any | None = None,
+        badge: Any | None = None,
         metrics: Any | None = None,
         number_of_steps: Any | None = None,
         current_step: Any | None = None,
@@ -460,6 +547,9 @@ class LiveActivitiesResource:
             title=title,
             subtitle=subtitle,
             type=type,
+            message=message,
+            icon=icon,
+            badge=badge,
             metrics=metrics,
             number_of_steps=number_of_steps,
             current_step=current_step,
@@ -482,6 +572,9 @@ class LiveActivitiesResource:
         title: Any | None = None,
         subtitle: Any | None = None,
         type: Any | None = None,
+        message: Any | None = None,
+        icon: Any | None = None,
+        badge: Any | None = None,
         metrics: Any | None = None,
         number_of_steps: Any | None = None,
         current_step: Any | None = None,
@@ -501,6 +594,9 @@ class LiveActivitiesResource:
             title=title,
             subtitle=subtitle,
             type=type,
+            message=message,
+            icon=icon,
+            badge=badge,
             metrics=metrics,
             number_of_steps=number_of_steps,
             current_step=current_step,
@@ -528,6 +624,9 @@ class LiveActivitiesResource:
         title: Any | None = None,
         subtitle: Any | None = None,
         type: Any | None = None,
+        message: Any | None = None,
+        icon: Any | None = None,
+        badge: Any | None = None,
         metrics: Any | None = None,
         number_of_steps: Any | None = None,
         current_step: Any | None = None,
@@ -546,6 +645,9 @@ class LiveActivitiesResource:
             title=title,
             subtitle=subtitle,
             type=type,
+            message=message,
+            icon=icon,
+            badge=badge,
             metrics=metrics,
             number_of_steps=number_of_steps,
             current_step=current_step,
