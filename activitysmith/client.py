@@ -10,7 +10,7 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
-SDK_VERSION = "1.4.2"
+SDK_VERSION = "1.5.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -149,13 +149,7 @@ def alert_badge(
 
 
 def _normalize_live_activity_content_state(content_state: Any) -> Any:
-    if not isinstance(content_state, dict):
-        return content_state
-
-    normalized = dict(content_state)
-    if normalized.get("type") == "alert":
-        normalized.pop("color", None)
-    return normalized
+    return content_state
 
 
 def content_state(

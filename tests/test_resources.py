@@ -331,7 +331,7 @@ def test_live_activities_support_alert_helpers(monkeypatch):
         title="Reactivation",
         message="Lumen came back after 2 weeks",
         type=client.live_activities.TYPE_ALERT,
-        icon=alert_icon("sparkles", color="yellow"),
+        icon=alert_icon("cloud.sun", color="yellow"),
         badge=alert_badge("Customer", color="magenta"),
         color="red",
     )
@@ -347,7 +347,6 @@ def test_live_activities_support_alert_helpers(monkeypatch):
         color="red",
     )
 
-    assert "color" not in state_payload
     assert client.live_activities._api.calls == [
         (
             "stream",
@@ -358,7 +357,8 @@ def test_live_activities_support_alert_helpers(monkeypatch):
                         "title": "Reactivation",
                         "message": "Lumen came back after 2 weeks",
                         "type": client.live_activities.TYPE_ALERT,
-                        "icon": {"symbol": "sparkles", "color": "yellow"},
+                        "color": "red",
+                        "icon": {"symbol": "cloud.sun", "color": "yellow"},
                         "badge": {"title": "Customer", "color": "magenta"},
                     },
                 },
@@ -373,6 +373,7 @@ def test_live_activities_support_alert_helpers(monkeypatch):
                         "title": "Onboarding",
                         "message": "A customer is stuck at workspace setup",
                         "type": client.live_activities.TYPE_ALERT,
+                        "color": "red",
                         "icon": {"symbol": "person.crop.circle.badge.questionmark"},
                         "badge": {"title": "Customer", "color": "gray"},
                     },

@@ -39,7 +39,14 @@ python -m pip install .
 
 ```python
 import os
-from activitysmith import ActivitySmith, action, content_state, metric
+from activitysmith import (
+    ActivitySmith,
+    action,
+    alert_badge,
+    alert_icon,
+    content_state,
+    metric,
+)
 
 activitysmith = ActivitySmith(
     api_key=os.environ["ACTIVITYSMITH_API_KEY"],
@@ -125,12 +132,13 @@ activitysmith.notifications.send(
 
 ## Live Activities
 
-There are four types of Live Activities:
+There are five types of Live Activities:
 
 - `stats`: best for showing business numbers side by side, such as revenue, sales, new users, conversion, refunds, or any other value you want visible at a glance
 - `metrics`: best for live percentage values that change often, like server CPU, memory usage, disk usage, or error rate
 - `segmented_progress`: best for anything that moves through clear stages, like deployments, onboarding flows, backups, ETL pipelines, migrations, and AI agent runs
 - `progress`: best for tracking real-time progress with percentage, like tasks, backups, migrations, syncs, or uploads
+- `alert`: best for status updates, such as feature adoption, reactivation, onboarding blockers, incidents, escalations, and other operational states
 
 ### Start & Update Live Activity
 
@@ -235,6 +243,37 @@ activitysmith.live_activities.stream(
 )
 ```
 
+#### Alert
+
+<p align="center">
+  <img
+    src="https://cdn.activitysmith.com/features/alert-live-activity.png"
+    alt="Alert Live Activity stream example"
+    width="680"
+  />
+</p>
+
+```python
+activitysmith.live_activities.stream(
+    "customer-ops",
+    content_state=content_state(
+        title="Reactivation",
+        message="Lumen came back after 2 weeks",
+        type="alert",
+        icon=alert_icon("cloud.sun", color="yellow"),
+        badge=alert_badge("Customer", color="magenta"),
+    ),
+)
+```
+
+The `icon.symbol` value is an Apple SF Symbol name. Browse the catalog with one of these tools:
+
+- [ActivitySmith app](https://apps.apple.com/us/app/activitysmith/id6752254835) - Open Settings -> SF Symbols to browse 45 hand-picked icons ready to use
+- [SF Symbols](https://developer.apple.com/sf-symbols/) - Apple's official macOS app
+- [Interactful](https://apps.apple.com/app/interactful/id1528095640) - free third-party iOS app listing all SF Symbols under Foundations -> Iconography
+
+`icon` and `badge` are optional. If you omit either one, that element is not shown in the Live Activity.
+
 ### End Live Activity
 
 Call `end_stream(...)` with the same `stream_key` to dismiss the Live Activity. You can include final values before it is removed. By default, iOS removes the Live Activity after two minutes. Set `auto_dismiss_minutes` to choose a different dismissal time, including `0` for immediate dismissal.
@@ -258,6 +297,7 @@ activitysmith.live_activities.end_stream(
 ### Live Activity Action
 
 Live Activities can include one optional action button. Use it to open a URL from the Live Activity or trigger a backend webhook.
+For alert Live Activities, set `content_state.color` to tint the action button. `icon.color` and `badge.color` only affect the icon and badge.
 
 <p align="center">
   <img
