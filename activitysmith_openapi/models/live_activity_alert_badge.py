@@ -17,33 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
-from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
+from activitysmith_openapi.models.live_activity_color import LiveActivityColor
 from typing import Optional, Set
 from typing_extensions import Self
 
-class ActivityMetric(BaseModel):
+class LiveActivityAlertBadge(BaseModel):
     """
-    ActivityMetric
+    Optional badge for alert Live Activities.
     """ # noqa: E501
-    label: Annotated[str, Field(min_length=1, strict=True)]
-    value: ActivityMetricValue
-    unit: Optional[StrictStr] = None
-    color: Optional[StrictStr] = Field(default=None, description="Optional per-metric accent color for metrics and stats activities.")
+    title: Annotated[str, Field(min_length=1, strict=True)]
+    color: Optional[LiveActivityColor] = Field(default=None, description="Optional badge color.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["label", "value", "unit", "color"]
-
-    @field_validator('color')
-    def color_validate_enum(cls, value):
-        """Validates the enum"""
-        if value is None:
-            return value
-
-        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray']):
-            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray')")
-        return value
+    __properties: ClassVar[List[str]] = ["title", "color"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -63,7 +51,7 @@ class ActivityMetric(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of ActivityMetric from a JSON string"""
+        """Create an instance of LiveActivityAlertBadge from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -86,9 +74,6 @@ class ActivityMetric(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of value
-        if self.value:
-            _dict['value'] = self.value.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -98,7 +83,7 @@ class ActivityMetric(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of ActivityMetric from a dict"""
+        """Create an instance of LiveActivityAlertBadge from a dict"""
         if obj is None:
             return None
 
@@ -106,9 +91,7 @@ class ActivityMetric(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "label": obj.get("label"),
-            "value": ActivityMetricValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
-            "unit": obj.get("unit"),
+            "title": obj.get("title"),
             "color": obj.get("color")
         })
         # store additional fields in additional_properties

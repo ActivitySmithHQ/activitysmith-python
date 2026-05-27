@@ -21,12 +21,14 @@ from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, Stric
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from activitysmith_openapi.models.activity_metric import ActivityMetric
+from activitysmith_openapi.models.live_activity_alert_badge import LiveActivityAlertBadge
+from activitysmith_openapi.models.live_activity_alert_icon import LiveActivityAlertIcon
 from typing import Optional, Set
 from typing_extensions import Self
 
 class StreamContentState(BaseModel):
     """
-    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and stats types.
+    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, stats, and alert types.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -36,14 +38,17 @@ class StreamContentState(BaseModel):
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for progress.")
     type: Optional[StrictStr] = Field(default=None, description="Required on the first PUT or whenever the stream cannot infer the current activity type.")
-    color: Optional[StrictStr] = Field(default='blue', description="Optional. Accent color for the Live Activity. Defaults to blue.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For alert Live Activities, this tints the action button when action is included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for metrics and stats activities.")
+    message: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Required for type=alert.")
+    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon for type=alert.")
+    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge for type=alert.")
     auto_dismiss_seconds: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Seconds before the ended Live Activity is dismissed.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Minutes before the ended Live Activity is dismissed.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "type", "color", "step_color", "step_colors", "metrics", "auto_dismiss_seconds", "auto_dismiss_minutes"]
+    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "type", "color", "step_color", "step_colors", "metrics", "message", "icon", "badge", "auto_dismiss_seconds", "auto_dismiss_minutes"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -51,8 +56,8 @@ class StreamContentState(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats')")
+        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats', 'alert']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats', 'alert')")
         return value
 
     @field_validator('color')
@@ -61,8 +66,8 @@ class StreamContentState(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
-            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
+        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray']):
+            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray')")
         return value
 
     @field_validator('step_color')
@@ -71,8 +76,8 @@ class StreamContentState(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
-            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
+        if value not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray']):
+            raise ValueError("must be one of enum values ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray')")
         return value
 
     @field_validator('step_colors')
@@ -82,8 +87,8 @@ class StreamContentState(BaseModel):
             return value
 
         for i in value:
-            if i not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow']):
-                raise ValueError("each list item must be one of ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow')")
+            if i not in set(['lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray']):
+                raise ValueError("each list item must be one of ('lime', 'green', 'cyan', 'blue', 'purple', 'magenta', 'red', 'orange', 'yellow', 'gray')")
         return value
 
     model_config = ConfigDict(
@@ -134,6 +139,12 @@ class StreamContentState(BaseModel):
                 if _item:
                     _items.append(_item.to_dict())
             _dict['metrics'] = _items
+        # override the default output from pydantic by calling `to_dict()` of icon
+        if self.icon:
+            _dict['icon'] = self.icon.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of badge
+        if self.badge:
+            _dict['badge'] = self.badge.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -159,10 +170,13 @@ class StreamContentState(BaseModel):
             "value": obj.get("value"),
             "upper_limit": obj.get("upper_limit"),
             "type": obj.get("type"),
-            "color": obj.get("color") if obj.get("color") is not None else 'blue',
+            "color": obj.get("color"),
             "step_color": obj.get("step_color"),
             "step_colors": obj.get("step_colors"),
             "metrics": [ActivityMetric.from_dict(_item) for _item in obj["metrics"]] if obj.get("metrics") is not None else None,
+            "message": obj.get("message"),
+            "icon": LiveActivityAlertIcon.from_dict(obj["icon"]) if obj.get("icon") is not None else None,
+            "badge": LiveActivityAlertBadge.from_dict(obj["badge"]) if obj.get("badge") is not None else None,
             "auto_dismiss_seconds": obj.get("auto_dismiss_seconds"),
             "auto_dismiss_minutes": obj.get("auto_dismiss_minutes")
         })

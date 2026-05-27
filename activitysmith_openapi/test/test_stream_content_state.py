@@ -43,7 +43,7 @@ class TestStreamContentState(unittest.TestCase):
                 value = 1.337,
                 upper_limit = 1.337,
                 type = 'segmented_progress',
-                color = 'blue',
+                color = 'lime',
                 step_color = 'lime',
                 step_colors = [
                     'lime'
@@ -51,6 +51,9 @@ class TestStreamContentState(unittest.TestCase):
                 metrics = [
                     { }
                     ],
+                message = '0',
+                icon = { },
+                badge = { },
                 auto_dismiss_seconds = 0,
                 auto_dismiss_minutes = 0
             )
