@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.3.0"
+__version__ = "1.4.2"
 
 # import apis into sdk package
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
@@ -44,6 +44,9 @@ from activitysmith_openapi.models.content_state_update import ContentStateUpdate
 from activitysmith_openapi.models.forbidden_error import ForbiddenError
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
 from activitysmith_openapi.models.live_activity_action_type import LiveActivityActionType
+from activitysmith_openapi.models.live_activity_alert_badge import LiveActivityAlertBadge
+from activitysmith_openapi.models.live_activity_alert_icon import LiveActivityAlertIcon
+from activitysmith_openapi.models.live_activity_color import LiveActivityColor
 from activitysmith_openapi.models.live_activity_end_request import LiveActivityEndRequest
 from activitysmith_openapi.models.live_activity_end_response import LiveActivityEndResponse
 from activitysmith_openapi.models.live_activity_limit_error import LiveActivityLimitError

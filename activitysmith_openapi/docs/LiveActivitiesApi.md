@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 End a Live Activity (legacy manual lifecycle)
 
-Legacy manual lifecycle endpoint. For new integrations, use DELETE /live-activity/stream/{stream_key} to end a managed Live Activity stream. This endpoint remains supported for existing integrations and advanced lifecycle control. Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, and stats activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
+Legacy manual lifecycle endpoint. For new integrations, use DELETE /live-activity/stream/{stream_key} to end a managed Live Activity stream. This endpoint remains supported for existing integrations and advanced lifecycle control. Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, stats, and alert activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start.
 
 ### Example
 
@@ -266,7 +266,7 @@ Name | Type | Description  | Notes
 
 Start a Live Activity (legacy manual lifecycle)
 
-Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, and stats activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
+Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, stats, and alert activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes.
 
 ### Example
 
@@ -349,7 +349,7 @@ Name | Type | Description  | Notes
 
 Update a Live Activity (legacy manual lifecycle)
 
-Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, and stats activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
+Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, stats, and alert activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes.
 
 ### Example
 

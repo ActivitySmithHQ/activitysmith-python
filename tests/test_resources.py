@@ -1,6 +1,6 @@
 from importlib.metadata import version
 
-from activitysmith.client import ActivitySmith, action, content_state, metric
+from activitysmith.client import ActivitySmith, action, alert_badge, alert_icon, content_state, metric
 import activitysmith.client as client_module
 
 
@@ -318,6 +318,68 @@ def test_live_activities_support_stats_payloads(monkeypatch):
 
     assert client.live_activities._api.calls == [
         ("start", {"live_activity_start_request": payload}),
+    ]
+
+
+def test_live_activities_support_alert_helpers(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+    state_payload = content_state(
+        title="Reactivation",
+        message="Lumen came back after 2 weeks",
+        type=client.live_activities.TYPE_ALERT,
+        icon=alert_icon("cloud.sun", color="yellow"),
+        badge=alert_badge("Customer", color="magenta"),
+        color="red",
+    )
+
+    client.live_activities.stream("customer-ops", content_state=state_payload)
+    client.live_activities.update(
+        activity_id="act-1",
+        title="Onboarding",
+        message="A customer is stuck at workspace setup",
+        type=client.live_activities.TYPE_ALERT,
+        icon=client.live_activities.alert_icon("person.crop.circle.badge.questionmark"),
+        badge=client.live_activities.alert_badge("Customer", color="gray"),
+        color="red",
+    )
+
+    assert client.live_activities._api.calls == [
+        (
+            "stream",
+            {
+                "stream_key": "customer-ops",
+                "live_activity_stream_request": {
+                    "content_state": {
+                        "title": "Reactivation",
+                        "message": "Lumen came back after 2 weeks",
+                        "type": client.live_activities.TYPE_ALERT,
+                        "color": "red",
+                        "icon": {"symbol": "cloud.sun", "color": "yellow"},
+                        "badge": {"title": "Customer", "color": "magenta"},
+                    },
+                },
+            },
+        ),
+        (
+            "update",
+            {
+                "live_activity_update_request": {
+                    "activity_id": "act-1",
+                    "content_state": {
+                        "title": "Onboarding",
+                        "message": "A customer is stuck at workspace setup",
+                        "type": client.live_activities.TYPE_ALERT,
+                        "color": "red",
+                        "icon": {"symbol": "person.crop.circle.badge.questionmark"},
+                        "badge": {"title": "Customer", "color": "gray"},
+                    },
+                }
+            },
+        ),
     ]
 
 
