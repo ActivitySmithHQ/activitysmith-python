@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class LiveActivityAlertBadge(BaseModel):
     """
-    Optional badge for alert Live Activities.
+    Optional badge for Alert Live Activities.
     """ # noqa: E501
     title: Annotated[str, Field(min_length=1, strict=True)]
     color: Optional[LiveActivityColor] = Field(default=None, description="Optional badge color.")

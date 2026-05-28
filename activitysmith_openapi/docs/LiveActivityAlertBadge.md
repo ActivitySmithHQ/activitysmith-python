@@ -1,6 +1,6 @@
 # LiveActivityAlertBadge
 
-Optional badge for alert Live Activities.
+Optional badge for Alert Live Activities.
 
 ## Properties
 

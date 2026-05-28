@@ -42,7 +42,7 @@ class ContentStateStart(BaseModel):
     icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon for type=alert.")
     badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge for type=alert.")
     type: StrictStr
-    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For alert Live Activities, this tints the action button when action is included.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For Alert Live Activities, this tints the action button when action is included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     additional_properties: Dict[str, Any] = {}

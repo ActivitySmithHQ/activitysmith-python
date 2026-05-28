@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class LiveActivityAlertIcon(BaseModel):
     """
-    Optional SF Symbol icon for alert Live Activities.
+    Optional SF Symbol icon for Alert Live Activities.
     """ # noqa: E501
     symbol: Annotated[str, Field(min_length=1, strict=True)] = Field(description="Apple SF Symbol name.")
     color: Optional[LiveActivityColor] = Field(default=None, description="Optional icon color.")

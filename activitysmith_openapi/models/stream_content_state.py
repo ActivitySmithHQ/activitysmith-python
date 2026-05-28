@@ -38,7 +38,7 @@ class StreamContentState(BaseModel):
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for progress.")
     type: Optional[StrictStr] = Field(default=None, description="Required on the first PUT or whenever the stream cannot infer the current activity type.")
-    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For alert Live Activities, this tints the action button when action is included.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For Alert Live Activities, this tints the action button when action is included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for metrics and stats activities.")
