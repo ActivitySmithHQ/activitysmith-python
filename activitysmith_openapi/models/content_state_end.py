@@ -33,7 +33,7 @@ class ContentStateEnd(BaseModel):
     title: StrictStr
     subtitle: Optional[StrictStr] = None
     number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. Optional on end, and safe to change if the final workflow used more or fewer steps than originally planned.")
-    current_step: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Current step. Use for type=segmented_progress.")
+    current_step: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Current completed step count. Use for type=segmented_progress. Must be less than or equal to number_of_steps when number_of_steps is provided.")
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")

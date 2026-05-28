@@ -38,7 +38,7 @@ class TestStreamContentState(unittest.TestCase):
                 title = '',
                 subtitle = '',
                 number_of_steps = 1,
-                current_step = 1,
+                current_step = 0,
                 percentage = 0,
                 value = 1.337,
                 upper_limit = 1.337,
