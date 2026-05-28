@@ -1,6 +1,6 @@
 # StreamContentState
 
-Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, and stats types.
+Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, stats, and alert types.
 
 ## Properties
 
@@ -14,10 +14,13 @@ Name | Type | Description | Notes
 **value** | **float** | Current progress value. Use with upper_limit for progress. | [optional] 
 **upper_limit** | **float** | Maximum progress value. Use with value for progress. | [optional] 
 **type** | **str** | Required on the first PUT or whenever the stream cannot infer the current activity type. | [optional] 
-**color** | **str** | Optional. Accent color for the Live Activity. Defaults to blue. | [optional] [default to 'blue']
+**color** | **str** | Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For Alert Live Activities, this tints the action button when action is included. | [optional] 
 **step_color** | **str** | Optional. Overrides color for the current step. Only applies to segmented_progress. | [optional] 
 **step_colors** | **List[str]** | Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step. | [optional] 
 **metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for metrics and stats activities. | [optional] 
+**message** | **str** | Required for type&#x3D;alert. | [optional] 
+**icon** | [**LiveActivityAlertIcon**](LiveActivityAlertIcon.md) | Optional SF Symbol icon for type&#x3D;alert. | [optional] 
+**badge** | [**LiveActivityAlertBadge**](LiveActivityAlertBadge.md) | Optional badge for type&#x3D;alert. | [optional] 
 **auto_dismiss_seconds** | **int** | Optional. Seconds before the ended Live Activity is dismissed. | [optional] 
 **auto_dismiss_minutes** | **int** | Optional. Minutes before the ended Live Activity is dismissed. | [optional] 
 
