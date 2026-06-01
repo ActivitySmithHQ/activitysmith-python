@@ -1,6 +1,6 @@
 # ContentStateStart
 
-Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For alert include message, with optional icon and badge. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
+Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For alert include message. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, and segmented_progress. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
 
 ## Properties
 
@@ -15,8 +15,8 @@ Name | Type | Description | Notes
 **upper_limit** | **float** | Maximum progress value. Use with value for type&#x3D;progress. | [optional] 
 **metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for type&#x3D;metrics or type&#x3D;stats. | [optional] 
 **message** | **str** | Required for type&#x3D;alert. | [optional] 
-**icon** | [**LiveActivityAlertIcon**](LiveActivityAlertIcon.md) | Optional SF Symbol icon for type&#x3D;alert. | [optional] 
-**badge** | [**LiveActivityAlertBadge**](LiveActivityAlertBadge.md) | Optional badge for type&#x3D;alert. | [optional] 
+**icon** | [**LiveActivityAlertIcon**](LiveActivityAlertIcon.md) | Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, and stats. | [optional] 
+**badge** | [**LiveActivityAlertBadge**](LiveActivityAlertBadge.md) | Optional badge. Supported by alert, progress, and segmented_progress. | [optional] 
 **type** | **str** |  | 
 **color** | **str** | Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For Alert Live Activities, this tints the action button when action is included. | [optional] 
 **step_color** | **str** | Optional. Overrides color for the current step. Only applies to type&#x3D;segmented_progress. | [optional] 

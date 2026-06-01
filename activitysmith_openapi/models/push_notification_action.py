@@ -17,9 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
 from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
 from activitysmith_openapi.models.push_notification_webhook_method import PushNotificationWebhookMethod
 from typing import Optional, Set
@@ -31,18 +30,11 @@ class PushNotificationAction(BaseModel):
     """ # noqa: E501
     title: StrictStr = Field(description="Button title displayed in iOS expanded notification UI.")
     type: PushNotificationActionType
-    url: Annotated[str, Field(strict=True)] = Field(description="HTTPS URL. For open_url it is opened in browser. For webhook it is called by ActivitySmith backend.")
+    url: StrictStr = Field(description="Action URL. For open_url, use an HTTPS or shortcuts:// URL. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
     method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
     body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "type", "url", "method", "body"]
-
-    @field_validator('url')
-    def url_validate_regular_expression(cls, value):
-        """Validates the regular expression"""
-        if not re.match(r"^https:\/\/", value):
-            raise ValueError(r"must validate the regular expression /^https:\/\//")
-        return value
+    __properties: ClassVar[List[str]] = []
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -102,11 +94,6 @@ class PushNotificationAction(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "title": obj.get("title"),
-            "type": obj.get("type"),
-            "url": obj.get("url"),
-            "method": obj.get("method") if obj.get("method") is not None else PushNotificationWebhookMethod.POST,
-            "body": obj.get("body")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

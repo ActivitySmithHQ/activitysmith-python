@@ -37,7 +37,7 @@ class TestLiveActivityAction(unittest.TestCase):
             return LiveActivityAction(
                 title = '',
                 type = 'open_url',
-                url = 'https:/',
+                url = '',
                 method = 'POST',
                 body = { }
             )
@@ -45,7 +45,7 @@ class TestLiveActivityAction(unittest.TestCase):
             return LiveActivityAction(
                 title = '',
                 type = 'open_url',
-                url = 'https:/',
+                url = '',
         )
         """
 

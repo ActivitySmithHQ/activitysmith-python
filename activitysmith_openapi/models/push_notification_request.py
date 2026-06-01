@@ -33,7 +33,7 @@ class PushNotificationRequest(BaseModel):
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
     media: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If `redirection` is omitted, tapping the notification opens this URL. Cannot be combined with `actions`.")
-    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL opened when user taps the notification body. Overrides the default tap target from `media` when both are provided.")
+    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS or shortcuts:// URL opened when user taps the notification body. Overrides the default tap target from `media` when both are provided.")
     actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
     payload: Optional[Dict[str, Any]] = None
     badge: Optional[StrictInt] = None
@@ -58,8 +58,8 @@ class PushNotificationRequest(BaseModel):
         if value is None:
             return value
 
-        if not re.match(r"^https:\/\/", value):
-            raise ValueError(r"must validate the regular expression /^https:\/\//")
+        if not re.match(r"^(https|shortcuts):\/\/", value):
+            raise ValueError(r"must validate the regular expression /^(https|shortcuts):\/\//")
         return value
 
     model_config = ConfigDict(

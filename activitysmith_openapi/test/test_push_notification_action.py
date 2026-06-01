@@ -37,7 +37,7 @@ class TestPushNotificationAction(unittest.TestCase):
             return PushNotificationAction(
                 title = '',
                 type = 'open_url',
-                url = 'https:/',
+                url = '',
                 method = 'POST',
                 body = { }
             )
@@ -45,7 +45,7 @@ class TestPushNotificationAction(unittest.TestCase):
             return PushNotificationAction(
                 title = '',
                 type = 'open_url',
-                url = 'https:/',
+                url = '',
         )
         """
 
