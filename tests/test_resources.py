@@ -119,7 +119,7 @@ def test_push_action_helper(monkeypatch):
             action(
                 title="Open CRM Profile",
                 type="open_url",
-                url="https://crm.example.com/customers/cus_9f3a1d",
+                url="shortcuts://run-shortcut?name=Open%20CRM",
             )
         ],
     )
@@ -132,7 +132,7 @@ def test_push_action_helper(monkeypatch):
                     {
                         "title": "Open CRM Profile",
                         "type": "open_url",
-                        "url": "https://crm.example.com/customers/cus_9f3a1d",
+                        "url": "shortcuts://run-shortcut?name=Open%20CRM",
                     }
                 ],
             }
@@ -170,9 +170,19 @@ def test_notifications_preserve_media_and_redirection(monkeypatch):
     }
 
     client.notifications.send(payload)
+    client.notifications.send(
+        title="Run Shortcut",
+        redirection="shortcuts://run-shortcut?name=Jarvis",
+    )
 
     assert client.notifications._api.calls == [
         {"push_notification_request": payload},
+        {
+            "push_notification_request": {
+                "title": "Run Shortcut",
+                "redirection": "shortcuts://run-shortcut?name=Jarvis",
+            }
+        },
     ]
 
 
@@ -383,6 +393,68 @@ def test_live_activities_support_alert_helpers(monkeypatch):
     ]
 
 
+def test_live_activities_support_icon_and_badge_on_non_alert_types(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    client.live_activities.stream(
+        "prod-web-1",
+        content_state=content_state(
+            title="Server Health",
+            subtitle="prod-web-1",
+            type=client.live_activities.TYPE_METRICS,
+            icon=alert_icon("server.rack", color="blue"),
+            metrics=[metric(label="CPU", value=18, unit="%")],
+        ),
+    )
+    client.live_activities.stream(
+        "nightly-database-backup",
+        content_state=content_state(
+            title="Nightly Database Backup",
+            subtitle="verify restore",
+            type=client.live_activities.TYPE_PROGRESS,
+            badge=alert_badge("S3", color="cyan"),
+            percentage=62,
+        ),
+    )
+
+    assert client.live_activities._api.calls == [
+        (
+            "stream",
+            {
+                "stream_key": "prod-web-1",
+                "live_activity_stream_request": {
+                    "content_state": {
+                        "title": "Server Health",
+                        "subtitle": "prod-web-1",
+                        "type": client.live_activities.TYPE_METRICS,
+                        "icon": {"symbol": "server.rack", "color": "blue"},
+                        "metrics": [{"label": "CPU", "value": 18, "unit": "%"}],
+                    },
+                },
+            },
+        ),
+        (
+            "stream",
+            {
+                "stream_key": "nightly-database-backup",
+                "live_activity_stream_request": {
+                    "content_state": {
+                        "title": "Nightly Database Backup",
+                        "subtitle": "verify restore",
+                        "type": client.live_activities.TYPE_PROGRESS,
+                        "badge": {"title": "S3", "color": "cyan"},
+                        "percentage": 62,
+                    },
+                },
+            },
+        ),
+    ]
+
+
 def test_live_activities_build_requests_from_named_fields(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
@@ -396,7 +468,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
     action_payload = action(
         title="Open Dashboard",
         type="open_url",
-        url="https://ops.example.com/servers/prod-web-1",
+        url="shortcuts://run-shortcut?name=Open%20Dashboard",
     )
     state_payload = content_state(
         title="Server Health",
@@ -563,7 +635,7 @@ def test_live_activities_pass_action_payloads_through(monkeypatch):
         "action": {
             "title": "Open Workflow",
             "type": "open_url",
-            "url": "https://github.com/acme/payments-api/actions/runs/1234567890",
+            "url": "shortcuts://run-shortcut?name=Deploy%20Status",
         },
     }
 
@@ -595,7 +667,7 @@ def test_live_activities_pass_action_payloads_through(monkeypatch):
         "action": {
             "title": "Open Workflow",
             "type": "open_url",
-            "url": "https://github.com/acme/payments-api/actions/runs/1234567890",
+            "url": "shortcuts://run-shortcut?name=Deploy%20Status",
         },
     }
 

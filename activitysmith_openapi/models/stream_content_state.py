@@ -43,8 +43,8 @@ class StreamContentState(BaseModel):
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for metrics and stats activities.")
     message: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Required for type=alert.")
-    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon for type=alert.")
-    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge for type=alert.")
+    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, and stats.")
+    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge. Supported by alert, progress, and segmented_progress.")
     auto_dismiss_seconds: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Seconds before the ended Live Activity is dismissed.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Minutes before the ended Live Activity is dismissed.")
     additional_properties: Dict[str, Any] = {}

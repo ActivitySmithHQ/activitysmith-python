@@ -39,7 +39,7 @@ class TestPushNotificationRequest(unittest.TestCase):
                 message = '',
                 subtitle = '',
                 media = 'https:/',
-                redirection = 'https:/',
+                redirection = 'shortcuts:/',
                 actions = [
                     {
                         'key' : null

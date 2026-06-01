@@ -19,8 +19,8 @@ Name | Type | Description | Notes
 **step_colors** | **List[str]** | Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step. | [optional] 
 **metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for metrics and stats activities. | [optional] 
 **message** | **str** | Required for type&#x3D;alert. | [optional] 
-**icon** | [**LiveActivityAlertIcon**](LiveActivityAlertIcon.md) | Optional SF Symbol icon for type&#x3D;alert. | [optional] 
-**badge** | [**LiveActivityAlertBadge**](LiveActivityAlertBadge.md) | Optional badge for type&#x3D;alert. | [optional] 
+**icon** | [**LiveActivityAlertIcon**](LiveActivityAlertIcon.md) | Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, and stats. | [optional] 
+**badge** | [**LiveActivityAlertBadge**](LiveActivityAlertBadge.md) | Optional badge. Supported by alert, progress, and segmented_progress. | [optional] 
 **auto_dismiss_seconds** | **int** | Optional. Seconds before the ended Live Activity is dismissed. | [optional] 
 **auto_dismiss_minutes** | **int** | Optional. Minutes before the ended Live Activity is dismissed. | [optional] 
 

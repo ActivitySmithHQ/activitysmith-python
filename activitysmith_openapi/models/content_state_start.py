@@ -28,7 +28,7 @@ from typing_extensions import Self
 
 class ContentStateStart(BaseModel):
     """
-    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For alert include message, with optional icon and badge. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
+    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For alert include message. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, and segmented_progress. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -39,8 +39,8 @@ class ContentStateStart(BaseModel):
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for type=metrics or type=stats.")
     message: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Required for type=alert.")
-    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon for type=alert.")
-    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge for type=alert.")
+    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, and stats.")
+    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge. Supported by alert, progress, and segmented_progress.")
     type: StrictStr
     color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For Alert Live Activities, this tints the action button when action is included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")

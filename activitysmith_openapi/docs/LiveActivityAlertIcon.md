@@ -1,6 +1,6 @@
 # LiveActivityAlertIcon
 
-Optional SF Symbol icon for Alert Live Activities.
+Optional SF Symbol icon for Live Activities.
 
 ## Properties
 
