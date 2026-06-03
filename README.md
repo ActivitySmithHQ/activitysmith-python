@@ -104,7 +104,7 @@ What will work:
   <img src="https://cdn.activitysmith.com/features/actionable-push-notifications-2.png" alt="Actionable push notification example" width="680" />
 </p>
 
-Actionable push notifications can open a URL on tap or trigger actions when someone long-presses the notification.
+Push notification `redirection` and `actions` are optional. Use them to open HTTPS URLs, run Apple Shortcuts with `shortcuts://` URLs, or trigger backend webhook workflows.
 Webhooks are executed by the ActivitySmith backend.
 
 ```python
@@ -117,6 +117,11 @@ activitysmith.notifications.send(
             title="Open CRM Profile",
             type="open_url",
             url="https://crm.example.com/customers/cus_9f3a1d",
+        ),
+        action(
+            title="Chat with Jarvis",
+            type="open_url",
+            url="shortcuts://run-shortcut?name=Jarvis",
         ),
         action(
             title="Start Onboarding Workflow",
@@ -290,8 +295,11 @@ activitysmith.live_activities.end_stream(
 
 ### Live Activity Action
 
-Live Activities can include one optional action button. Use it to open a URL from the Live Activity or trigger a backend webhook.
-For Alert Live Activities, set `content_state.color` to tint the action button. `icon.color` and `badge.color` only affect the icon and badge.
+Live Activities can include one optional action button.
+
+- `open_url`: open an HTTPS URL.
+- `open_url` with a `shortcuts://` URL: run an Apple Shortcut, for example to open an app.
+- `webhook`: trigger a backend GET/POST workflow.
 
 <p align="center">
   <img
@@ -316,9 +324,29 @@ activitysmith.live_activities.stream(
         ],
     ),
     action=action(
-        title="Open Dashboard",
+        title="Dashboard",
         type="open_url",
         url="https://ops.example.com/servers/prod-web-1",
+    ),
+)
+```
+
+#### Apple Shortcut action
+
+```python
+activitysmith.live_activities.stream(
+    "deploy-payments-api",
+    content_state=content_state(
+        title="Deploying payments-api",
+        subtitle="Running database migrations",
+        type="segmented_progress",
+        number_of_steps=5,
+        current_step=3,
+    ),
+    action=action(
+        title="Chat with Jarvis",
+        type="open_url",
+        url="shortcuts://run-shortcut?name=Jarvis",
     ),
 )
 ```
