@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr, model_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from activitysmith_openapi.models.live_activity_action_type import LiveActivityActionType
 from activitysmith_openapi.models.live_activity_webhook_method import LiveActivityWebhookMethod
@@ -30,7 +30,7 @@ class LiveActivityAction(BaseModel):
     """ # noqa: E501
     title: StrictStr = Field(description="Button title displayed in the Live Activity UI.")
     type: LiveActivityActionType
-    url: StrictStr = Field(description="Action URL. For open_url, use an HTTPS or shortcuts:// URL. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
+    url: StrictStr = Field(description="Action URL. For open_url, use an HTTPS URL or a shortcuts:// URL that runs an Apple Shortcut. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
     method: Optional[LiveActivityWebhookMethod] = Field(default=LiveActivityWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
     body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
@@ -41,14 +41,6 @@ class LiveActivityAction(BaseModel):
         validate_assignment=True,
         protected_namespaces=(),
     )
-
-    @model_validator(mode="after")
-    def validate_url_for_type(self) -> Self:
-        if self.type == LiveActivityActionType.OPEN_URL and not (self.url.startswith("https://") or self.url.startswith("shortcuts://")):
-            raise ValueError("open_url action url must use https or shortcuts")
-        if self.type == LiveActivityActionType.WEBHOOK and not self.url.startswith("https://"):
-            raise ValueError("webhook action url must use https")
-        return self
 
 
     def to_str(self) -> str:
@@ -109,4 +101,5 @@ class LiveActivityAction(BaseModel):
                 _obj.additional_properties[_key] = obj.get(_key)
 
         return _obj
+
 
