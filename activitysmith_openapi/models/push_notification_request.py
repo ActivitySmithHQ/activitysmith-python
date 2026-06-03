@@ -33,7 +33,7 @@ class PushNotificationRequest(BaseModel):
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
     media: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If `redirection` is omitted, tapping the notification opens this URL. Cannot be combined with `actions`.")
-    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS or shortcuts:// URL opened when user taps the notification body. Overrides the default tap target from `media` when both are provided.")
+    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL or shortcuts://run-shortcut?name=... URL opened when the user taps the notification body. Use shortcuts://run-shortcut?name=... to run a specific iPhone Shortcut that already exists on the user's device. Overrides the default tap target from `media` when both are provided.")
     actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
     payload: Optional[Dict[str, Any]] = None
     badge: Optional[StrictInt] = None
