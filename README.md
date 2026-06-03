@@ -104,7 +104,7 @@ What will work:
   <img src="https://cdn.activitysmith.com/features/actionable-push-notifications-2.png" alt="Actionable push notification example" width="680" />
 </p>
 
-Push notification `redirection` and `actions` are optional. Use them to open HTTPS URLs, run Apple Shortcuts with `shortcuts://` URLs, or trigger backend webhook workflows.
+Push notification `redirection` and `actions` are optional. Use them to open HTTPS URLs, run a specific iPhone Shortcut with `shortcuts://run-shortcut?name=...`, or trigger backend webhook workflows.
 Webhooks are executed by the ActivitySmith backend.
 
 ```python
@@ -298,7 +298,7 @@ activitysmith.live_activities.end_stream(
 Live Activities can include one optional action button.
 
 - `open_url`: open an HTTPS URL.
-- `open_url` with a `shortcuts://` URL: run an Apple Shortcut, for example to open an app.
+- `open_url` with a `shortcuts://run-shortcut?name=...` URL: run a specific iPhone Shortcut, for example to open an app.
 - `webhook`: trigger a backend GET/POST workflow.
 
 <p align="center">
