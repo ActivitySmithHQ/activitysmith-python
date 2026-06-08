@@ -139,10 +139,11 @@ activitysmith.notifications.send(
 
 ## Live Activities
 
-There are five types of Live Activities:
+There are six types of Live Activities:
 
 - `stats`: best for showing business numbers side by side, such as revenue, sales, new users, conversion, refunds, or any other value you want visible at a glance
 - `metrics`: best for live percentage values that change often, like server CPU, memory usage, disk usage, or error rate
+- `timer`: best for countdowns and elapsed timers, like benchmark runs, cooking timers, workouts, soak windows, and long-running jobs
 - `segmented_progress`: best for anything that moves through clear stages, like deployments, onboarding flows, backups, ETL pipelines, migrations, and AI agent runs
 - `progress`: best for tracking real-time progress with percentage, like tasks, backups, migrations, syncs, or uploads
 - `alert`: best for status updates, such as feature adoption, reactivation, onboarding blockers, incidents, escalations, and other operational states
@@ -249,6 +250,25 @@ activitysmith.live_activities.stream(
     ),
 )
 ```
+
+#### Timer
+
+Use `duration_seconds` for a countdown. Omit `counts_down` for the default countdown behavior, or set `counts_down=False` for an elapsed timer.
+
+```python
+activitysmith.live_activities.stream(
+    "benchmark-run",
+    content_state=content_state(
+        title="Benchmark Run",
+        subtitle="sampling performance",
+        type="timer",
+        duration_seconds=300,
+        color="cyan",
+    ),
+)
+```
+
+Later updates can change the title, subtitle, color, icon, or action without resetting the timer. Include `duration_seconds` again only when you want to restart the timer window from that update.
 
 #### Alert
 
@@ -382,7 +402,7 @@ Add more context to Live Activities with icons and badges.
 
 #### Icon
 
-Supported Live Activity types: `stats`, `metrics`, `progress`, `segmented_progress`, and `alert`.
+Supported Live Activity types: `stats`, `metrics`, `progress`, `segmented_progress`, `alert`, and `timer`.
 
 <p align="center">
   <img src="https://cdn.activitysmith.com/features/metrics-live-activity-with-icon.png" alt="Metrics Live Activity with an SF Symbol icon on the iPhone Lock Screen" width="680" />
