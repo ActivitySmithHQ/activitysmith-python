@@ -139,13 +139,14 @@ activitysmith.notifications.send(
 
 ## Live Activities
 
-There are five types of Live Activities:
+There are six types of Live Activities:
 
 - `stats`: best for showing business numbers side by side, such as revenue, sales, new users, conversion, refunds, or any other value you want visible at a glance
 - `metrics`: best for live percentage values that change often, like server CPU, memory usage, disk usage, or error rate
 - `segmented_progress`: best for anything that moves through clear stages, like deployments, onboarding flows, backups, ETL pipelines, migrations, and AI agent runs
 - `progress`: best for tracking real-time progress with percentage, like tasks, backups, migrations, syncs, or uploads
 - `alert`: best for status updates, such as feature adoption, reactivation, onboarding blockers, incidents, escalations, and other operational states
+- `timer`: best for countdowns and elapsed runtime, like benchmark runs, uploads, backups, transcodes, and long-running jobs
 
 ### Start & Update Live Activity
 
@@ -273,6 +274,33 @@ activitysmith.live_activities.stream(
 )
 ```
 
+#### Timer
+
+<p align="center">
+  <img
+    src="https://cdn.activitysmith.com/features/timer-live-activity.png"
+    alt="Timer Live Activity showing a benchmark run countdown"
+    width="680"
+  />
+</p>
+
+```python
+activitysmith.live_activities.stream(
+    "benchmark-run",
+    content_state=content_state(
+        title="Benchmark Run",
+        subtitle="sampling",
+        type="timer",
+        duration_seconds=300,
+        color="cyan",
+    ),
+)
+```
+
+For a countdown, send `duration_seconds`. You can update `title`, `subtitle`, `color`, or any other visible field as the work changes. Leave `duration_seconds` out unless you want to change the timer.
+
+To start at 00:00 and count up, set `counts_down: false` and leave out `duration_seconds`.
+
 ### End Live Activity
 
 Call `end_stream(...)` with the same `stream_key` to dismiss the Live Activity. You can include final values before it is removed. By default, iOS removes the Live Activity after two minutes. Set `auto_dismiss_minutes` to choose a different dismissal time, including `0` for immediate dismissal.
@@ -382,7 +410,7 @@ Add more context to Live Activities with icons and badges.
 
 #### Icon
 
-Supported Live Activity types: `stats`, `metrics`, `progress`, `segmented_progress`, and `alert`.
+Supported Live Activity types: `stats`, `metrics`, `progress`, `segmented_progress`, `alert`, and `timer`.
 
 <p align="center">
   <img src="https://cdn.activitysmith.com/features/metrics-live-activity-with-icon.png" alt="Metrics Live Activity with an SF Symbol icon on the iPhone Lock Screen" width="680" />

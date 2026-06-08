@@ -305,6 +305,62 @@ def test_live_activities_support_progress_payloads(monkeypatch):
     ]
 
 
+def test_live_activities_support_timer_payloads(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    client.live_activities.start(
+        title="Benchmark Run",
+        subtitle="sampling performance",
+        type=client.live_activities.TYPE_TIMER,
+        duration_seconds=300,
+        counts_down=True,
+        color="cyan",
+    )
+    client.live_activities.update(
+        activity_id="act-1",
+        title="Benchmark Run",
+        type=client.live_activities.TYPE_TIMER,
+        subtitle="complete",
+        color="cyan",
+    )
+
+    assert client.live_activities._api.calls == [
+        (
+            "start",
+            {
+                "live_activity_start_request": {
+                    "content_state": {
+                        "title": "Benchmark Run",
+                        "subtitle": "sampling performance",
+                        "type": "timer",
+                        "duration_seconds": 300,
+                        "counts_down": True,
+                        "color": "cyan",
+                    }
+                }
+            },
+        ),
+        (
+            "update",
+            {
+                "live_activity_update_request": {
+                    "activity_id": "act-1",
+                    "content_state": {
+                        "title": "Benchmark Run",
+                        "type": "timer",
+                        "subtitle": "complete",
+                        "color": "cyan",
+                    },
+                }
+            },
+        ),
+    ]
+
+
 def test_live_activities_support_stats_payloads(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)

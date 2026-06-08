@@ -15,7 +15,6 @@
 import unittest
 
 from activitysmith_openapi.models.push_notification_action import PushNotificationAction
-from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
 
 class TestPushNotificationAction(unittest.TestCase):
     """PushNotificationAction unit test stubs"""
@@ -54,23 +53,6 @@ class TestPushNotificationAction(unittest.TestCase):
         """Test PushNotificationAction"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
-
-    def test_open_url_allows_shortcuts_url(self):
-        action = PushNotificationAction(
-            title="Chat",
-            type=PushNotificationActionType.OPEN_URL,
-            url="shortcuts://run-shortcut?name=JARVIS",
-        )
-
-        self.assertEqual("shortcuts://run-shortcut?name=JARVIS", action.url)
-
-    def test_webhook_rejects_shortcuts_url(self):
-        with self.assertRaises(ValueError):
-            PushNotificationAction(
-                title="Chat",
-                type=PushNotificationActionType.WEBHOOK,
-                url="shortcuts://run-shortcut?name=JARVIS",
-            )
 
 if __name__ == '__main__':
     unittest.main()

@@ -10,7 +10,7 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
-SDK_VERSION = "1.6.0"
+SDK_VERSION = "1.7.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -166,6 +166,8 @@ def content_state(
     percentage: int | float | None = None,
     value: int | float | None = None,
     upper_limit: int | float | None = None,
+    duration_seconds: int | float | None = None,
+    counts_down: bool | None = None,
     color: str | None = None,
     step_color: str | None = None,
     auto_dismiss_seconds: int | None = None,
@@ -185,6 +187,8 @@ def content_state(
             "percentage": percentage,
             "value": value,
             "upper_limit": upper_limit,
+            "duration_seconds": duration_seconds,
+            "counts_down": counts_down,
             "color": color,
             "step_color": step_color,
             "auto_dismiss_seconds": auto_dismiss_seconds,
@@ -265,6 +269,8 @@ def _build_live_activity_request(
     percentage: Any | None = None,
     value: Any | None = None,
     upper_limit: Any | None = None,
+    duration_seconds: Any | None = None,
+    counts_down: Any | None = None,
     color: Any | None = None,
     step_color: Any | None = None,
     auto_dismiss_seconds: Any | None = None,
@@ -288,6 +294,8 @@ def _build_live_activity_request(
             "percentage": percentage,
             "value": value,
             "upper_limit": upper_limit,
+            "duration_seconds": duration_seconds,
+            "counts_down": counts_down,
             "color": color,
             "step_color": step_color,
             "auto_dismiss_seconds": auto_dismiss_seconds,
@@ -387,6 +395,7 @@ class LiveActivitiesResource:
     TYPE_METRICS = "metrics"
     TYPE_STATS = "stats"
     TYPE_ALERT = "alert"
+    TYPE_TIMER = "timer"
 
     def __init__(self, api: LiveActivitiesApi) -> None:
         self._api = api
@@ -434,6 +443,8 @@ class LiveActivitiesResource:
         percentage: Any | None = None,
         value: Any | None = None,
         upper_limit: Any | None = None,
+        duration_seconds: Any | None = None,
+        counts_down: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
@@ -456,6 +467,8 @@ class LiveActivitiesResource:
             percentage=percentage,
             value=value,
             upper_limit=upper_limit,
+            duration_seconds=duration_seconds,
+            counts_down=counts_down,
             color=color,
             step_color=step_color,
             action=action,
@@ -485,6 +498,8 @@ class LiveActivitiesResource:
         percentage: Any | None = None,
         value: Any | None = None,
         upper_limit: Any | None = None,
+        duration_seconds: Any | None = None,
+        counts_down: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
@@ -505,6 +520,8 @@ class LiveActivitiesResource:
             percentage=percentage,
             value=value,
             upper_limit=upper_limit,
+            duration_seconds=duration_seconds,
+            counts_down=counts_down,
             color=color,
             step_color=step_color,
             action=action,
@@ -529,6 +546,8 @@ class LiveActivitiesResource:
         percentage: Any | None = None,
         value: Any | None = None,
         upper_limit: Any | None = None,
+        duration_seconds: Any | None = None,
+        counts_down: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         auto_dismiss_minutes: Any | None = None,
@@ -550,6 +569,8 @@ class LiveActivitiesResource:
             percentage=percentage,
             value=value,
             upper_limit=upper_limit,
+            duration_seconds=duration_seconds,
+            counts_down=counts_down,
             color=color,
             step_color=step_color,
             auto_dismiss_minutes=auto_dismiss_minutes,
@@ -575,6 +596,8 @@ class LiveActivitiesResource:
         percentage: Any | None = None,
         value: Any | None = None,
         upper_limit: Any | None = None,
+        duration_seconds: Any | None = None,
+        counts_down: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
@@ -597,6 +620,8 @@ class LiveActivitiesResource:
             percentage=percentage,
             value=value,
             upper_limit=upper_limit,
+            duration_seconds=duration_seconds,
+            counts_down=counts_down,
             color=color,
             step_color=step_color,
             action=action,
@@ -627,6 +652,8 @@ class LiveActivitiesResource:
         percentage: Any | None = None,
         value: Any | None = None,
         upper_limit: Any | None = None,
+        duration_seconds: Any | None = None,
+        counts_down: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         auto_dismiss_minutes: Any | None = None,
@@ -648,6 +675,8 @@ class LiveActivitiesResource:
             percentage=percentage,
             value=value,
             upper_limit=upper_limit,
+            duration_seconds=duration_seconds,
+            counts_down=counts_down,
             color=color,
             step_color=step_color,
             auto_dismiss_minutes=auto_dismiss_minutes,
