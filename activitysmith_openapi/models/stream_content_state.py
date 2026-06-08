@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictFloat, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
 from activitysmith_openapi.models.activity_metric import ActivityMetric
@@ -28,7 +28,7 @@ from typing_extensions import Self
 
 class StreamContentState(BaseModel):
     """
-    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, stats, and alert types.
+    Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, stats, alert, and timer types. For timer, send duration_seconds to start or reset a bounded timer; omit duration_seconds on later updates to preserve the existing timer window.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
@@ -37,18 +37,21 @@ class StreamContentState(BaseModel):
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Use for progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for progress.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for progress.")
+    duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Timer duration in seconds. For type=timer, send duration_seconds to start or reset the timer window; omit it on later stream updates to preserve the existing timer window.")
+    counts_down: Optional[StrictBool] = Field(default=True, description="Use with type=timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer.")
+    is_running: Optional[StrictBool] = Field(default=True, description="Use with type=timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume.")
     type: Optional[StrictStr] = Field(default=None, description="Required on the first PUT or whenever the stream cannot infer the current activity type.")
-    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, and metrics Live Activities. For Alert Live Activities, this tints the action button when action is included.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints the action button when action is included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for metrics and stats activities.")
     message: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Required for type=alert.")
-    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, and stats.")
+    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, stats, and timer.")
     badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge. Supported by alert, progress, and segmented_progress.")
     auto_dismiss_seconds: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Seconds before the ended Live Activity is dismissed.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Optional. Minutes before the ended Live Activity is dismissed.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "type", "color", "step_color", "step_colors", "metrics", "message", "icon", "badge", "auto_dismiss_seconds", "auto_dismiss_minutes"]
+    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "duration_seconds", "counts_down", "is_running", "type", "color", "step_color", "step_colors", "metrics", "message", "icon", "badge", "auto_dismiss_seconds", "auto_dismiss_minutes"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -56,8 +59,8 @@ class StreamContentState(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats', 'alert']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats', 'alert')")
+        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats', 'alert', 'timer']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats', 'alert', 'timer')")
         return value
 
     @field_validator('color')
@@ -169,6 +172,9 @@ class StreamContentState(BaseModel):
             "percentage": obj.get("percentage"),
             "value": obj.get("value"),
             "upper_limit": obj.get("upper_limit"),
+            "duration_seconds": obj.get("duration_seconds"),
+            "counts_down": obj.get("counts_down") if obj.get("counts_down") is not None else True,
+            "is_running": obj.get("is_running") if obj.get("is_running") is not None else True,
             "type": obj.get("type"),
             "color": obj.get("color"),
             "step_color": obj.get("step_color"),

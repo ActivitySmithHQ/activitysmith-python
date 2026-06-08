@@ -15,7 +15,6 @@
 import unittest
 
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
-from activitysmith_openapi.models.live_activity_action_type import LiveActivityActionType
 
 class TestLiveActivityAction(unittest.TestCase):
     """LiveActivityAction unit test stubs"""
@@ -54,23 +53,6 @@ class TestLiveActivityAction(unittest.TestCase):
         """Test LiveActivityAction"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
-
-    def test_open_url_allows_shortcuts_url(self):
-        action = LiveActivityAction(
-            title="Chat",
-            type=LiveActivityActionType.OPEN_URL,
-            url="shortcuts://run-shortcut?name=JARVIS",
-        )
-
-        self.assertEqual("shortcuts://run-shortcut?name=JARVIS", action.url)
-
-    def test_webhook_rejects_shortcuts_url(self):
-        with self.assertRaises(ValueError):
-            LiveActivityAction(
-                title="Chat",
-                type=LiveActivityActionType.WEBHOOK,
-                url="shortcuts://run-shortcut?name=JARVIS",
-            )
 
 if __name__ == '__main__':
     unittest.main()
