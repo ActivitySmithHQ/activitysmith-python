@@ -37,6 +37,7 @@ class TestLiveActivityStreamDeleteRequest(unittest.TestCase):
             return LiveActivityStreamDeleteRequest(
                 content_state = { },
                 action = { },
+                secondary_action = { },
                 alert = { }
             )
         else:

@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from activitysmith_openapi.models.content_state_end import ContentStateEnd
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
@@ -31,8 +31,9 @@ class LiveActivityEndRequest(BaseModel):
     activity_id: StrictStr
     content_state: ContentStateEnd
     action: Optional[LiveActivityAction] = None
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported only for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["activity_id", "content_state", "action"]
+    __properties: ClassVar[List[str]] = ["activity_id", "content_state", "action", "secondary_action"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +82,9 @@ class LiveActivityEndRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of action
         if self.action:
             _dict['action'] = self.action.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of secondary_action
+        if self.secondary_action:
+            _dict['secondary_action'] = self.secondary_action.to_dict()
         # puts key-value pairs in additional_properties in the top level
         if self.additional_properties is not None:
             for _key, _value in self.additional_properties.items():
@@ -100,7 +104,8 @@ class LiveActivityEndRequest(BaseModel):
         _obj = cls.model_validate({
             "activity_id": obj.get("activity_id"),
             "content_state": ContentStateEnd.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
-            "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None
+            "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
+            "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

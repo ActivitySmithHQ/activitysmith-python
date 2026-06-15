@@ -37,6 +37,7 @@ class TestLiveActivityStreamRequest(unittest.TestCase):
             return LiveActivityStreamRequest(
                 content_state = { },
                 action = { },
+                secondary_action = { },
                 alert = { },
                 channels = [
                     ''

@@ -37,7 +37,8 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
             return LiveActivityUpdateRequest(
                 activity_id = '',
                 content_state = { },
-                action = { }
+                action = { },
+                secondary_action = { }
             )
         else:
             return LiveActivityUpdateRequest(

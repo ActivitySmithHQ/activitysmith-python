@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
 from activitysmith_openapi.models.alert_payload import AlertPayload
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
@@ -31,9 +31,10 @@ class LiveActivityStreamDeleteRequest(BaseModel):
     """ # noqa: E501
     content_state: Optional[StreamContentState] = None
     action: Optional[LiveActivityAction] = None
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported only for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["content_state", "action", "alert"]
+    __properties: ClassVar[List[str]] = ["content_state", "action", "secondary_action", "alert"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -82,6 +83,9 @@ class LiveActivityStreamDeleteRequest(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of action
         if self.action:
             _dict['action'] = self.action.to_dict()
+        # override the default output from pydantic by calling `to_dict()` of secondary_action
+        if self.secondary_action:
+            _dict['secondary_action'] = self.secondary_action.to_dict()
         # override the default output from pydantic by calling `to_dict()` of alert
         if self.alert:
             _dict['alert'] = self.alert.to_dict()
@@ -104,6 +108,7 @@ class LiveActivityStreamDeleteRequest(BaseModel):
         _obj = cls.model_validate({
             "content_state": StreamContentState.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
             "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
+            "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None,
             "alert": AlertPayload.from_dict(obj["alert"]) if obj.get("alert") is not None else None
         })
         # store additional fields in additional_properties
