@@ -276,6 +276,7 @@ def _build_live_activity_request(
     auto_dismiss_seconds: Any | None = None,
     auto_dismiss_minutes: Any | None = None,
     action: Any | None = None,
+    secondary_action: Any | None = None,
     alert: Any | None = None,
     target: Any | None = None,
     channels: Any | None = None,
@@ -307,6 +308,7 @@ def _build_live_activity_request(
         {
             "activity_id": activity_id,
             "action": action,
+            "secondary_action": secondary_action,
             "alert": alert,
             "target": target,
             "channels": channels,
@@ -448,6 +450,7 @@ class LiveActivitiesResource:
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
+        secondary_action: Any | None = None,
         alert: Any | None = None,
         target: Any | None = None,
         channels: Any | None = None,
@@ -472,6 +475,7 @@ class LiveActivitiesResource:
             color=color,
             step_color=step_color,
             action=action,
+            secondary_action=secondary_action,
             alert=alert,
             target=target,
             channels=channels,
@@ -503,6 +507,7 @@ class LiveActivitiesResource:
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
+        secondary_action: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -525,6 +530,7 @@ class LiveActivitiesResource:
             color=color,
             step_color=step_color,
             action=action,
+            secondary_action=secondary_action,
         )
         return self._api.update_live_activity(live_activity_update_request=request)
 
@@ -552,6 +558,7 @@ class LiveActivitiesResource:
         step_color: Any | None = None,
         auto_dismiss_minutes: Any | None = None,
         action: Any | None = None,
+        secondary_action: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -575,6 +582,7 @@ class LiveActivitiesResource:
             step_color=step_color,
             auto_dismiss_minutes=auto_dismiss_minutes,
             action=action,
+            secondary_action=secondary_action,
         )
         return self._api.end_live_activity(live_activity_end_request=request)
 
@@ -601,6 +609,7 @@ class LiveActivitiesResource:
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
+        secondary_action: Any | None = None,
         alert: Any | None = None,
         target: Any | None = None,
         channels: Any | None = None,
@@ -625,6 +634,7 @@ class LiveActivitiesResource:
             color=color,
             step_color=step_color,
             action=action,
+            secondary_action=secondary_action,
             alert=alert,
             target=target,
             channels=channels,
@@ -658,6 +668,7 @@ class LiveActivitiesResource:
         step_color: Any | None = None,
         auto_dismiss_minutes: Any | None = None,
         action: Any | None = None,
+        secondary_action: Any | None = None,
         alert: Any | None = None,
     ):
         request = _build_live_activity_request(
@@ -681,6 +692,7 @@ class LiveActivitiesResource:
             step_color=step_color,
             auto_dismiss_minutes=auto_dismiss_minutes,
             action=action,
+            secondary_action=secondary_action,
             alert=alert,
         )
         return self._api.end_live_activity_stream(
