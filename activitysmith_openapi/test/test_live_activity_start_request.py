@@ -37,6 +37,7 @@ class TestLiveActivityStartRequest(unittest.TestCase):
             return LiveActivityStartRequest(
                 content_state = { },
                 action = { },
+                secondary_action = { },
                 alert = { },
                 target = { }
             )

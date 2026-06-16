@@ -41,7 +41,7 @@ class StreamContentState(BaseModel):
     counts_down: Optional[StrictBool] = Field(default=True, description="Use with type=timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer.")
     is_running: Optional[StrictBool] = Field(default=True, description="Use with type=timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume.")
     type: Optional[StrictStr] = Field(default=None, description="Required on the first PUT or whenever the stream cannot infer the current activity type.")
-    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints the action button when action is included.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for metrics and stats activities.")

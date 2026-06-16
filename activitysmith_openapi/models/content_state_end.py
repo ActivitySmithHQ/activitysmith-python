@@ -45,7 +45,7 @@ class ContentStateEnd(BaseModel):
     icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, stats, and timer.")
     badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge. Supported by alert, progress, and segmented_progress.")
     type: Optional[StrictStr] = Field(default=None, description="Optional. When omitted, the API uses the existing Live Activity type.")
-    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints the action button when action is included.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=3, description="Optional. Minutes before the ended Live Activity is dismissed. Default 3. Set 0 for immediate dismissal. iOS will dismiss ended Live Activities after ~4 hours max.")

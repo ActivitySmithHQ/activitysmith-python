@@ -17,7 +17,7 @@ Name | Type | Description | Notes
 **counts_down** | **bool** | Use with type&#x3D;timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer. | [optional] [default to True]
 **is_running** | **bool** | Use with type&#x3D;timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume. | [optional] [default to True]
 **type** | **str** | Required on the first PUT or whenever the stream cannot infer the current activity type. | [optional] 
-**color** | **str** | Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints the action button when action is included. | [optional] 
+**color** | **str** | Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included. | [optional] 
 **step_color** | **str** | Optional. Overrides color for the current step. Only applies to segmented_progress. | [optional] 
 **step_colors** | **List[str]** | Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step. | [optional] 
 **metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for metrics and stats activities. | [optional] 

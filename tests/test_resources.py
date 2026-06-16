@@ -526,6 +526,12 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
         type="open_url",
         url="shortcuts://run-shortcut?name=Open%20Dashboard",
     )
+    secondary_action_payload = action(
+        title="Deny",
+        type="webhook",
+        url="https://ops.example.com/hooks/server-health/deny",
+        method="POST",
+    )
     state_payload = content_state(
         title="Server Health",
         subtitle="prod-web-1",
@@ -536,6 +542,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
     client.live_activities.start(
         content_state=state_payload,
         action=action_payload,
+        secondary_action=secondary_action_payload,
         channels=["ops"],
     )
     client.live_activities.update(
@@ -544,6 +551,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
         subtitle="prod-web-1",
         type=client.live_activities.TYPE_METRICS,
         metrics=metrics,
+        secondary_action=secondary_action_payload,
     )
     client.live_activities.end(
         activity_id="act-1",
@@ -552,6 +560,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
         type=client.live_activities.TYPE_METRICS,
         metrics=metrics,
         auto_dismiss_minutes=2,
+        secondary_action=secondary_action_payload,
     )
 
     assert client.live_activities._api.calls == [
@@ -566,6 +575,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
                         "metrics": metrics,
                     },
                     "action": action_payload,
+                    "secondary_action": secondary_action_payload,
                     "target": {"channels": ["ops"]},
                 }
             },
@@ -581,6 +591,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
                         "type": client.live_activities.TYPE_METRICS,
                         "metrics": metrics,
                     },
+                    "secondary_action": secondary_action_payload,
                 }
             },
         ),
@@ -596,6 +607,7 @@ def test_live_activities_build_requests_from_named_fields(monkeypatch):
                         "metrics": metrics,
                         "auto_dismiss_minutes": 2,
                     },
+                    "secondary_action": secondary_action_payload,
                 }
             },
         ),

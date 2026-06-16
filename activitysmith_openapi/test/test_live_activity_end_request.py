@@ -37,7 +37,8 @@ class TestLiveActivityEndRequest(unittest.TestCase):
             return LiveActivityEndRequest(
                 activity_id = '',
                 content_state = { },
-                action = { }
+                action = { },
+                secondary_action = { }
             )
         else:
             return LiveActivityEndRequest(
