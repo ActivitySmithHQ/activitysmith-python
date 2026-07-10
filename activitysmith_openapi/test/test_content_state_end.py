@@ -46,11 +46,19 @@ class TestContentStateEnd(unittest.TestCase):
                 counts_down = True,
                 is_running = True,
                 metrics = [
-                    { }
+                    activitysmith_openapi.models.activity_metric.ActivityMetric(
+                        label = '0', 
+                        value = null, 
+                        unit = '', 
+                        color = 'lime', )
                     ],
                 message = '0',
-                icon = { },
-                badge = { },
+                icon = activitysmith_openapi.models.live_activity_alert_icon.LiveActivityAlertIcon(
+                    symbol = '0', 
+                    color = 'lime', ),
+                badge = activitysmith_openapi.models.live_activity_alert_badge.LiveActivityAlertBadge(
+                    title = '0', 
+                    color = 'lime', ),
                 type = 'segmented_progress',
                 color = 'lime',
                 step_color = 'lime',

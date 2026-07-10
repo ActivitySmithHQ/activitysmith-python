@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **type** | [**PushNotificationActionType**](PushNotificationActionType.md) |  | 
 **url** | **str** | Action URL. For open_url, use an HTTPS URL or a shortcuts://run-shortcut?name&#x3D;... URL that runs a specific iPhone Shortcut. For webhook, use an HTTPS URL called by the ActivitySmith backend. | 
 **method** | [**PushNotificationWebhookMethod**](PushNotificationWebhookMethod.md) | Webhook HTTP method. Used only when type&#x3D;webhook. | [optional] [default to PushNotificationWebhookMethod.POST]
-**body** | **Dict[str, object]** | Optional webhook payload body. Used only when type&#x3D;webhook. | [optional] 
+**body** | **object** | Optional webhook payload body. Used only when type&#x3D;webhook. | [optional] 
 
 ## Example
 

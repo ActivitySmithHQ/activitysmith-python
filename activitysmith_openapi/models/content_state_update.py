@@ -48,7 +48,6 @@ class ContentStateUpdate(BaseModel):
     color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
-    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "duration_seconds", "counts_down", "is_running", "metrics", "message", "icon", "badge", "type", "color", "step_color", "step_colors"]
 
     @field_validator('type')
@@ -122,10 +121,8 @@ class ContentStateUpdate(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -146,11 +143,6 @@ class ContentStateUpdate(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of badge
         if self.badge:
             _dict['badge'] = self.badge.to_dict()
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         return _dict
 
     @classmethod
@@ -182,11 +174,6 @@ class ContentStateUpdate(BaseModel):
             "step_color": obj.get("step_color"),
             "step_colors": obj.get("step_colors")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

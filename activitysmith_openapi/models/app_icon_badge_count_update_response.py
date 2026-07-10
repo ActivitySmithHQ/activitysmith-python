@@ -18,21 +18,23 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class LiveActivityUpdateResponse(BaseModel):
+class AppIconBadgeCountUpdateResponse(BaseModel):
     """
-    Returned after a Live Activity update is sent or queued.
+    AppIconBadgeCountUpdateResponse
     """ # noqa: E501
     success: StrictBool
-    activity_id: StrictStr
-    devices_queued: Optional[StrictInt] = None
-    devices_notified: Optional[StrictInt] = None
+    badge: Annotated[int, Field(le=2147483647, strict=True, ge=0)]
+    devices_notified: StrictInt
+    users_notified: StrictInt
+    effective_channel_slugs: List[StrictStr]
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "activity_id", "devices_queued", "devices_notified", "timestamp"]
+    __properties: ClassVar[List[str]] = ["success", "badge", "devices_notified", "users_notified", "effective_channel_slugs", "timestamp"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +54,7 @@ class LiveActivityUpdateResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of LiveActivityUpdateResponse from a JSON string"""
+        """Create an instance of AppIconBadgeCountUpdateResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -77,7 +79,7 @@ class LiveActivityUpdateResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of LiveActivityUpdateResponse from a dict"""
+        """Create an instance of AppIconBadgeCountUpdateResponse from a dict"""
         if obj is None:
             return None
 
@@ -86,9 +88,10 @@ class LiveActivityUpdateResponse(BaseModel):
 
         _obj = cls.model_validate({
             "success": obj.get("success"),
-            "activity_id": obj.get("activity_id"),
-            "devices_queued": obj.get("devices_queued"),
+            "badge": obj.get("badge"),
             "devices_notified": obj.get("devices_notified"),
+            "users_notified": obj.get("users_notified"),
+            "effective_channel_slugs": obj.get("effective_channel_slugs"),
             "timestamp": obj.get("timestamp")
         })
         return _obj

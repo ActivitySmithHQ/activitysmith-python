@@ -39,7 +39,7 @@ class TestPushNotificationAction(unittest.TestCase):
                 type = 'open_url',
                 url = '',
                 method = 'POST',
-                body = { }
+                body = None
             )
         else:
             return PushNotificationAction(

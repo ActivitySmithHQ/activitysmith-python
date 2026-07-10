@@ -17,22 +17,20 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
+from activitysmith_openapi.models.channel_target import ChannelTarget
 from typing import Optional, Set
 from typing_extensions import Self
 
-class LiveActivityUpdateResponse(BaseModel):
+class AppIconBadgeCountUpdateRequest(BaseModel):
     """
-    Returned after a Live Activity update is sent or queued.
+    App Icon Badge Count update. Send badge 0 to clear the count.
     """ # noqa: E501
-    success: StrictBool
-    activity_id: StrictStr
-    devices_queued: Optional[StrictInt] = None
-    devices_notified: Optional[StrictInt] = None
-    timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "activity_id", "devices_queued", "devices_notified", "timestamp"]
+    badge: Annotated[int, Field(le=2147483647, strict=True, ge=0)] = Field(description="The count to show on the ActivitySmith app icon. Send 0 to clear it.")
+    target: Optional[ChannelTarget] = None
+    __properties: ClassVar[List[str]] = ["badge", "target"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -52,7 +50,7 @@ class LiveActivityUpdateResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of LiveActivityUpdateResponse from a JSON string"""
+        """Create an instance of AppIconBadgeCountUpdateRequest from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -73,11 +71,14 @@ class LiveActivityUpdateResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of target
+        if self.target:
+            _dict['target'] = self.target.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of LiveActivityUpdateResponse from a dict"""
+        """Create an instance of AppIconBadgeCountUpdateRequest from a dict"""
         if obj is None:
             return None
 
@@ -85,11 +86,8 @@ class LiveActivityUpdateResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "success": obj.get("success"),
-            "activity_id": obj.get("activity_id"),
-            "devices_queued": obj.get("devices_queued"),
-            "devices_notified": obj.get("devices_notified"),
-            "timestamp": obj.get("timestamp")
+            "badge": obj.get("badge"),
+            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
         })
         return _obj
 
