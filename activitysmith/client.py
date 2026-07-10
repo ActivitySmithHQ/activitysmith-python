@@ -9,6 +9,7 @@ from activitysmith_openapi.api_client import ApiClient
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
+from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 
 SDK_VERSION = "1.8.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
@@ -762,3 +763,10 @@ class ActivitySmith:
         self.notifications = NotificationsResource(PushNotificationsApi(api_client))
         self.live_activities = LiveActivitiesResource(LiveActivitiesApi(api_client))
         self.metrics = MetricsResource(MetricsApi(api_client))
+        self._app_icon_badges = AppIconBadgesApi(api_client)
+
+    def badge_count(self, value: int, *, channels: Any | None = None):
+        request = _compact_dict({"badge": value, "channels": channels})
+        return self._app_icon_badges.update_app_icon_badge_count(
+            app_icon_badge_count_update_request=_normalize_channels_target(request)
+        )

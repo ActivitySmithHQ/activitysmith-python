@@ -50,6 +50,16 @@ class FakeMetricsApi:
         return kwargs
 
 
+class FakeAppIconBadgesApi:
+    def __init__(self, _api_client):
+        self._api_client = _api_client
+        self.calls = []
+
+    def update_app_icon_badge_count(self, **kwargs):
+        self.calls.append(kwargs)
+        return kwargs
+
+
 def test_sdk_header_and_user_agent_are_configured(monkeypatch):
     monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
     monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
@@ -80,6 +90,24 @@ def test_notifications_short_and_legacy_alias(monkeypatch):
         {"push_notification_request": payload},
         {"push_notification_request": payload},
     ]
+
+
+def test_badge_count_clears_and_targets_channels(monkeypatch):
+    monkeypatch.setattr(client_module, "AppIconBadgesApi", FakeAppIconBadgesApi)
+
+    client = ActivitySmith(api_key="x")
+
+    cleared = client.badge_count(0)
+    targeted = client.badge_count(3, channels="sales,customer-success")
+
+    assert cleared == {"app_icon_badge_count_update_request": {"badge": 0}}
+    assert targeted == {
+        "app_icon_badge_count_update_request": {
+            "badge": 3,
+            "target": {"channels": ["sales", "customer-success"]},
+        }
+    }
+    assert client._app_icon_badges.calls == [cleared, targeted]
 
 
 def test_notifications_named_fields(monkeypatch):
