@@ -11,7 +11,7 @@ from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 
-SDK_VERSION = "1.8.0"
+SDK_VERSION = "1.9.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 

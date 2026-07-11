@@ -20,9 +20,9 @@ See the [API reference](https://activitysmith.com/docs/api-reference/introductio
   - [Live Activity Action](#live-activity-action)
   - [Icons and Badges](#icons-and-badges)
   - [Live Activity Colors](#live-activity-colors)
-- [Channels](#channels)
 - [Widgets](#widgets)
 - [App Icon Badge Count](#app-icon-badge-count)
+- [Channels](#channels)
 
 ## Installation
 
@@ -514,18 +514,6 @@ Choose from these colors for the Live Activity accent, including progress bars a
 
 `lime`, `green`, `cyan`, `blue`, `purple`, `magenta`, `red`, `orange`, `yellow`, `gray`
 
-## Channels
-
-Use `channels` to target specific team members or devices
-
-```python
-activitysmith.notifications.send(
-    title="New subscription 💸",
-    message="Customer upgraded to Pro plan",
-    channels=["sales", "customer-success"],  # Optional
-)
-```
-
 ## Widgets
 
 <p align="center">
@@ -556,17 +544,47 @@ activitysmith.metrics.update("prod.status", "healthy")
 
 Show the number you care about on your ActivitySmith app icon. Track MRR, a customer count, a stock price, or any other value you want to keep in view.
 
+Set or update the badge value.
+
 ```python
 activitysmith.badge_count(8333)
 ```
 
-Pass `0` to clear the badge.
+To clear the badge, set its value to 0.
 
 ```python
 activitysmith.badge_count(0)
 ```
 
+## Channels
+
 Use `channels` to target specific team members or devices
+
+### Push Notifications
+
+```python
+activitysmith.notifications.send(
+    title="New subscription 💸",
+    message="Customer upgraded to Pro plan",
+    channels=["sales", "customer-success"],
+)
+```
+
+### Live Activities
+
+```python
+activitysmith.live_activities.start(
+    content_state=content_state(
+        title="Nightly Database Backup",
+        subtitle="verify restore",
+        type="progress",
+        percentage=62,
+    ),
+    channels=["sales", "customer-success"],
+)
+```
+
+### App Icon Badge Count
 
 ```python
 activitysmith.badge_count(3, channels=["sales", "customer-success"])
