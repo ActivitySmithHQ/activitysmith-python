@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.push_notification_request import PushNotificationRequest
+from activitysmith_openapi.models.app_icon_badge_count_update_request import AppIconBadgeCountUpdateRequest
 
-class TestPushNotificationRequest(unittest.TestCase):
-    """PushNotificationRequest unit test stubs"""
+class TestAppIconBadgeCountUpdateRequest(unittest.TestCase):
+    """AppIconBadgeCountUpdateRequest unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,42 +25,30 @@ class TestPushNotificationRequest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> PushNotificationRequest:
-        """Test PushNotificationRequest
+    def make_instance(self, include_optional) -> AppIconBadgeCountUpdateRequest:
+        """Test AppIconBadgeCountUpdateRequest
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `PushNotificationRequest`
+        # uncomment below to create an instance of `AppIconBadgeCountUpdateRequest`
         """
-        model = PushNotificationRequest()
+        model = AppIconBadgeCountUpdateRequest()
         if include_optional:
-            return PushNotificationRequest(
-                title = '',
-                message = '',
-                subtitle = '',
-                media = 'https:/',
-                redirection = 'shortcuts:/',
-                actions = [
-                    {
-                        'key' : null
-                        }
-                    ],
-                payload = None,
-                badge = 56,
-                sound = '',
+            return AppIconBadgeCountUpdateRequest(
+                badge = 0,
                 target = activitysmith_openapi.models.channel_target.ChannelTarget(
                     channels = [
                         ''
                         ], )
             )
         else:
-            return PushNotificationRequest(
-                title = '',
+            return AppIconBadgeCountUpdateRequest(
+                badge = 0,
         )
         """
 
-    def testPushNotificationRequest(self):
-        """Test PushNotificationRequest"""
+    def testAppIconBadgeCountUpdateRequest(self):
+        """Test AppIconBadgeCountUpdateRequest"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

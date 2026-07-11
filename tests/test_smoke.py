@@ -12,3 +12,4 @@ def test_client_constructs():
     assert hasattr(client.live_activities, "end")
     assert hasattr(client.live_activities, "stream")
     assert hasattr(client.live_activities, "end_stream")
+    assert hasattr(client, "badge_count")

@@ -39,7 +39,7 @@ class TestLiveActivityAction(unittest.TestCase):
                 type = 'open_url',
                 url = '',
                 method = 'POST',
-                body = { }
+                body = None
             )
         else:
             return LiveActivityAction(

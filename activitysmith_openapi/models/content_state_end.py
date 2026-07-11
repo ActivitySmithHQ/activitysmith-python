@@ -49,7 +49,6 @@ class ContentStateEnd(BaseModel):
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=3, description="Optional. Minutes before the ended Live Activity is dismissed. Default 3. Set 0 for immediate dismissal. iOS will dismiss ended Live Activities after ~4 hours max.")
-    additional_properties: Dict[str, Any] = {}
     __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "duration_seconds", "counts_down", "is_running", "metrics", "message", "icon", "badge", "type", "color", "step_color", "step_colors", "auto_dismiss_minutes"]
 
     @field_validator('type')
@@ -123,10 +122,8 @@ class ContentStateEnd(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -147,11 +144,6 @@ class ContentStateEnd(BaseModel):
         # override the default output from pydantic by calling `to_dict()` of badge
         if self.badge:
             _dict['badge'] = self.badge.to_dict()
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         return _dict
 
     @classmethod
@@ -184,11 +176,6 @@ class ContentStateEnd(BaseModel):
             "step_colors": obj.get("step_colors"),
             "auto_dismiss_minutes": obj.get("auto_dismiss_minutes") if obj.get("auto_dismiss_minutes") is not None else 3
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

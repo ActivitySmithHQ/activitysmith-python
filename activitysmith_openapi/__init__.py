@@ -17,6 +17,7 @@
 __version__ = "1.8.0"
 
 # import apis into sdk package
+from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
@@ -36,6 +37,8 @@ from activitysmith_openapi.exceptions import ApiException
 from activitysmith_openapi.models.activity_metric import ActivityMetric
 from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from activitysmith_openapi.models.alert_payload import AlertPayload
+from activitysmith_openapi.models.app_icon_badge_count_update_request import AppIconBadgeCountUpdateRequest
+from activitysmith_openapi.models.app_icon_badge_count_update_response import AppIconBadgeCountUpdateResponse
 from activitysmith_openapi.models.bad_request_error import BadRequestError
 from activitysmith_openapi.models.channel_target import ChannelTarget
 from activitysmith_openapi.models.content_state_end import ContentStateEnd

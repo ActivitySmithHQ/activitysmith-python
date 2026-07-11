@@ -35,15 +35,82 @@ class TestLiveActivityStartRequest(unittest.TestCase):
         model = LiveActivityStartRequest()
         if include_optional:
             return LiveActivityStartRequest(
-                content_state = { },
-                action = { },
-                secondary_action = { },
-                alert = { },
-                target = { }
+                content_state = activitysmith_openapi.models.content_state_start.ContentStateStart(
+                    title = '', 
+                    subtitle = '', 
+                    number_of_steps = 1, 
+                    current_step = 0, 
+                    percentage = 0, 
+                    value = 1.337, 
+                    upper_limit = 1.337, 
+                    duration_seconds = 1.337, 
+                    counts_down = True, 
+                    is_running = True, 
+                    metrics = [
+                        activitysmith_openapi.models.activity_metric.ActivityMetric(
+                            label = '0', 
+                            value = null, 
+                            unit = '', 
+                            color = 'lime', )
+                        ], 
+                    message = '0', 
+                    icon = activitysmith_openapi.models.live_activity_alert_icon.LiveActivityAlertIcon(
+                        symbol = '0', 
+                        color = 'lime', ), 
+                    badge = activitysmith_openapi.models.live_activity_alert_badge.LiveActivityAlertBadge(
+                        title = '0', ), 
+                    type = 'segmented_progress', 
+                    color = 'lime', 
+                    step_color = 'lime', 
+                    step_colors = [
+                        'lime'
+                        ], ),
+                action = {
+                    'key' : null
+                    },
+                secondary_action = {
+                    'key' : null
+                    },
+                alert = activitysmith_openapi.models.alert_payload.AlertPayload(
+                    title = '', 
+                    body = '', ),
+                target = activitysmith_openapi.models.channel_target.ChannelTarget(
+                    channels = [
+                        ''
+                        ], )
             )
         else:
             return LiveActivityStartRequest(
-                content_state = { },
+                content_state = activitysmith_openapi.models.content_state_start.ContentStateStart(
+                    title = '', 
+                    subtitle = '', 
+                    number_of_steps = 1, 
+                    current_step = 0, 
+                    percentage = 0, 
+                    value = 1.337, 
+                    upper_limit = 1.337, 
+                    duration_seconds = 1.337, 
+                    counts_down = True, 
+                    is_running = True, 
+                    metrics = [
+                        activitysmith_openapi.models.activity_metric.ActivityMetric(
+                            label = '0', 
+                            value = null, 
+                            unit = '', 
+                            color = 'lime', )
+                        ], 
+                    message = '0', 
+                    icon = activitysmith_openapi.models.live_activity_alert_icon.LiveActivityAlertIcon(
+                        symbol = '0', 
+                        color = 'lime', ), 
+                    badge = activitysmith_openapi.models.live_activity_alert_badge.LiveActivityAlertBadge(
+                        title = '0', ), 
+                    type = 'segmented_progress', 
+                    color = 'lime', 
+                    step_color = 'lime', 
+                    step_colors = [
+                        'lime'
+                        ], ),
         )
         """
 
