@@ -33,7 +33,7 @@ class LiveActivityStreamRequest(BaseModel):
     """ # noqa: E501
     content_state: StreamContentState
     action: Optional[LiveActivityAction] = None
-    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported only for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
     channels: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Channel slugs. When omitted, API key scope determines recipients.")
     target: Optional[ChannelTarget] = None

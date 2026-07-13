@@ -1,6 +1,5 @@
 # AppIconBadgeCountUpdateRequest
 
-App Icon Badge Count update. Send badge 0 to clear the count.
 
 ## Properties
 

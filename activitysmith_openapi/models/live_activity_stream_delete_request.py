@@ -31,7 +31,7 @@ class LiveActivityStreamDeleteRequest(BaseModel):
     """ # noqa: E501
     content_state: Optional[StreamContentState] = None
     action: Optional[LiveActivityAction] = None
-    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported only for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
     __properties: ClassVar[List[str]] = ["content_state", "action", "secondary_action", "alert"]
 
