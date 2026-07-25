@@ -77,7 +77,10 @@ class TestLiveActivityStartRequest(unittest.TestCase):
                 target = activitysmith_openapi.models.channel_target.ChannelTarget(
                     channels = [
                         ''
-                        ], )
+                        ], ),
+                tags = [
+                    'gB:9JLe6iL71-aa-.Ctq:dcsc.3-8:1gAa8Xa6u61ArrlGpCQjkQVRmfnjddwcDM0'
+                    ]
             )
         else:
             return LiveActivityStartRequest(

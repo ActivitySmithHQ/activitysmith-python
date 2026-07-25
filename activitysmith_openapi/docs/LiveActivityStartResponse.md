@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **users_notified** | **int** |  | [optional] 
 **activity_id** | **str** |  | 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
+**tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 **timestamp** | **datetime** |  | 
 
 ## Example

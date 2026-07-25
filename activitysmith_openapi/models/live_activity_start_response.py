@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,8 +33,9 @@ class LiveActivityStartResponse(BaseModel):
     users_notified: Optional[StrictInt] = None
     activity_id: StrictStr
     effective_channel_slugs: Optional[List[StrictStr]] = None
+    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "activity_id", "effective_channel_slugs", "timestamp"]
+    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "activity_id", "effective_channel_slugs", "tags", "timestamp"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -91,6 +93,7 @@ class LiveActivityStartResponse(BaseModel):
             "users_notified": obj.get("users_notified"),
             "activity_id": obj.get("activity_id"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),
+            "tags": obj.get("tags"),
             "timestamp": obj.get("timestamp")
         })
         return _obj

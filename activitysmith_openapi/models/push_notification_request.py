@@ -33,14 +33,15 @@ class PushNotificationRequest(BaseModel):
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
     media: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If `redirection` is omitted, tapping the notification opens this URL. Cannot be combined with `actions`.")
-    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL or shortcuts://run-shortcut?name=... URL opened when the user taps the notification body. Use shortcuts://run-shortcut?name=... to run a specific iPhone Shortcut that already exists on the user's device. Overrides the default tap target from `media` when both are provided.")
+    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTP URL, HTTPS URL, or shortcuts://run-shortcut?name=... URL opened when the user taps the notification body. Use shortcuts://run-shortcut?name=... to run a specific iPhone Shortcut that already exists on the user's device. Overrides the default tap target from `media` when both are provided.")
     actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
     payload: Optional[Dict[str, Any]] = None
     badge: Optional[StrictInt] = None
     sound: Optional[StrictStr] = None
     target: Optional[ChannelTarget] = None
+    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "media", "redirection", "actions", "payload", "badge", "sound", "target"]
+    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "media", "redirection", "actions", "payload", "badge", "sound", "target", "tags"]
 
     @field_validator('media')
     def media_validate_regular_expression(cls, value):
@@ -58,8 +59,8 @@ class PushNotificationRequest(BaseModel):
         if value is None:
             return value
 
-        if not re.match(r"^(https|shortcuts):\/\/", value):
-            raise ValueError(r"must validate the regular expression /^(https|shortcuts):\/\//")
+        if not re.match(r"^(http|https|shortcuts):\/\/", value):
+            raise ValueError(r"must validate the regular expression /^(http|https|shortcuts):\/\//")
         return value
 
     model_config = ConfigDict(
@@ -139,7 +140,8 @@ class PushNotificationRequest(BaseModel):
             "payload": obj.get("payload"),
             "badge": obj.get("badge"),
             "sound": obj.get("sound"),
-            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
+            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None,
+            "tags": obj.get("tags")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

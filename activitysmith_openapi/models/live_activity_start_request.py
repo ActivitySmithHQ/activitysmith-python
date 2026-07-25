@@ -17,8 +17,9 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from activitysmith_openapi.models.alert_payload import AlertPayload
 from activitysmith_openapi.models.channel_target import ChannelTarget
 from activitysmith_openapi.models.content_state_start import ContentStateStart
@@ -32,10 +33,11 @@ class LiveActivityStartRequest(BaseModel):
     """ # noqa: E501
     content_state: ContentStateStart
     action: Optional[LiveActivityAction] = None
-    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported only for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
     target: Optional[ChannelTarget] = None
-    __properties: ClassVar[List[str]] = ["content_state", "action", "secondary_action", "alert", "target"]
+    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
+    __properties: ClassVar[List[str]] = ["content_state", "action", "secondary_action", "alert", "target", "tags"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -107,7 +109,8 @@ class LiveActivityStartRequest(BaseModel):
             "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
             "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None,
             "alert": AlertPayload.from_dict(obj["alert"]) if obj.get("alert") is not None else None,
-            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None
+            "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None,
+            "tags": obj.get("tags")
         })
         return _obj
 

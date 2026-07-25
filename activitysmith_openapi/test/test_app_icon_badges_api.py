@@ -29,7 +29,7 @@ class TestAppIconBadgesApi(unittest.TestCase):
     def test_update_app_icon_badge_count(self) -> None:
         """Test case for update_app_icon_badge_count
 
-        Update App Icon Badge Count
+        Set App Icon Badge Count
         """
         pass
 

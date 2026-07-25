@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class AppIconBadgeCountUpdateRequest(BaseModel):
     """
-    App Icon Badge Count update. Send badge 0 to clear the count.
+    AppIconBadgeCountUpdateRequest
     """ # noqa: E501
     badge: Annotated[int, Field(le=2147483647, strict=True, ge=0)] = Field(description="The count to show on the ActivitySmith app icon. Send 0 to clear it.")
     target: Optional[ChannelTarget] = None
