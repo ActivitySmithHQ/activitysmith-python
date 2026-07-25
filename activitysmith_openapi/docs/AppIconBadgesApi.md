@@ -4,15 +4,15 @@ All URIs are relative to *https://activitysmith.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**update_app_icon_badge_count**](AppIconBadgesApi.md#update_app_icon_badge_count) | **POST** /badge | Update App Icon Badge Count
+[**update_app_icon_badge_count**](AppIconBadgesApi.md#update_app_icon_badge_count) | **POST** /badge | Set App Icon Badge Count
 
 
 # **update_app_icon_badge_count**
 > AppIconBadgeCountUpdateResponse update_app_icon_badge_count(app_icon_badge_count_update_request)
 
-Update App Icon Badge Count
+Set App Icon Badge Count
 
-Updates the App Icon Badge Count on devices matched by API key scope and optional target channels. Send `badge: 0` to clear the count. Badge updates are independent of push notifications and do not create a push notification history item.
+Shows a number on the ActivitySmith app icon.
 
 ### Example
 
@@ -45,10 +45,10 @@ configuration = activitysmith_openapi.Configuration(
 with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.AppIconBadgesApi(api_client)
-    app_icon_badge_count_update_request = {"badge":12} # AppIconBadgeCountUpdateRequest | 
+    app_icon_badge_count_update_request = {"badge":8333} # AppIconBadgeCountUpdateRequest | 
 
     try:
-        # Update App Icon Badge Count
+        # Set App Icon Badge Count
         api_response = api_instance.update_app_icon_badge_count(app_icon_badge_count_update_request)
         print("The response of AppIconBadgesApi->update_app_icon_badge_count:\n")
         pprint(api_response)
@@ -83,8 +83,8 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 **200** | App Icon Badge Count updated |  -  |
-**400** | Bad request (invalid badge value or channel targeting input) |  -  |
-**403** | Forbidden (API key scope or channel assignment violation) |  -  |
+**400** | Bad request |  -  |
+**403** | Forbidden |  -  |
 **404** | No recipients found for effective channel target |  -  |
 **429** | Rate limit exceeded |  -  |
 

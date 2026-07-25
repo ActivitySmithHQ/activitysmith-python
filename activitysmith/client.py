@@ -11,7 +11,7 @@ from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 
-SDK_VERSION = "1.9.0"
+SDK_VERSION = "1.10.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -210,6 +210,7 @@ def _build_push_request(
     actions: Any | None = None,
     target: Any | None = None,
     channels: Any | None = None,
+    tags: Any | None = None,
 ) -> Any:
     request_fields = _compact_dict(
         {
@@ -221,6 +222,7 @@ def _build_push_request(
             "actions": actions,
             "target": target,
             "channels": channels,
+            "tags": tags,
         }
     )
 
@@ -281,6 +283,7 @@ def _build_live_activity_request(
     alert: Any | None = None,
     target: Any | None = None,
     channels: Any | None = None,
+    tags: Any | None = None,
 ) -> Any:
     content_state_fields = _compact_dict(
         {
@@ -313,6 +316,7 @@ def _build_live_activity_request(
             "alert": alert,
             "target": target,
             "channels": channels,
+            "tags": tags,
         }
     )
 
@@ -370,6 +374,7 @@ class NotificationsResource:
         actions: Any | None = None,
         target: Any | None = None,
         channels: Any | None = None,
+        tags: Any | None = None,
     ):
         request = _build_push_request(
             request,
@@ -381,6 +386,7 @@ class NotificationsResource:
             actions=actions,
             target=target,
             channels=channels,
+            tags=tags,
         )
         normalized = _validate_push_request(_normalize_channels_target(request))
         return self._api.send_push_notification(
@@ -455,6 +461,7 @@ class LiveActivitiesResource:
         alert: Any | None = None,
         target: Any | None = None,
         channels: Any | None = None,
+        tags: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -480,6 +487,7 @@ class LiveActivitiesResource:
             alert=alert,
             target=target,
             channels=channels,
+            tags=tags,
         )
         return self._api.start_live_activity(
             live_activity_start_request=_normalize_channels_target(request)
@@ -614,6 +622,7 @@ class LiveActivitiesResource:
         alert: Any | None = None,
         target: Any | None = None,
         channels: Any | None = None,
+        tags: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -639,6 +648,7 @@ class LiveActivitiesResource:
             alert=alert,
             target=target,
             channels=channels,
+            tags=tags,
         )
         return self._api.reconcile_live_activity_stream(
             stream_key=stream_key,

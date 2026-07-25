@@ -54,9 +54,9 @@ class AppIconBadgesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> AppIconBadgeCountUpdateResponse:
-        """Update App Icon Badge Count
+        """Set App Icon Badge Count
 
-        Updates the App Icon Badge Count on devices matched by API key scope and optional target channels. Send `badge: 0` to clear the count. Badge updates are independent of push notifications and do not create a push notification history item.
+        Shows a number on the ActivitySmith app icon.
 
         :param app_icon_badge_count_update_request: (required)
         :type app_icon_badge_count_update_request: AppIconBadgeCountUpdateRequest
@@ -125,9 +125,9 @@ class AppIconBadgesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[AppIconBadgeCountUpdateResponse]:
-        """Update App Icon Badge Count
+        """Set App Icon Badge Count
 
-        Updates the App Icon Badge Count on devices matched by API key scope and optional target channels. Send `badge: 0` to clear the count. Badge updates are independent of push notifications and do not create a push notification history item.
+        Shows a number on the ActivitySmith app icon.
 
         :param app_icon_badge_count_update_request: (required)
         :type app_icon_badge_count_update_request: AppIconBadgeCountUpdateRequest
@@ -196,9 +196,9 @@ class AppIconBadgesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Update App Icon Badge Count
+        """Set App Icon Badge Count
 
-        Updates the App Icon Badge Count on devices matched by API key scope and optional target channels. Send `badge: 0` to clear the count. Badge updates are independent of push notifications and do not create a push notification history item.
+        Shows a number on the ActivitySmith app icon.
 
         :param app_icon_badge_count_update_request: (required)
         :type app_icon_badge_count_update_request: AppIconBadgeCountUpdateRequest

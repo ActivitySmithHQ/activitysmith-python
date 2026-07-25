@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **devices_notified** | **int** |  | [optional] 
 **users_notified** | **int** |  | [optional] 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
+**tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 **timestamp** | **datetime** |  | 
 
 ## Example

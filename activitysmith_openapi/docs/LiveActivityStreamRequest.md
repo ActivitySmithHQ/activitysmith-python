@@ -8,10 +8,11 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **content_state** | [**StreamContentState**](StreamContentState.md) |  | 
 **action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
-**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported only for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
+**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
 **alert** | [**AlertPayload**](AlertPayload.md) |  | [optional] 
 **channels** | **List[str]** | Channel slugs. When omitted, API key scope determines recipients. | [optional] 
 **target** | [**ChannelTarget**](ChannelTarget.md) |  | [optional] 
+**tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 
 ## Example
 
