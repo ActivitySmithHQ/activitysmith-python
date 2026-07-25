@@ -121,6 +121,7 @@ def test_notifications_named_fields(monkeypatch):
         title="New subscription 💸",
         message="Customer upgraded to Pro plan",
         channels="sales,customer-success",
+        tags=["user:382", "billing"],
     )
 
     assert client.notifications._api.calls == [
@@ -129,6 +130,7 @@ def test_notifications_named_fields(monkeypatch):
                 "title": "New subscription 💸",
                 "message": "Customer upgraded to Pro plan",
                 "target": {"channels": ["sales", "customer-success"]},
+                "tags": ["user:382", "billing"],
             }
         },
     ]
@@ -292,7 +294,7 @@ def test_live_activities_start_maps_channels_to_target(monkeypatch):
         "channels": ["devs", "ops"],
     }
 
-    client.live_activities.start(payload)
+    client.live_activities.start(payload, tags=["user:382", "deployment"])
     client.live_activities.start_live_activity(payload)
 
     expected = {
@@ -305,7 +307,15 @@ def test_live_activities_start_maps_channels_to_target(monkeypatch):
         "target": {"channels": ["devs", "ops"]},
     }
     assert client.live_activities._api.calls == [
-        ("start", {"live_activity_start_request": expected}),
+        (
+            "start",
+            {
+                "live_activity_start_request": {
+                    **expected,
+                    "tags": ["user:382", "deployment"],
+                }
+            },
+        ),
         ("start", {"live_activity_start_request": expected}),
     ]
 
@@ -672,7 +682,11 @@ def test_live_activities_stream_short_and_legacy_aliases(monkeypatch):
         }
     }
 
-    client.live_activities.stream("prod-web-1", stream_payload)
+    client.live_activities.stream(
+        "prod-web-1",
+        stream_payload,
+        tags=["user:382", "environment:production"],
+    )
     client.live_activities.end_stream("prod-web-1", end_payload)
     client.live_activities.reconcile_live_activity_stream("prod-web-1", stream_payload)
     client.live_activities.end_live_activity_stream("prod-web-1", end_payload)
@@ -686,7 +700,10 @@ def test_live_activities_stream_short_and_legacy_aliases(monkeypatch):
             "stream",
             {
                 "stream_key": "prod-web-1",
-                "live_activity_stream_request": expected_stream,
+                "live_activity_stream_request": {
+                    **expected_stream,
+                    "tags": ["user:382", "environment:production"],
+                },
             },
         ),
         (
