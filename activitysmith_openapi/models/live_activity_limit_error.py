@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -29,8 +29,10 @@ class LiveActivityLimitError(BaseModel):
     error: StrictStr
     message: StrictStr
     limit: StrictInt
-    active: StrictInt = Field(description="Current number of active Live Activities.")
-    __properties: ClassVar[List[str]] = ["error", "message", "limit", "active"]
+    active: StrictInt = Field(description="Highest number of active Live Activities among the targeted devices.")
+    blocked_devices: Optional[StrictInt] = Field(default=None, description="Number of targeted devices that have reached the enforced iOS Live Activity concurrency threshold. Included only when targeted devices have mixed capacity.")
+    targeted_devices: Optional[StrictInt] = Field(default=None, description="Total number of targeted devices. Included only when targeted devices have mixed capacity.")
+    __properties: ClassVar[List[str]] = ["error", "message", "limit", "active", "blocked_devices", "targeted_devices"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,7 +88,9 @@ class LiveActivityLimitError(BaseModel):
             "error": obj.get("error"),
             "message": obj.get("message"),
             "limit": obj.get("limit"),
-            "active": obj.get("active")
+            "active": obj.get("active"),
+            "blocked_devices": obj.get("blocked_devices"),
+            "targeted_devices": obj.get("targeted_devices")
         })
         return _obj
 
