@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **error** | **str** |  | 
 **message** | **str** |  | 
 **limit** | **int** |  | 
-**active** | **int** | Current number of active Live Activities. | 
+**blocked_devices** | **int** | Number of targeted devices that have reached the enforced iOS Live Activity concurrency threshold. | 
 
 ## Example
 

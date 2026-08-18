@@ -38,14 +38,14 @@ class TestLiveActivityLimitError(unittest.TestCase):
                 error = '',
                 message = '',
                 limit = 56,
-                active = 56
+                blocked_devices = 56
             )
         else:
             return LiveActivityLimitError(
                 error = '',
                 message = '',
                 limit = 56,
-                active = 56,
+                blocked_devices = 56,
         )
         """
 

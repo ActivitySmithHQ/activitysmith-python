@@ -29,8 +29,8 @@ class LiveActivityLimitError(BaseModel):
     error: StrictStr
     message: StrictStr
     limit: StrictInt
-    active: StrictInt = Field(description="Current number of active Live Activities.")
-    __properties: ClassVar[List[str]] = ["error", "message", "limit", "active"]
+    blocked_devices: StrictInt = Field(description="Number of targeted devices that have reached the enforced iOS Live Activity concurrency threshold.")
+    __properties: ClassVar[List[str]] = ["error", "message", "limit", "blocked_devices"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -86,7 +86,7 @@ class LiveActivityLimitError(BaseModel):
             "error": obj.get("error"),
             "message": obj.get("message"),
             "limit": obj.get("limit"),
-            "active": obj.get("active")
+            "blocked_devices": obj.get("blocked_devices")
         })
         return _obj
 
