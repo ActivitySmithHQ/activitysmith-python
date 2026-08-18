@@ -38,7 +38,9 @@ class TestSendPushNotification429Response(unittest.TestCase):
                 error = '',
                 message = '',
                 limit = 56,
-                active = 56
+                active = 56,
+                blocked_devices = 56,
+                targeted_devices = 56
             )
         else:
             return SendPushNotification429Response(
