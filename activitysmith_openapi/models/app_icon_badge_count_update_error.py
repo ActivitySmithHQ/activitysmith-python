@@ -17,26 +17,33 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class AppIconBadgeCountUpdateResponse(BaseModel):
+class AppIconBadgeCountUpdateError(BaseModel):
     """
-    AppIconBadgeCountUpdateResponse
+    AppIconBadgeCountUpdateError
     """ # noqa: E501
-    success: StrictBool
+    error: StrictStr
+    code: StrictStr
+    message: StrictStr
     badge: Annotated[int, Field(le=2147483647, strict=True, ge=0)]
-    devices_updated: StrictInt = Field(description="Number of devices whose App Icon Badge Count was updated.")
-    users_updated: StrictInt = Field(description="Number of account users with at least one updated device.")
+    devices_targeted: Optional[StrictInt] = None
+    devices_updated: StrictInt
+    users_updated: Optional[StrictInt] = None
     devices_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for devices_updated.")
-    users_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for users_updated.")
-    effective_channel_slugs: List[StrictStr]
-    timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "badge", "devices_updated", "users_updated", "devices_notified", "users_notified", "effective_channel_slugs", "timestamp"]
+    effective_channel_slugs: Optional[List[StrictStr]] = None
+    __properties: ClassVar[List[str]] = ["error", "code", "message", "badge", "devices_targeted", "devices_updated", "users_updated", "devices_notified", "effective_channel_slugs"]
+
+    @field_validator('code')
+    def code_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['badge_device_disconnected', 'badge_update_failed']):
+            raise ValueError("must be one of enum values ('badge_device_disconnected', 'badge_update_failed')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -56,7 +63,7 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of AppIconBadgeCountUpdateResponse from a JSON string"""
+        """Create an instance of AppIconBadgeCountUpdateError from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -81,7 +88,7 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of AppIconBadgeCountUpdateResponse from a dict"""
+        """Create an instance of AppIconBadgeCountUpdateError from a dict"""
         if obj is None:
             return None
 
@@ -89,14 +96,15 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "success": obj.get("success"),
+            "error": obj.get("error"),
+            "code": obj.get("code"),
+            "message": obj.get("message"),
             "badge": obj.get("badge"),
+            "devices_targeted": obj.get("devices_targeted"),
             "devices_updated": obj.get("devices_updated"),
             "users_updated": obj.get("users_updated"),
             "devices_notified": obj.get("devices_notified"),
-            "users_notified": obj.get("users_notified"),
-            "effective_channel_slugs": obj.get("effective_channel_slugs"),
-            "timestamp": obj.get("timestamp")
+            "effective_channel_slugs": obj.get("effective_channel_slugs")
         })
         return _obj
 
