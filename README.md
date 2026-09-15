@@ -593,7 +593,3 @@ Wrap API calls with `try/except`. The SDK raises exceptions for non-2xx response
 ### [PyPI Package](https://pypi.org/project/activitysmith/)
 
 Install the ActivitySmith Python SDK from PyPI
-
-### [Source Code](https://github.com/ActivitySmithHQ/activitysmith-python)
-
-View the Python SDK source on GitHub
