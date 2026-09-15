@@ -1,4 +1,5 @@
 from __future__ import annotations
+from .normalization import normalize_metadata_request
 
 from dataclasses import dataclass
 from typing import Any
@@ -10,6 +11,10 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
+
+from activitysmith_openapi.models.metric_value_update_request import MetricValueUpdateRequest
+
+from .normalization import normalize_live_activity_request, normalize_metric_request
 
 SDK_VERSION = "1.10.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
@@ -46,6 +51,11 @@ def _validate_push_request(request: Any) -> Any:
 
 
 def _metric_value_request(value_or_request: Any, timestamp: Any | None = None) -> Any:
+    if isinstance(value_or_request, MetricValueUpdateRequest):
+        if timestamp is None:
+            return value_or_request
+        return value_or_request.model_copy(update={"timestamp": timestamp})
+
     if isinstance(value_or_request, dict) and "value" in value_or_request:
         if timestamp is None:
             return value_or_request
@@ -211,6 +221,7 @@ def _build_push_request(
     target: Any | None = None,
     channels: Any | None = None,
     tags: Any | None = None,
+    metadata: Any | None = None,
 ) -> Any:
     request_fields = _compact_dict(
         {
@@ -223,6 +234,7 @@ def _build_push_request(
             "target": target,
             "channels": channels,
             "tags": tags,
+            "metadata": metadata,
         }
     )
 
@@ -284,6 +296,7 @@ def _build_live_activity_request(
     target: Any | None = None,
     channels: Any | None = None,
     tags: Any | None = None,
+    metadata: Any | None = None,
 ) -> Any:
     content_state_fields = _compact_dict(
         {
@@ -317,11 +330,12 @@ def _build_live_activity_request(
             "target": target,
             "channels": channels,
             "tags": tags,
+            "metadata": metadata,
         }
     )
 
     if content_state is None and not content_state_fields and not request_fields:
-        return request
+        return normalize_live_activity_request(request)
 
     if request is None:
         normalized: dict[str, Any] = {}
@@ -355,7 +369,7 @@ def _build_live_activity_request(
         )
 
     normalized.update(request_fields)
-    return normalized
+    return normalize_live_activity_request(normalized)
 
 
 class NotificationsResource:
@@ -375,6 +389,7 @@ class NotificationsResource:
         target: Any | None = None,
         channels: Any | None = None,
         tags: Any | None = None,
+        metadata: Any | None = None,
     ):
         request = _build_push_request(
             request,
@@ -387,8 +402,9 @@ class NotificationsResource:
             target=target,
             channels=channels,
             tags=tags,
+            metadata=metadata,
         )
-        normalized = _validate_push_request(_normalize_channels_target(request))
+        normalized = normalize_metadata_request(_validate_push_request(_normalize_channels_target(request)))
         return self._api.send_push_notification(
             push_notification_request=normalized
         )
@@ -462,6 +478,7 @@ class LiveActivitiesResource:
         target: Any | None = None,
         channels: Any | None = None,
         tags: Any | None = None,
+        metadata: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -488,6 +505,7 @@ class LiveActivitiesResource:
             target=target,
             channels=channels,
             tags=tags,
+            metadata=metadata,
         )
         return self._api.start_live_activity(
             live_activity_start_request=_normalize_channels_target(request)
@@ -517,6 +535,8 @@ class LiveActivitiesResource:
         step_color: Any | None = None,
         action: Any | None = None,
         secondary_action: Any | None = None,
+        tags: Any | None = None,
+        metadata: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -540,6 +560,8 @@ class LiveActivitiesResource:
             step_color=step_color,
             action=action,
             secondary_action=secondary_action,
+            tags=tags,
+            metadata=metadata,
         )
         return self._api.update_live_activity(live_activity_update_request=request)
 
@@ -568,6 +590,8 @@ class LiveActivitiesResource:
         auto_dismiss_minutes: Any | None = None,
         action: Any | None = None,
         secondary_action: Any | None = None,
+        tags: Any | None = None,
+        metadata: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -592,6 +616,8 @@ class LiveActivitiesResource:
             auto_dismiss_minutes=auto_dismiss_minutes,
             action=action,
             secondary_action=secondary_action,
+            tags=tags,
+            metadata=metadata,
         )
         return self._api.end_live_activity(live_activity_end_request=request)
 
@@ -623,6 +649,7 @@ class LiveActivitiesResource:
         target: Any | None = None,
         channels: Any | None = None,
         tags: Any | None = None,
+        metadata: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -649,6 +676,7 @@ class LiveActivitiesResource:
             target=target,
             channels=channels,
             tags=tags,
+            metadata=metadata,
         )
         return self._api.reconcile_live_activity_stream(
             stream_key=stream_key,
@@ -681,6 +709,8 @@ class LiveActivitiesResource:
         action: Any | None = None,
         secondary_action: Any | None = None,
         alert: Any | None = None,
+        tags: list[str] | None = None,
+        metadata: dict[str, Any] | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -705,6 +735,8 @@ class LiveActivitiesResource:
             action=action,
             secondary_action=secondary_action,
             alert=alert,
+            tags=tags,
+            metadata=metadata,
         )
         return self._api.end_live_activity_stream(
             stream_key=stream_key,
@@ -745,14 +777,16 @@ class MetricsResource:
     def update(self, key: str, value_or_request: Any, timestamp: Any | None = None):
         return self._api.update_metric_value(
             key=key,
-            metric_value_update_request=_metric_value_request(value_or_request, timestamp),
+            metric_value_update_request=normalize_metric_request(
+                _metric_value_request(value_or_request, timestamp)
+            ),
         )
 
     # Backward-compatible generated-style alias.
     def update_metric_value(self, key: str, metric_value_update_request: Any):
         return self._api.update_metric_value(
             key=key,
-            metric_value_update_request=metric_value_update_request,
+            metric_value_update_request=normalize_metric_request(metric_value_update_request),
         )
 
 
