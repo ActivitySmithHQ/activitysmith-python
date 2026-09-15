@@ -138,17 +138,29 @@ activitysmith.notifications.send(
 
 Choose the Live Activity type that matches what you want to show:
 
-- ![Stats Live Activity with six labeled sales metrics](https://cdn.activitysmith.com/features/stats-live-activity.png) **Stats**: Show up to 8 labeled values on your Lock Screen, from revenue and orders to uptime and conversion.
+![Stats Live Activity with six labeled sales metrics](https://cdn.activitysmith.com/features/stats-live-activity.png)
 
-- ![Metrics Live Activity with CPU and memory values](https://cdn.activitysmith.com/features/metrics-live-activity-start.png) **Metrics**: Track two related values with segmented bars, such as CPU and memory.
+**Stats**: Show up to 8 labeled values on your Lock Screen, from revenue and orders to uptime and conversion.
 
-- ![Segmented Progress Live Activity showing a workflow step](https://cdn.activitysmith.com/features/update-live-activity.png) **Segmented Progress**: Show progress through a known set of steps, like build, test, deploy, and verify.
+![Metrics Live Activity with CPU and memory values](https://cdn.activitysmith.com/features/metrics-live-activity-start.png)
 
-- ![Progress Live Activity showing percentage completion](https://cdn.activitysmith.com/features/progress-live-activity.png) **Progress**: Show percentage progress for jobs that move continuously toward completion.
+**Metrics**: Track two related values with segmented bars, such as CPU and memory.
 
-- ![Alert Live Activity showing a customer reactivation update](https://cdn.activitysmith.com/features/alert-live-activity.png) **Alert**: Show status updates with a clear message, badge, and icon. When you add an action button, `color` controls the button tint.
+![Segmented Progress Live Activity showing a workflow step](https://cdn.activitysmith.com/features/update-live-activity.png)
 
-- ![Timer Live Activity showing a benchmark run countdown](https://cdn.activitysmith.com/features/timer-live-activity.png) **Timer**: Count down from a duration, or count up from 00:00 while a job runs.
+**Segmented Progress**: Show progress through a known set of steps, like build, test, deploy, and verify.
+
+![Progress Live Activity showing percentage completion](https://cdn.activitysmith.com/features/progress-live-activity.png)
+
+**Progress**: Show percentage progress for jobs that move continuously toward completion.
+
+![Alert Live Activity showing a customer reactivation update](https://cdn.activitysmith.com/features/alert-live-activity.png)
+
+**Alert**: Show status updates with a clear message, badge, and icon. When you add an action button, `color` controls the button tint.
+
+![Timer Live Activity showing a benchmark run countdown](https://cdn.activitysmith.com/features/timer-live-activity.png)
+
+**Timer**: Count down from a duration, or count up from 00:00 while a job runs.
 
 ### Start & Update Live Activity
 
