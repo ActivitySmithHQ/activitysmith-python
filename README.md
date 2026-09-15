@@ -168,8 +168,6 @@ Use a stable `stream_key` to identify the metric, job, deployment, or system you
 
 #### Stats
 
-The current Python client requires `...` for values inside Live Activity metrics. It serializes to a plain number or string in the API request.
-
 ![Stats Live Activity stream example](https://cdn.activitysmith.com/features/stats-live-activity.png)
 
 ```python
@@ -491,7 +489,7 @@ ActivitySmith lets you display any value on your Lock Screen with widgets - SaaS
 
 ![Create widget metric](https://cdn.activitysmith.com/features/create-widget-metric.png)
 
-Use the metric key to update its value. The current Python client requires `...` here; it serializes to the number or string expected by the API.
+Use the metric key to update its value.
 
 ```python
 activitysmith.metrics.update("deploy.success_rate", 99.9)
