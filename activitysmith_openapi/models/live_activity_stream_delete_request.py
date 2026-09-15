@@ -17,10 +17,12 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from activitysmith_openapi.models.alert_payload import AlertPayload
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
+from activitysmith_openapi.models.metadata_value import MetadataValue
 from activitysmith_openapi.models.stream_content_state import StreamContentState
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,11 +31,13 @@ class LiveActivityStreamDeleteRequest(BaseModel):
     """
     Optional payload for ending a managed stream. When omitted, ActivitySmith ends the stream using the latest known state when possible.
     """ # noqa: E501
+    metadata: Optional[Dict[str, MetadataValue]] = Field(default=None, description="Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it.")
+    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     content_state: Optional[StreamContentState] = None
     action: Optional[LiveActivityAction] = None
     secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
-    __properties: ClassVar[List[str]] = ["content_state", "action", "secondary_action", "alert"]
+    __properties: ClassVar[List[str]] = ["metadata", "tags", "content_state", "action", "secondary_action", "alert"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -74,6 +78,13 @@ class LiveActivityStreamDeleteRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key in self.metadata:
+                if self.metadata[_key]:
+                    _field_dict[_key] = self.metadata[_key].to_dict()
+            _dict['metadata'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of content_state
         if self.content_state:
             _dict['content_state'] = self.content_state.to_dict()
@@ -98,6 +109,13 @@ class LiveActivityStreamDeleteRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "metadata": dict(
+                (_k, MetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None,
+            "tags": obj.get("tags"),
             "content_state": StreamContentState.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
             "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
             "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None,

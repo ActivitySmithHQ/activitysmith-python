@@ -35,11 +35,14 @@ class TestPushNotificationRequest(unittest.TestCase):
         model = PushNotificationRequest()
         if include_optional:
             return PushNotificationRequest(
+                metadata = {
+                    'key' : null
+                    },
                 title = '',
                 message = '',
                 subtitle = '',
                 media = 'https:/',
-                redirection = 'shortcuts:/',
+                redirection = 'A5bTTFjjMRwg.Zbs8YayHLrJdgMvb:',
                 actions = [
                     {
                         'key' : null

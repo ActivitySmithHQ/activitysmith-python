@@ -21,6 +21,7 @@ from pydantic import BaseModel, ConfigDict, Field, StrictInt, StrictStr, field_v
 from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from activitysmith_openapi.models.channel_target import ChannelTarget
+from activitysmith_openapi.models.metadata_value import MetadataValue
 from activitysmith_openapi.models.push_notification_action import PushNotificationAction
 from typing import Optional, Set
 from typing_extensions import Self
@@ -29,11 +30,12 @@ class PushNotificationRequest(BaseModel):
     """
     PushNotificationRequest
     """ # noqa: E501
+    metadata: Optional[Dict[str, MetadataValue]] = Field(default=None, description="Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it.")
     title: StrictStr
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
     media: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If `redirection` is omitted, tapping the notification opens this URL. Cannot be combined with `actions`.")
-    redirection: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTP URL, HTTPS URL, or shortcuts://run-shortcut?name=... URL opened when the user taps the notification body. Use shortcuts://run-shortcut?name=... to run a specific iPhone Shortcut that already exists on the user's device. Overrides the default tap target from `media` when both are provided.")
+    redirection: Optional[Annotated[str, Field(strict=True, max_length=2048)]] = Field(default=None, description="Optional HTTP, HTTPS, Shortcuts, or installed app URL opened when the user taps the notification body. Custom schemes such as spotify:// and spotify:track:123 require iOS 1.13.4 build 2 or later and an installed handler; no web fallback is provided. Internal and executable schemes are blocked. Overrides the default tap target from media.")
     actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
     payload: Optional[Dict[str, Any]] = None
     badge: Optional[StrictInt] = None
@@ -41,7 +43,7 @@ class PushNotificationRequest(BaseModel):
     target: Optional[ChannelTarget] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["title", "message", "subtitle", "media", "redirection", "actions", "payload", "badge", "sound", "target", "tags"]
+    __properties: ClassVar[List[str]] = ["metadata", "title", "message", "subtitle", "media", "redirection", "actions", "payload", "badge", "sound", "target", "tags"]
 
     @field_validator('media')
     def media_validate_regular_expression(cls, value):
@@ -59,8 +61,8 @@ class PushNotificationRequest(BaseModel):
         if value is None:
             return value
 
-        if not re.match(r"^(http|https|shortcuts):\/\/", value):
-            raise ValueError(r"must validate the regular expression /^(http|https|shortcuts):\/\//")
+        if not re.match(r"^[A-Za-z][A-Za-z0-9+.-]*:", value):
+            raise ValueError(r"must validate the regular expression /^[A-Za-z][A-Za-z0-9+.-]*:/")
         return value
 
     model_config = ConfigDict(
@@ -104,6 +106,13 @@ class PushNotificationRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key in self.metadata:
+                if self.metadata[_key]:
+                    _field_dict[_key] = self.metadata[_key].to_dict()
+            _dict['metadata'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of each item in actions (list)
         _items = []
         if self.actions:
@@ -131,6 +140,12 @@ class PushNotificationRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "metadata": dict(
+                (_k, MetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None,
             "title": obj.get("title"),
             "message": obj.get("message"),
             "subtitle": obj.get("subtitle"),

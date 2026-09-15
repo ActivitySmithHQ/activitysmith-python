@@ -6,6 +6,8 @@ Optional payload for ending a managed stream. When omitted, ActivitySmith ends t
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**metadata** | [**Dict[str, MetadataValue]**](MetadataValue.md) | Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it. | [optional] 
+**tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 **content_state** | [**StreamContentState**](StreamContentState.md) |  | [optional] 
 **action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
 **secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 

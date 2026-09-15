@@ -35,6 +35,9 @@ class TestLiveActivityStartRequest(unittest.TestCase):
         model = LiveActivityStartRequest()
         if include_optional:
             return LiveActivityStartRequest(
+                metadata = {
+                    'key' : null
+                    },
                 content_state = activitysmith_openapi.models.content_state_start.ContentStateStart(
                     title = '', 
                     subtitle = '', 

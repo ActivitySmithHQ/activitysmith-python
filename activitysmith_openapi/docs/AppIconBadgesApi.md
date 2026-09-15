@@ -85,7 +85,8 @@ Name | Type | Description  | Notes
 **200** | App Icon Badge Count updated |  -  |
 **400** | Bad request |  -  |
 **403** | Forbidden |  -  |
-**404** | No recipients found for effective channel target |  -  |
+**422** | No matching devices found, or a targeted device needs to reconnect |  -  |
+**502** | App Icon Badge Count could not be updated |  -  |
 **429** | Rate limit exceeded |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
