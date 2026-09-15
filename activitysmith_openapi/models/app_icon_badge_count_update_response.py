@@ -19,7 +19,7 @@ import json
 
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
-from typing import Any, ClassVar, Dict, List
+from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
@@ -30,11 +30,13 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
     """ # noqa: E501
     success: StrictBool
     badge: Annotated[int, Field(le=2147483647, strict=True, ge=0)]
-    devices_notified: StrictInt
-    users_notified: StrictInt
+    devices_updated: StrictInt = Field(description="Number of devices whose App Icon Badge Count was updated.")
+    users_updated: StrictInt = Field(description="Number of account users with at least one updated device.")
+    devices_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for devices_updated.")
+    users_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for users_updated.")
     effective_channel_slugs: List[StrictStr]
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "badge", "devices_notified", "users_notified", "effective_channel_slugs", "timestamp"]
+    __properties: ClassVar[List[str]] = ["success", "badge", "devices_updated", "users_updated", "devices_notified", "users_notified", "effective_channel_slugs", "timestamp"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,6 +91,8 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
         _obj = cls.model_validate({
             "success": obj.get("success"),
             "badge": obj.get("badge"),
+            "devices_updated": obj.get("devices_updated"),
+            "users_updated": obj.get("users_updated"),
             "devices_notified": obj.get("devices_notified"),
             "users_notified": obj.get("users_notified"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),

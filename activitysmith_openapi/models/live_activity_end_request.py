@@ -19,8 +19,10 @@ import json
 
 from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from activitysmith_openapi.models.content_state_end import ContentStateEnd
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
+from activitysmith_openapi.models.metadata_value import MetadataValue
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -28,11 +30,13 @@ class LiveActivityEndRequest(BaseModel):
     """
     End an existing Live Activity by activity_id.
     """ # noqa: E501
+    metadata: Optional[Dict[str, MetadataValue]] = Field(default=None, description="Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it.")
     activity_id: StrictStr
+    tags: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]], Field(max_length=20)]] = Field(default=None, description="Tags for notification history. Omit to keep existing Tags, supply an array to replace them, or send an empty array to clear them.")
     content_state: ContentStateEnd
     action: Optional[LiveActivityAction] = None
     secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
-    __properties: ClassVar[List[str]] = ["activity_id", "content_state", "action", "secondary_action"]
+    __properties: ClassVar[List[str]] = ["metadata", "activity_id", "tags", "content_state", "action", "secondary_action"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,6 +77,13 @@ class LiveActivityEndRequest(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of each value in metadata (dict)
+        _field_dict = {}
+        if self.metadata:
+            for _key in self.metadata:
+                if self.metadata[_key]:
+                    _field_dict[_key] = self.metadata[_key].to_dict()
+            _dict['metadata'] = _field_dict
         # override the default output from pydantic by calling `to_dict()` of content_state
         if self.content_state:
             _dict['content_state'] = self.content_state.to_dict()
@@ -94,7 +105,14 @@ class LiveActivityEndRequest(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "metadata": dict(
+                (_k, MetadataValue.from_dict(_v))
+                for _k, _v in obj["metadata"].items()
+            )
+            if obj.get("metadata") is not None
+            else None,
             "activity_id": obj.get("activity_id"),
+            "tags": obj.get("tags"),
             "content_state": ContentStateEnd.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
             "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
             "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None

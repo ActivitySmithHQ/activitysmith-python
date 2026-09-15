@@ -382,6 +382,13 @@ class Configuration:
                 'key': 'Authorization',
                 'value': 'Bearer ' + self.access_token
             }
+        if self.access_token is not None:
+            auth['mcpOAuth'] = {
+                'type': 'oauth2',
+                'in': 'header',
+                'key': 'Authorization',
+                'value': 'Bearer ' + self.access_token
+            }
         return auth
 
     def to_debug_report(self):
@@ -393,7 +400,7 @@ class Configuration:
                "OS: {env}\n"\
                "Python Version: {pyversion}\n"\
                "Version of the API: 1.0.0\n"\
-               "SDK Package Version: 1.10.0".\
+               "SDK Package Version: 1.11.0".\
                format(env=sys.platform, pyversion=sys.version)
 
     def get_host_settings(self):

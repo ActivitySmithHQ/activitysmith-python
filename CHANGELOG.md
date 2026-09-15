@@ -1,3 +1,7 @@
+## 1.11.0
+
+This version adds support for Metadata and iOS deep links, and expands Tags support when updating or ending Live Activities.
+
 ## 1.10.0
 
 ### New Features

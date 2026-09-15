@@ -1,3 +1,4 @@
+import json
 from importlib.metadata import version
 
 from activitysmith.client import ActivitySmith, action, alert_badge, alert_icon, content_state, metric
@@ -20,22 +21,27 @@ class FakeLiveActivitiesApi:
         self.calls = []
 
     def start_live_activity(self, **kwargs):
+        kwargs = json.loads(json.dumps(kwargs, default=lambda value: value.to_dict()))
         self.calls.append(("start", kwargs))
         return kwargs
 
     def update_live_activity(self, **kwargs):
+        kwargs = json.loads(json.dumps(kwargs, default=lambda value: value.to_dict()))
         self.calls.append(("update", kwargs))
         return kwargs
 
     def end_live_activity(self, **kwargs):
+        kwargs = json.loads(json.dumps(kwargs, default=lambda value: value.to_dict()))
         self.calls.append(("end", kwargs))
         return kwargs
 
     def reconcile_live_activity_stream(self, **kwargs):
+        kwargs = json.loads(json.dumps(kwargs, default=lambda value: value.to_dict()))
         self.calls.append(("stream", kwargs))
         return kwargs
 
     def end_live_activity_stream(self, **kwargs):
+        kwargs = json.loads(json.dumps(kwargs, default=lambda value: value.to_dict()))
         self.calls.append(("end_stream", kwargs))
         return kwargs
 
@@ -46,6 +52,7 @@ class FakeMetricsApi:
         self.calls = []
 
     def update_metric_value(self, **kwargs):
+        kwargs = json.loads(json.dumps(kwargs, default=lambda value: value.to_dict()))
         self.calls.append(kwargs)
         return kwargs
 

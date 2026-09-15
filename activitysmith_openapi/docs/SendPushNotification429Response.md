@@ -8,7 +8,9 @@ Name | Type | Description | Notes
 **error** | **str** |  | 
 **message** | **str** |  | 
 **limit** | **int** |  | 
-**active** | **int** | Current number of active Live Activities. | 
+**active** | **int** | Highest number of active Live Activities among the targeted devices. | 
+**blocked_devices** | **int** | Number of targeted devices that have reached the enforced iOS Live Activity concurrency threshold. Included only when targeted devices have mixed capacity. | [optional] 
+**targeted_devices** | **int** | Total number of targeted devices. Included only when targeted devices have mixed capacity. | [optional] 
 
 ## Example
 

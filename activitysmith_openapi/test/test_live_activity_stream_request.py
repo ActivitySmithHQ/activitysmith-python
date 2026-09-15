@@ -35,6 +35,9 @@ class TestLiveActivityStreamRequest(unittest.TestCase):
         model = LiveActivityStreamRequest()
         if include_optional:
             return LiveActivityStreamRequest(
+                metadata = {
+                    'key' : null
+                    },
                 content_state = activitysmith_openapi.models.stream_content_state.StreamContentState(
                     title = '', 
                     subtitle = '', 

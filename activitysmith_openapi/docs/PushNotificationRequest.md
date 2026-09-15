@@ -5,11 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**metadata** | [**Dict[str, MetadataValue]**](MetadataValue.md) | Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it. | [optional] 
 **title** | **str** |  | 
 **message** | **str** |  | [optional] 
 **subtitle** | **str** |  | [optional] 
 **media** | **str** | Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If &#x60;redirection&#x60; is omitted, tapping the notification opens this URL. Cannot be combined with &#x60;actions&#x60;. | [optional] 
-**redirection** | **str** | Optional HTTP URL, HTTPS URL, or shortcuts://run-shortcut?name&#x3D;... URL opened when the user taps the notification body. Use shortcuts://run-shortcut?name&#x3D;... to run a specific iPhone Shortcut that already exists on the user&#39;s device. Overrides the default tap target from &#x60;media&#x60; when both are provided. | [optional] 
+**redirection** | **str** | Optional HTTP, HTTPS, Shortcuts, or installed app URL opened when the user taps the notification body. Custom schemes such as spotify:// and spotify:track:123 require iOS 1.13.4 build 2 or later and an installed handler; no web fallback is provided. Internal and executable schemes are blocked. Overrides the default tap target from media. | [optional] 
 **actions** | [**List[PushNotificationAction]**](PushNotificationAction.md) | Optional interactive actions shown when users expand the notification. Cannot be combined with &#x60;media&#x60;. | [optional] 
 **payload** | **object** |  | [optional] 
 **badge** | **int** |  | [optional] 

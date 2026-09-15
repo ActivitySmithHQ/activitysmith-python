@@ -37,6 +37,8 @@ class TestAppIconBadgeCountUpdateResponse(unittest.TestCase):
             return AppIconBadgeCountUpdateResponse(
                 success = True,
                 badge = 0,
+                devices_updated = 56,
+                users_updated = 56,
                 devices_notified = 56,
                 users_notified = 56,
                 effective_channel_slugs = [
@@ -48,8 +50,8 @@ class TestAppIconBadgeCountUpdateResponse(unittest.TestCase):
             return AppIconBadgeCountUpdateResponse(
                 success = True,
                 badge = 0,
-                devices_notified = 56,
-                users_notified = 56,
+                devices_updated = 56,
+                users_updated = 56,
                 effective_channel_slugs = [
                     ''
                     ],
