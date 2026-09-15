@@ -35,6 +35,12 @@ class TestLiveActivityStreamDeleteRequest(unittest.TestCase):
         model = LiveActivityStreamDeleteRequest()
         if include_optional:
             return LiveActivityStreamDeleteRequest(
+                metadata = {
+                    'key' : null
+                    },
+                tags = [
+                    'gB:9JLe6iL71-aa-.Ctq:dcsc.3-8:1gAa8Xa6u61ArrlGpCQjkQVRmfnjddwcDM0'
+                    ],
                 content_state = activitysmith_openapi.models.stream_content_state.StreamContentState(
                     title = '', 
                     subtitle = '', 

@@ -17,24 +17,21 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
+from pydantic import BaseModel, ConfigDict, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
-from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
-from activitysmith_openapi.models.push_notification_webhook_method import PushNotificationWebhookMethod
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PushNotificationAction(BaseModel):
+class ChangelogItem(BaseModel):
     """
-    PushNotificationAction
+    ChangelogItem
     """ # noqa: E501
-    title: StrictStr = Field(description="Button title displayed in iOS expanded notification UI.")
-    type: PushNotificationActionType
-    url: StrictStr = Field(description="Action URL. For open_url, use HTTP, HTTPS, Shortcuts, or an installed app’s custom URL scheme, such as spotify:// or spotify:track:123. Custom app schemes require iOS 1.13.4 build 2 or later; no web fallback is provided. Internal and executable schemes are blocked. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
-    method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
-    body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = []
+    icon: Optional[StrictStr] = None
+    title: StrictStr
+    body: StrictStr
+    image_url: Optional[StrictStr] = None
+    accent_color: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["icon", "title", "body", "image_url", "accent_color"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +51,7 @@ class PushNotificationAction(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PushNotificationAction from a JSON string"""
+        """Create an instance of ChangelogItem from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,10 +63,8 @@ class PushNotificationAction(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -77,16 +72,26 @@ class PushNotificationAction(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
+        # set to None if icon (nullable) is None
+        # and model_fields_set contains the field
+        if self.icon is None and "icon" in self.model_fields_set:
+            _dict['icon'] = None
+
+        # set to None if image_url (nullable) is None
+        # and model_fields_set contains the field
+        if self.image_url is None and "image_url" in self.model_fields_set:
+            _dict['image_url'] = None
+
+        # set to None if accent_color (nullable) is None
+        # and model_fields_set contains the field
+        if self.accent_color is None and "accent_color" in self.model_fields_set:
+            _dict['accent_color'] = None
 
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PushNotificationAction from a dict"""
+        """Create an instance of ChangelogItem from a dict"""
         if obj is None:
             return None
 
@@ -94,12 +99,12 @@ class PushNotificationAction(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "icon": obj.get("icon"),
+            "title": obj.get("title"),
+            "body": obj.get("body"),
+            "image_url": obj.get("image_url"),
+            "accent_color": obj.get("accent_color")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

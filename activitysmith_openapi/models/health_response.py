@@ -17,24 +17,22 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
-from activitysmith_openapi.models.push_notification_webhook_method import PushNotificationWebhookMethod
+from datetime import datetime
+from pydantic import BaseModel, ConfigDict, StrictBool, StrictStr
+from typing import Any, ClassVar, Dict, List
+from activitysmith_openapi.models.health_check import HealthCheck
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PushNotificationAction(BaseModel):
+class HealthResponse(BaseModel):
     """
-    PushNotificationAction
+    HealthResponse
     """ # noqa: E501
-    title: StrictStr = Field(description="Button title displayed in iOS expanded notification UI.")
-    type: PushNotificationActionType
-    url: StrictStr = Field(description="Action URL. For open_url, use HTTP, HTTPS, Shortcuts, or an installed app’s custom URL scheme, such as spotify:// or spotify:track:123. Custom app schemes require iOS 1.13.4 build 2 or later; no web fallback is provided. Internal and executable schemes are blocked. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
-    method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
-    body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = []
+    ok: StrictBool
+    service: StrictStr
+    timestamp: datetime
+    checks: List[HealthCheck]
+    __properties: ClassVar[List[str]] = ["ok", "service", "timestamp", "checks"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +52,7 @@ class PushNotificationAction(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PushNotificationAction from a JSON string"""
+        """Create an instance of HealthResponse from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,10 +64,8 @@ class PushNotificationAction(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -77,16 +73,18 @@ class PushNotificationAction(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
+        # override the default output from pydantic by calling `to_dict()` of each item in checks (list)
+        _items = []
+        if self.checks:
+            for _item in self.checks:
+                if _item:
+                    _items.append(_item.to_dict())
+            _dict['checks'] = _items
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PushNotificationAction from a dict"""
+        """Create an instance of HealthResponse from a dict"""
         if obj is None:
             return None
 
@@ -94,12 +92,11 @@ class PushNotificationAction(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "ok": obj.get("ok"),
+            "service": obj.get("service"),
+            "timestamp": obj.get("timestamp"),
+            "checks": [HealthCheck.from_dict(_item) for _item in obj["checks"]] if obj.get("checks") is not None else None
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 

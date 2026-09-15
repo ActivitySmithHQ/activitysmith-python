@@ -35,7 +35,13 @@ class TestLiveActivityEndRequest(unittest.TestCase):
         model = LiveActivityEndRequest()
         if include_optional:
             return LiveActivityEndRequest(
+                metadata = {
+                    'key' : null
+                    },
                 activity_id = '',
+                tags = [
+                    '0'
+                    ],
                 content_state = activitysmith_openapi.models.content_state_end.ContentStateEnd(
                     title = '', 
                     subtitle = '', 

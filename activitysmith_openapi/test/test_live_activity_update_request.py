@@ -35,7 +35,13 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
         model = LiveActivityUpdateRequest()
         if include_optional:
             return LiveActivityUpdateRequest(
+                metadata = {
+                    'key' : null
+                    },
                 activity_id = '',
+                tags = [
+                    '0'
+                    ],
                 content_state = activitysmith_openapi.models.content_state_update.ContentStateUpdate(
                     title = '', 
                     subtitle = '', 

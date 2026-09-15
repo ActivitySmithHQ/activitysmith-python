@@ -17,24 +17,34 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, Field, StrictStr
-from typing import Any, ClassVar, Dict, List, Optional
-from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
-from activitysmith_openapi.models.push_notification_webhook_method import PushNotificationWebhookMethod
+from pydantic import BaseModel, ConfigDict, Field, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PushNotificationAction(BaseModel):
+class HealthCheck(BaseModel):
     """
-    PushNotificationAction
+    HealthCheck
     """ # noqa: E501
-    title: StrictStr = Field(description="Button title displayed in iOS expanded notification UI.")
-    type: PushNotificationActionType
-    url: StrictStr = Field(description="Action URL. For open_url, use HTTP, HTTPS, Shortcuts, or an installed app’s custom URL scheme, such as spotify:// or spotify:track:123. Custom app schemes require iOS 1.13.4 build 2 or later; no web fallback is provided. Internal and executable schemes are blocked. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
-    method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
-    body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
-    additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = []
+    name: StrictStr
+    status: StrictStr
+    duration_ms: Annotated[int, Field(strict=True, ge=0)]
+    __properties: ClassVar[List[str]] = ["name", "status", "duration_ms"]
+
+    @field_validator('name')
+    def name_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['database', 'redis']):
+            raise ValueError("must be one of enum values ('database', 'redis')")
+        return value
+
+    @field_validator('status')
+    def status_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['ok', 'failed']):
+            raise ValueError("must be one of enum values ('ok', 'failed')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +64,7 @@ class PushNotificationAction(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PushNotificationAction from a JSON string"""
+        """Create an instance of HealthCheck from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -66,10 +76,8 @@ class PushNotificationAction(BaseModel):
         * `None` is only added to the output dict for nullable fields that
           were set at model initialization. Other fields with value `None`
           are ignored.
-        * Fields in `self.additional_properties` are added to the output dict.
         """
         excluded_fields: Set[str] = set([
-            "additional_properties",
         ])
 
         _dict = self.model_dump(
@@ -77,16 +85,11 @@ class PushNotificationAction(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # puts key-value pairs in additional_properties in the top level
-        if self.additional_properties is not None:
-            for _key, _value in self.additional_properties.items():
-                _dict[_key] = _value
-
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PushNotificationAction from a dict"""
+        """Create an instance of HealthCheck from a dict"""
         if obj is None:
             return None
 
@@ -94,12 +97,10 @@ class PushNotificationAction(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "name": obj.get("name"),
+            "status": obj.get("status"),
+            "duration_ms": obj.get("duration_ms")
         })
-        # store additional fields in additional_properties
-        for _key in obj.keys():
-            if _key not in cls.__properties:
-                _obj.additional_properties[_key] = obj.get(_key)
-
         return _obj
 
 
