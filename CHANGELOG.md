@@ -1,12 +1,6 @@
-## Unreleased
+## 1.11.0
 
-- Support Push Notification app deep links and final Tags/Metadata when ending a managed Live Activity stream.
-
-- Add Metadata to Push Notifications and Live Activity start, update, end, and stream requests, including empty-object clearing.
-
-- Add Tags replacement and empty-array clearing to legacy Live Activity update and end.
-
-- Accept native numbers and strings for Live Activity metrics and Lock Screen Widget values without generated value wrappers.
+This version adds support for Metadata and iOS deep links, and expands Tags support when updating or ending Live Activities.
 
 ## 1.10.0
 
