@@ -525,7 +525,7 @@ activitysmith.badge_count(0)
 
 ## Metadata
 
-Metadata adds information to Push Notification and Live Activity details in ActivitySmith. It does not appear in the notification or Live Activity on your device.
+Metadata adds extra information to Push Notification and Live Activity details in ActivitySmith. It does not appear in the notification or Live Activity on your device.
 
 ```python
 activitysmith.notifications.send(
@@ -541,8 +541,6 @@ activitysmith.live_activities.stream(
     metadata={"job_id": "import-382", "records": 1200},
 )
 ```
-
-Supported on Push Notifications, Live Activity streams (including stream ending), and legacy `start`, `update`, and `end` calls. On updates or end calls, omit `metadata` to keep it, supply an object to replace it, or send `{}` to clear it.
 
 Values can be strings, numbers, or booleans. Metadata supports up to 50 entries and 16 KB of JSON, with keys up to 100 characters and strings up to 4,000 characters. Nested objects, arrays, and null values are not supported.
 
