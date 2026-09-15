@@ -20,7 +20,6 @@ __version__ = "1.10.0"
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
-from activitysmith_openapi.api.public_api import PublicApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 
 # import ApiClient
@@ -42,16 +41,11 @@ from activitysmith_openapi.models.app_icon_badge_count_update_error import AppIc
 from activitysmith_openapi.models.app_icon_badge_count_update_request import AppIconBadgeCountUpdateRequest
 from activitysmith_openapi.models.app_icon_badge_count_update_response import AppIconBadgeCountUpdateResponse
 from activitysmith_openapi.models.bad_request_error import BadRequestError
-from activitysmith_openapi.models.changelog_entry import ChangelogEntry
-from activitysmith_openapi.models.changelog_item import ChangelogItem
-from activitysmith_openapi.models.changelog_list_response import ChangelogListResponse
 from activitysmith_openapi.models.channel_target import ChannelTarget
 from activitysmith_openapi.models.content_state_end import ContentStateEnd
 from activitysmith_openapi.models.content_state_start import ContentStateStart
 from activitysmith_openapi.models.content_state_update import ContentStateUpdate
 from activitysmith_openapi.models.forbidden_error import ForbiddenError
-from activitysmith_openapi.models.health_check import HealthCheck
-from activitysmith_openapi.models.health_response import HealthResponse
 from activitysmith_openapi.models.live_activity_action import LiveActivityAction
 from activitysmith_openapi.models.live_activity_action_type import LiveActivityActionType
 from activitysmith_openapi.models.live_activity_alert_badge import LiveActivityAlertBadge
