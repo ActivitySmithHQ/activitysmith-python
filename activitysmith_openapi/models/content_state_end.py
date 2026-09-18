@@ -28,28 +28,28 @@ from typing_extensions import Self
 
 class ContentStateEnd(BaseModel):
     """
-    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For alert include message. For timer, omit duration_seconds to preserve and freeze the latest timer state. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, and segmented_progress. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
+    End payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer, omit duration_seconds to preserve and freeze the latest timer state. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. Type is optional when ending an existing activity. You can send an updated number_of_steps here if the workflow changed after start.
     """ # noqa: E501
     title: StrictStr
     subtitle: Optional[StrictStr] = None
     number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. Optional on end, and safe to change if the final workflow used more or fewer steps than originally planned.")
     current_step: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Current completed step count. Use for type=segmented_progress. Must be less than or equal to number_of_steps when number_of_steps is provided.")
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
-    value: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Current progress value. Use with upper_limit for type=progress.")
+    value: Optional[StrictStr] = Field(default=None, description="For type=value, the required prominent readout (string or finite number); strings preserve exact formatting. For type=progress, a numeric progress value used with upper_limit.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
     duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Timer duration in seconds. For type=timer, omit duration_seconds on end to preserve and freeze the latest timer state.")
     counts_down: Optional[StrictBool] = Field(default=True, description="Use with type=timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer.")
     is_running: Optional[StrictBool] = Field(default=True, description="Use with type=timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for type=metrics or type=stats.")
     message: Optional[Annotated[str, Field(min_length=1, strict=True)]] = Field(default=None, description="Alert message. Use for type=alert.")
-    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, stats, and timer.")
-    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge. Supported by alert, progress, and segmented_progress.")
+    icon: Optional[LiveActivityAlertIcon] = Field(default=None, description="Optional SF Symbol icon. Supported by alert, progress, segmented_progress, metrics, stats, timer, and value.")
+    badge: Optional[LiveActivityAlertBadge] = Field(default=None, description="Optional badge. Supported by alert, progress, segmented_progress, and value.")
     type: Optional[StrictStr] = Field(default=None, description="Optional. When omitted, the API uses the existing Live Activity type.")
-    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, and timer Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included.")
+    color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, timer, and value Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
     auto_dismiss_minutes: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=3, description="Optional. Minutes before the ended Live Activity is dismissed. Default 3. Set 0 for immediate dismissal. iOS will dismiss ended Live Activities after ~4 hours max.")
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "duration_seconds", "counts_down", "is_running", "metrics", "message", "icon", "badge", "type", "color", "step_color", "step_colors", "auto_dismiss_minutes"]
+    __properties: ClassVar[List[str]] = []
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -57,8 +57,8 @@ class ContentStateEnd(BaseModel):
         if value is None:
             return value
 
-        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats', 'alert', 'timer']):
-            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats', 'alert', 'timer')")
+        if value not in set(['segmented_progress', 'progress', 'metrics', 'stats', 'alert', 'timer', 'value']):
+            raise ValueError("must be one of enum values ('segmented_progress', 'progress', 'metrics', 'stats', 'alert', 'timer', 'value')")
         return value
 
     @field_validator('color')
@@ -131,19 +131,6 @@ class ContentStateEnd(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
-        # override the default output from pydantic by calling `to_dict()` of each item in metrics (list)
-        _items = []
-        if self.metrics:
-            for _item in self.metrics:
-                if _item:
-                    _items.append(_item.to_dict())
-            _dict['metrics'] = _items
-        # override the default output from pydantic by calling `to_dict()` of icon
-        if self.icon:
-            _dict['icon'] = self.icon.to_dict()
-        # override the default output from pydantic by calling `to_dict()` of badge
-        if self.badge:
-            _dict['badge'] = self.badge.to_dict()
         return _dict
 
     @classmethod
@@ -156,25 +143,6 @@ class ContentStateEnd(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "title": obj.get("title"),
-            "subtitle": obj.get("subtitle"),
-            "number_of_steps": obj.get("number_of_steps"),
-            "current_step": obj.get("current_step"),
-            "percentage": obj.get("percentage"),
-            "value": obj.get("value"),
-            "upper_limit": obj.get("upper_limit"),
-            "duration_seconds": obj.get("duration_seconds"),
-            "counts_down": obj.get("counts_down") if obj.get("counts_down") is not None else True,
-            "is_running": obj.get("is_running") if obj.get("is_running") is not None else True,
-            "metrics": [ActivityMetric.from_dict(_item) for _item in obj["metrics"]] if obj.get("metrics") is not None else None,
-            "message": obj.get("message"),
-            "icon": LiveActivityAlertIcon.from_dict(obj["icon"]) if obj.get("icon") is not None else None,
-            "badge": LiveActivityAlertBadge.from_dict(obj["badge"]) if obj.get("badge") is not None else None,
-            "type": obj.get("type"),
-            "color": obj.get("color"),
-            "step_color": obj.get("step_color"),
-            "step_colors": obj.get("step_colors"),
-            "auto_dismiss_minutes": obj.get("auto_dismiss_minutes") if obj.get("auto_dismiss_minutes") is not None else 3
         })
         return _obj
 

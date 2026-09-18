@@ -35,6 +35,7 @@ class TestRateLimitError(unittest.TestCase):
         model = RateLimitError()
         if include_optional:
             return RateLimitError(
+                code = 'rate_limited',
                 error = '',
                 message = ''
             )

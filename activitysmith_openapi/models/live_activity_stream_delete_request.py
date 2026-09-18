@@ -35,7 +35,7 @@ class LiveActivityStreamDeleteRequest(BaseModel):
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     content_state: Optional[StreamContentState] = None
     action: Optional[LiveActivityAction] = None
-    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
     __properties: ClassVar[List[str]] = ["metadata", "tags", "content_state", "action", "secondary_action", "alert"]
 

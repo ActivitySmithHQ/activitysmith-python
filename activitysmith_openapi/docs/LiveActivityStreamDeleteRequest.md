@@ -10,7 +10,7 @@ Name | Type | Description | Notes
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 **content_state** | [**StreamContentState**](StreamContentState.md) |  | [optional] 
 **action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
-**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
+**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
 **alert** | [**AlertPayload**](AlertPayload.md) |  | [optional] 
 
 ## Example

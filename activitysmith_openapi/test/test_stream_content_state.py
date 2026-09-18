@@ -40,7 +40,7 @@ class TestStreamContentState(unittest.TestCase):
                 number_of_steps = 1,
                 current_step = 0,
                 percentage = 0,
-                value = 1.337,
+                value = '',
                 upper_limit = 1.337,
                 duration_seconds = 1.337,
                 counts_down = True,

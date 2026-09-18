@@ -5,6 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**code** | **str** |  | [optional] 
 **error** | **str** |  | 
 **message** | **str** |  | 
 **limit** | **int** |  | 
