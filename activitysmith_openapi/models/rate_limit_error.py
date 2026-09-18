@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -26,9 +26,20 @@ class RateLimitError(BaseModel):
     """
     RateLimitError
     """ # noqa: E501
+    code: Optional[StrictStr] = None
     error: StrictStr
     message: StrictStr
-    __properties: ClassVar[List[str]] = ["error", "message"]
+    __properties: ClassVar[List[str]] = ["code", "error", "message"]
+
+    @field_validator('code')
+    def code_validate_enum(cls, value):
+        """Validates the enum"""
+        if value is None:
+            return value
+
+        if value not in set(['rate_limited']):
+            raise ValueError("must be one of enum values ('rate_limited')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -81,6 +92,7 @@ class RateLimitError(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "code": obj.get("code"),
             "error": obj.get("error"),
             "message": obj.get("message")
         })

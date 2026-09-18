@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class LiveActivityAction(BaseModel):
     """
-    Optional action button shown in the Live Activity UI. Use action for the primary button, or secondary_action for a secondary button on alert, progress, and segmented_progress Live Activities.
+    Optional action button shown in the Live Activity UI. Use action for the primary button, or secondary_action for a secondary button on alert, progress, segmented_progress, and value Live Activities.
     """ # noqa: E501
     title: StrictStr = Field(description="Button title displayed in the Live Activity UI.")
     type: LiveActivityActionType

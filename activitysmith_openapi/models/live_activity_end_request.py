@@ -35,7 +35,7 @@ class LiveActivityEndRequest(BaseModel):
     tags: Optional[Annotated[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]], Field(max_length=20)]] = Field(default=None, description="Tags for notification history. Omit to keep existing Tags, supply an array to replace them, or send an empty array to clear them.")
     content_state: ContentStateEnd
     action: Optional[LiveActivityAction] = None
-    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     __properties: ClassVar[List[str]] = ["metadata", "activity_id", "tags", "content_state", "action", "secondary_action"]
 
     model_config = ConfigDict(

@@ -16,7 +16,7 @@ Method | HTTP request | Description
 
 End a Live Activity (legacy manual lifecycle)
 
-Legacy manual lifecycle endpoint. For new integrations, use DELETE /live-activity/stream/{stream_key} to end a managed Live Activity stream. This endpoint remains supported for existing integrations and advanced lifecycle control. Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, stats, alert, and timer activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start. Use secondary_action for a second button on alert, progress, and segmented_progress Live Activities.
+Legacy manual lifecycle endpoint. For new integrations, use DELETE /live-activity/stream/{stream_key} to end a managed Live Activity stream. This endpoint remains supported for existing integrations and advanced lifecycle control. Ends a Live Activity and archives its lifecycle. Supports segmented_progress, progress, metrics, stats, alert, timer, and value activity types. For segmented_progress activities, you can send the latest number_of_steps here if the workflow changed after start. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities.
 
 ### Example
 
@@ -86,9 +86,9 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Live Activity ended |  -  |
-**403** | Forbidden (activity not owned by this API key account) |  -  |
-**429** | Rate limit exceeded |  -  |
+**200** | Live Activity ended |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**403** | Forbidden (activity not owned by this API key account) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -97,7 +97,7 @@ Name | Type | Description  | Notes
 
 End a stream
 
-Use this endpoint when the process you are tracking is finished and you no longer want the Live Activity on your devices. ActivitySmith ends the current Live Activity for this stream and dismisses it from devices. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead. Use secondary_action for a second button on alert, progress, and segmented_progress Live Activities.
+Use this endpoint when the process you are tracking is finished and you no longer want the Live Activity on your devices. ActivitySmith ends the current Live Activity for this stream and dismisses it from devices. If you need direct lifecycle control, use /live-activity/start, /live-activity/update, and /live-activity/end instead. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities.
 
 ### Example
 
@@ -169,10 +169,10 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Managed stream ended |  -  |
-**400** | Bad request (invalid stream_key or action) |  -  |
-**404** | Managed stream not found |  -  |
-**429** | Rate limit exceeded |  -  |
+**200** | Managed stream ended |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**400** | Bad request (invalid stream_key or action) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**404** | Managed stream not found |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -181,7 +181,7 @@ Name | Type | Description  | Notes
 
 Start a new Live Activity or update an existing one
 
-Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer; omit duration_seconds on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, and segmented_progress Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
+Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer; omit duration_seconds on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
 
 ### Example
 
@@ -253,11 +253,11 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Stream reconciled |  -  |
-**400** | Bad request (invalid stream_key, payload, action, or channel targeting input) |  -  |
-**403** | Forbidden (API key scope or channel assignment violation) |  -  |
-**404** | No recipients found for effective channel target |  -  |
-**429** | Rate limit exceeded |  -  |
+**200** | Stream reconciled |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**400** | Bad request (invalid stream_key, payload, action, or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**404** | No recipients found for effective channel target |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -266,7 +266,7 @@ Name | Type | Description  | Notes
 
 Start a Live Activity (legacy manual lifecycle)
 
-Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, stats, alert, and timer activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes. Use secondary_action for a second button on alert, progress, and segmented_progress Live Activities. Optional tags to organize and filter notification history.
+Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Starts a Live Activity on devices matched by API key scope and optional target channels. Supports segmented_progress, progress, metrics, stats, alert, timer, and value activity types. For segmented_progress activities, number_of_steps can be changed later during update or end calls if the workflow changes. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history.
 
 ### Example
 
@@ -336,11 +336,11 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Live Activity started |  -  |
-**400** | Bad request (invalid payload or channel targeting input) |  -  |
-**403** | Forbidden (API key scope or channel assignment violation) |  -  |
-**404** | No recipients found for effective channel target |  -  |
-**429** | Rate limit exceeded |  -  |
+**200** | Live Activity started |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**400** | Bad request (invalid payload or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**404** | No recipients found for effective channel target |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -349,7 +349,7 @@ Name | Type | Description  | Notes
 
 Update a Live Activity (legacy manual lifecycle)
 
-Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, stats, alert, and timer activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes. For timer activities, send duration_seconds only when you want to reset the timer window; omit it to keep the current timer running. Use secondary_action for a second button on alert, progress, and segmented_progress Live Activities.
+Legacy manual lifecycle endpoint. For new integrations, use PUT /live-activity/stream/{stream_key} so ActivitySmith can manage start, update, rotation, and end state for you. This endpoint remains supported for existing integrations and advanced lifecycle control. Updates an existing Live Activity. If the per-activity token is not registered yet, the update is queued. Supports segmented_progress, progress, metrics, stats, alert, timer, and value activity types. For segmented_progress activities, you can increase or decrease number_of_steps here as the workflow changes. For timer activities, send duration_seconds only when you want to reset the timer window; omit it to keep the current timer running. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities.
 
 ### Example
 
@@ -419,9 +419,9 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Live Activity updated (or queued) |  -  |
-**403** | Forbidden (activity not owned by this API key account) |  -  |
-**429** | Rate limit exceeded |  -  |
+**200** | Live Activity updated (or queued) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**403** | Forbidden (activity not owned by this API key account) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
