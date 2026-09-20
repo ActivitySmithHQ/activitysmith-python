@@ -34,7 +34,7 @@ class PushNotificationAction(BaseModel):
     method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
     body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = []
+    __properties: ClassVar[List[str]] = ["title", "type", "url", "method", "body"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,6 +94,11 @@ class PushNotificationAction(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "title": obj.get("title"),
+            "type": obj.get("type"),
+            "url": obj.get("url"),
+            "method": obj.get("method") if obj.get("method") is not None else PushNotificationWebhookMethod.POST,
+            "body": obj.get("body")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

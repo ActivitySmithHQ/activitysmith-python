@@ -35,7 +35,7 @@ class LiveActivityStartRequest(BaseModel):
     metadata: Optional[Dict[str, MetadataValue]] = Field(default=None, description="Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it.")
     content_state: ContentStateStart
     action: Optional[LiveActivityAction] = None
-    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
+    secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
     alert: Optional[AlertPayload] = None
     target: Optional[ChannelTarget] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")

@@ -11,7 +11,7 @@ Name | Type | Description | Notes
 **tags** | **List[str]** | Tags for notification history. Omit to keep existing Tags, supply an array to replace them, or send an empty array to clear them. | [optional] 
 **content_state** | [**ContentStateUpdate**](ContentStateUpdate.md) |  | 
 **action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
-**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
+**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
 
 ## Example
 

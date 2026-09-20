@@ -9,7 +9,7 @@ Name | Type | Description | Notes
 **metadata** | [**Dict[str, MetadataValue]**](MetadataValue.md) | Additional information shown in notification and Live Activity details in ActivitySmith. Not displayed in the Push Notification or Live Activity on the device. Values must be strings, finite numbers, or booleans. At most 50 entries and 16 KB of serialized UTF-8 JSON. Omit on updates to preserve existing Metadata; send {} to clear it. | [optional] 
 **content_state** | [**StreamContentState**](StreamContentState.md) |  | 
 **action** | [**LiveActivityAction**](LiveActivityAction.md) |  | [optional] 
-**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, and segmented_progress Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
+**secondary_action** | [**LiveActivityAction**](LiveActivityAction.md) | Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action. | [optional] 
 **alert** | [**AlertPayload**](AlertPayload.md) |  | [optional] 
 **channels** | **List[str]** | Channel slugs. When omitted, API key scope determines recipients. | [optional] 
 **target** | [**ChannelTarget**](ChannelTarget.md) |  | [optional] 

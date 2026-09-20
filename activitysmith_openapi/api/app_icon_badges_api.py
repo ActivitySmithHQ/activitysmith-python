@@ -95,8 +95,8 @@ class AppIconBadgesApi:
             '400': "BadRequestError",
             '403': "ForbiddenError",
             '422': "UpdateAppIconBadgeCount422Response",
-            '502': "AppIconBadgeCountUpdateError",
             '429': "RateLimitError",
+            '502': "AppIconBadgeCountUpdateError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -167,8 +167,8 @@ class AppIconBadgesApi:
             '400': "BadRequestError",
             '403': "ForbiddenError",
             '422': "UpdateAppIconBadgeCount422Response",
-            '502': "AppIconBadgeCountUpdateError",
             '429': "RateLimitError",
+            '502': "AppIconBadgeCountUpdateError",
         }
         response_data = self.api_client.call_api(
             *_param,
@@ -239,8 +239,8 @@ class AppIconBadgesApi:
             '400': "BadRequestError",
             '403': "ForbiddenError",
             '422': "UpdateAppIconBadgeCount422Response",
-            '502': "AppIconBadgeCountUpdateError",
             '429': "RateLimitError",
+            '502': "AppIconBadgeCountUpdateError",
         }
         response_data = self.api_client.call_api(
             *_param,

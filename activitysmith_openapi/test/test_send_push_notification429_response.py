@@ -35,6 +35,7 @@ class TestSendPushNotification429Response(unittest.TestCase):
         model = SendPushNotification429Response()
         if include_optional:
             return SendPushNotification429Response(
+                code = 'rate_limited',
                 error = '',
                 message = '',
                 limit = 56,

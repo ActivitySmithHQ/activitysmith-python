@@ -59,7 +59,7 @@ class MetricsApi:
     ) -> MetricValueUpdateResponse:
         """Update a widget metric value
 
-        Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key.
+        Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key. Metric updates have an independent 300-requests-per-minute account allowance. They do not consume the Push Notification, badge, or Live Activity allowances.
 
         :param key: Metric key configured in the web app. Lowercase letters, numbers, dots, underscores, and dashes are allowed. (required)
         :type key: str
@@ -133,7 +133,7 @@ class MetricsApi:
     ) -> ApiResponse[MetricValueUpdateResponse]:
         """Update a widget metric value
 
-        Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key.
+        Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key. Metric updates have an independent 300-requests-per-minute account allowance. They do not consume the Push Notification, badge, or Live Activity allowances.
 
         :param key: Metric key configured in the web app. Lowercase letters, numbers, dots, underscores, and dashes are allowed. (required)
         :type key: str
@@ -207,7 +207,7 @@ class MetricsApi:
     ) -> RESTResponseType:
         """Update a widget metric value
 
-        Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key.
+        Updates the latest value for a metric displayed in ActivitySmith widgets. Create the metric in the web app first, then update its value using the key. Metric updates have an independent 300-requests-per-minute account allowance. They do not consume the Push Notification, badge, or Live Activity allowances.
 
         :param key: Metric key configured in the web app. Lowercase letters, numbers, dots, underscores, and dashes are allowed. (required)
         :type key: str
