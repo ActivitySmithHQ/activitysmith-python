@@ -26,7 +26,7 @@ from typing_extensions import Self
 
 class LiveActivityAction(BaseModel):
     """
-    Optional action button shown in the Live Activity UI. Use action for the primary button, or secondary_action for a secondary button on alert, progress, and segmented_progress Live Activities.
+    Optional action button shown in the Live Activity UI. Use action for the primary button, or secondary_action for a secondary button on alert, progress, segmented_progress, and value Live Activities.
     """ # noqa: E501
     title: StrictStr = Field(description="Button title displayed in the Live Activity UI.")
     type: LiveActivityActionType
@@ -34,7 +34,7 @@ class LiveActivityAction(BaseModel):
     method: Optional[LiveActivityWebhookMethod] = Field(default=LiveActivityWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
     body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = []
+    __properties: ClassVar[List[str]] = ["title", "type", "url", "method", "body"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,6 +94,11 @@ class LiveActivityAction(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
+            "title": obj.get("title"),
+            "type": obj.get("type"),
+            "url": obj.get("url"),
+            "method": obj.get("method") if obj.get("method") is not None else LiveActivityWebhookMethod.POST,
+            "body": obj.get("body")
         })
         # store additional fields in additional_properties
         for _key in obj.keys():

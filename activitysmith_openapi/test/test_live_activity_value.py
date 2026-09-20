@@ -14,10 +14,10 @@
 
 import unittest
 
-from activitysmith_openapi.models.rate_limit_error import RateLimitError
+from activitysmith_openapi.models.live_activity_value import LiveActivityValue
 
-class TestRateLimitError(unittest.TestCase):
-    """RateLimitError unit test stubs"""
+class TestLiveActivityValue(unittest.TestCase):
+    """LiveActivityValue unit test stubs"""
 
     def setUp(self):
         pass
@@ -25,29 +25,24 @@ class TestRateLimitError(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def make_instance(self, include_optional) -> RateLimitError:
-        """Test RateLimitError
+    def make_instance(self, include_optional) -> LiveActivityValue:
+        """Test LiveActivityValue
             include_optional is a boolean, when False only required
             params are included, when True both required and
             optional params are included """
-        # uncomment below to create an instance of `RateLimitError`
+        # uncomment below to create an instance of `LiveActivityValue`
         """
-        model = RateLimitError()
+        model = LiveActivityValue()
         if include_optional:
-            return RateLimitError(
-                code = 'rate_limited',
-                error = '',
-                message = ''
+            return LiveActivityValue(
             )
         else:
-            return RateLimitError(
-                error = '',
-                message = '',
+            return LiveActivityValue(
         )
         """
 
-    def testRateLimitError(self):
-        """Test RateLimitError"""
+    def testLiveActivityValue(self):
+        """Test LiveActivityValue"""
         # inst_req_only = self.make_instance(include_optional=False)
         # inst_req_and_optional = self.make_instance(include_optional=True)
 

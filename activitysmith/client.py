@@ -16,7 +16,7 @@ from activitysmith_openapi.models.metric_value_update_request import MetricValue
 
 from .normalization import normalize_live_activity_request, normalize_metric_request
 
-SDK_VERSION = "1.11.0"
+SDK_VERSION = "1.12.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -175,7 +175,7 @@ def content_state(
     number_of_steps: int | None = None,
     current_step: int | None = None,
     percentage: int | float | None = None,
-    value: int | float | None = None,
+    value: str | int | float | None = None,
     upper_limit: int | float | None = None,
     duration_seconds: int | float | None = None,
     counts_down: bool | None = None,
@@ -421,6 +421,7 @@ class LiveActivitiesResource:
     TYPE_STATS = "stats"
     TYPE_ALERT = "alert"
     TYPE_TIMER = "timer"
+    TYPE_VALUE = "value"
 
     def __init__(self, api: LiveActivitiesApi) -> None:
         self._api = api

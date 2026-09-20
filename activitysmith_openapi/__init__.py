@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.11.0"
+__version__ = "1.12.0"
 
 # import apis into sdk package
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
@@ -62,6 +62,7 @@ from activitysmith_openapi.models.live_activity_stream_put_response import LiveA
 from activitysmith_openapi.models.live_activity_stream_request import LiveActivityStreamRequest
 from activitysmith_openapi.models.live_activity_update_request import LiveActivityUpdateRequest
 from activitysmith_openapi.models.live_activity_update_response import LiveActivityUpdateResponse
+from activitysmith_openapi.models.live_activity_value import LiveActivityValue
 from activitysmith_openapi.models.live_activity_webhook_method import LiveActivityWebhookMethod
 from activitysmith_openapi.models.metadata_value import MetadataValue
 from activitysmith_openapi.models.metric_error import MetricError

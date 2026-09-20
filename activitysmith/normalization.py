@@ -1,5 +1,6 @@
 """Adapt plain values to the generated client's union models."""
 from typing import Any
+from activitysmith_openapi.models.live_activity_value import LiveActivityValue
 
 from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from activitysmith_openapi.models.metric_value_update_request_value import MetricValueUpdateRequestValue
@@ -22,7 +23,12 @@ def normalize_live_activity_request(request: Any) -> Any:
     if not isinstance(request, dict):
         return request
     state = request.get("content_state")
-    if not isinstance(state, dict) or not isinstance(state.get("metrics"), (list, tuple)):
+    if not isinstance(state, dict):
+        return request
+    if "value" in state:
+        state = {**state, "value": _wrap_value(state["value"], LiveActivityValue)}
+        request = {**request, "content_state": state}
+    if not isinstance(state.get("metrics"), (list, tuple)):
         return request
     metrics = []
     for metric in state["metrics"]:
