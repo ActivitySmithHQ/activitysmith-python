@@ -1,3 +1,7 @@
+## 1.12.0
+
+Adds the new `value` Live Activity type.
+
 ## 1.11.0
 
 This version adds support for Metadata and iOS deep links, and expands Tags support when updating or ending Live Activities.

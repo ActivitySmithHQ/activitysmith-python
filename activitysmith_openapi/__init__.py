@@ -14,7 +14,7 @@
 """  # noqa: E501
 
 
-__version__ = "1.11.0"
+__version__ = "1.12.0"
 
 # import apis into sdk package
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi

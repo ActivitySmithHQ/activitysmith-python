@@ -142,3 +142,25 @@ def test_end_stream_tags(requests, tags):
     if tags is not None:
         assert requests[-1]["tags"] == tags
     assert requests[-1]["metadata"] == {}
+
+
+@pytest.mark.parametrize("value", ["$1,240", "0007", "", 0, -12.75])
+@pytest.mark.parametrize("method", ["start", "update", "end", "stream", "end_stream"])
+@pytest.mark.parametrize("form", ["dict", "named", "helper"])
+def test_prominent_value_serializes_without_losing_format(requests, value, method, form):
+    activitysmith = ActivitySmith(api_key="test")
+    state = content_state("Revenue", type="value", value=value)
+    request = {"content_state": state}
+    if method in ("update", "end"):
+        request["activity_id"] = "activity-1"
+    args = ["revenue"] if method in ("stream", "end_stream") else []
+    with pytest.raises(RequestCaptured):
+        if form == "named":
+            kwargs = dict(state)
+            if method in ("update", "end"):
+                kwargs["activity_id"] = "activity-1"
+            getattr(activitysmith.live_activities, method)(*args, **kwargs)
+        else:
+            getattr(activitysmith.live_activities, method)(*args, request)
+    assert requests[-1]["content_state"]["value"] == value
+    assert isinstance(requests[-1]["content_state"]["value"], str) == isinstance(value, str)
