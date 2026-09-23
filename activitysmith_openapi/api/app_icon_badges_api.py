@@ -93,6 +93,7 @@ class AppIconBadgesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AppIconBadgeCountUpdateResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
             '422': "UpdateAppIconBadgeCount422Response",
             '429': "RateLimitError",
@@ -165,6 +166,7 @@ class AppIconBadgesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AppIconBadgeCountUpdateResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
             '422': "UpdateAppIconBadgeCount422Response",
             '429': "RateLimitError",
@@ -237,6 +239,7 @@ class AppIconBadgesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "AppIconBadgeCountUpdateResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
             '422': "UpdateAppIconBadgeCount422Response",
             '429': "RateLimitError",
