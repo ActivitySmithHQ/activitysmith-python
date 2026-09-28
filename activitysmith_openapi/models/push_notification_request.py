@@ -22,6 +22,7 @@ from typing import Any, ClassVar, Dict, List, Optional
 from typing_extensions import Annotated
 from activitysmith_openapi.models.channel_target import ChannelTarget
 from activitysmith_openapi.models.metadata_value import MetadataValue
+from activitysmith_openapi.models.push_interruption_level import PushInterruptionLevel
 from activitysmith_openapi.models.push_notification_action import PushNotificationAction
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,6 +35,8 @@ class PushNotificationRequest(BaseModel):
     title: StrictStr
     message: Optional[StrictStr] = None
     subtitle: Optional[StrictStr] = None
+    icon: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS image URL without credentials for a custom notification icon. If the image cannot be loaded, the app icon is used. iOS may omit subtitle when displaying a custom icon.")
+    interruption_level: Optional[PushInterruptionLevel] = None
     media: Optional[Annotated[str, Field(strict=True)]] = Field(default=None, description="Optional HTTPS URL for an image, audio file, or video that users can preview or play when they expand the notification. If `redirection` is omitted, tapping the notification opens this URL. Cannot be combined with `actions`.")
     redirection: Optional[Annotated[str, Field(strict=True, max_length=2048)]] = Field(default=None, description="Optional HTTP, HTTPS, Shortcuts, or installed app URL opened when the user taps the notification body. Custom schemes such as spotify:// and spotify:track:123 require iOS 1.13.4 build 2 or later and an installed handler; no web fallback is provided. Internal and executable schemes are blocked. Overrides the default tap target from media.")
     actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
@@ -43,7 +46,17 @@ class PushNotificationRequest(BaseModel):
     target: Optional[ChannelTarget] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     additional_properties: Dict[str, Any] = {}
-    __properties: ClassVar[List[str]] = ["metadata", "title", "message", "subtitle", "media", "redirection", "actions", "payload", "badge", "sound", "target", "tags"]
+    __properties: ClassVar[List[str]] = ["metadata", "title", "message", "subtitle", "icon", "interruption_level", "media", "redirection", "actions", "payload", "badge", "sound", "target", "tags"]
+
+    @field_validator('icon')
+    def icon_validate_regular_expression(cls, value):
+        """Validates the regular expression"""
+        if value is None:
+            return value
+
+        if not re.match(r"^https:\/\/", value):
+            raise ValueError(r"must validate the regular expression /^https:\/\//")
+        return value
 
     @field_validator('media')
     def media_validate_regular_expression(cls, value):
@@ -149,6 +162,8 @@ class PushNotificationRequest(BaseModel):
             "title": obj.get("title"),
             "message": obj.get("message"),
             "subtitle": obj.get("subtitle"),
+            "icon": obj.get("icon"),
+            "interruption_level": obj.get("interruption_level"),
             "media": obj.get("media"),
             "redirection": obj.get("redirection"),
             "actions": [PushNotificationAction.from_dict(_item) for _item in obj["actions"]] if obj.get("actions") is not None else None,
