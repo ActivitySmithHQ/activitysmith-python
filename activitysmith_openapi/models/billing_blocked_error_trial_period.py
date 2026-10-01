@@ -18,23 +18,18 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
-from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
+from pydantic import BaseModel, ConfigDict
+from typing import Any, ClassVar, Dict, List
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PushNotificationResponse(BaseModel):
+class BillingBlockedErrorTrialPeriod(BaseModel):
     """
-    Apple APNs acceptance result. Acceptance does not confirm device delivery or presentation. Alerts remain eligible for APNs delivery retries for 24 hours; device settings and APNs storage policies still apply.
+    BillingBlockedErrorTrialPeriod
     """ # noqa: E501
-    success: StrictBool = Field(description="True when APNs accepts the notification for at least one targeted device.")
-    devices_notified: Optional[StrictInt] = Field(default=None, description="Number of device tokens for which APNs accepted the notification, without confirming on-device delivery.")
-    users_notified: Optional[StrictInt] = None
-    effective_channel_slugs: Optional[List[StrictStr]] = None
-    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
-    timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "effective_channel_slugs", "tags", "timestamp"]
+    started_at: datetime
+    ends_at: datetime
+    __properties: ClassVar[List[str]] = ["started_at", "ends_at"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +49,7 @@ class PushNotificationResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PushNotificationResponse from a JSON string"""
+        """Create an instance of BillingBlockedErrorTrialPeriod from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -79,7 +74,7 @@ class PushNotificationResponse(BaseModel):
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PushNotificationResponse from a dict"""
+        """Create an instance of BillingBlockedErrorTrialPeriod from a dict"""
         if obj is None:
             return None
 
@@ -87,12 +82,8 @@ class PushNotificationResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "success": obj.get("success"),
-            "devices_notified": obj.get("devices_notified"),
-            "users_notified": obj.get("users_notified"),
-            "effective_channel_slugs": obj.get("effective_channel_slugs"),
-            "tags": obj.get("tags"),
-            "timestamp": obj.get("timestamp")
+            "started_at": obj.get("started_at"),
+            "ends_at": obj.get("ends_at")
         })
         return _obj
 
