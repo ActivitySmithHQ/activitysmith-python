@@ -44,6 +44,18 @@ activitysmith.notifications.send(
 )
 ```
 
+### Custom Push Notification Icons
+
+Set `icon` to a publicly accessible HTTPS image URL to show an avatar or service logo alongside a smaller ActivitySmith app icon. With a custom icon, iOS may omit the subtitle from the notification. Requires ActivitySmith for iOS 1.16.0 or later.
+
+```python
+activitysmith.notifications.send(
+    title="GitHub",
+    message="Your pull request is ready for review.",
+    icon="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+)
+```
+
 ### Rich Push Notifications with Media
 
 ![Rich Push Notification with image](https://cdn.activitysmith.com/features/rich-push-notification-with-image.png)
@@ -133,6 +145,79 @@ activitysmith.notifications.send(
     ],
 )
 ```
+
+### Push Notification Interruption Levels
+
+Use `interruption_level` to choose how urgently iOS presents a Push Notification. Omit it for normal delivery. Explicit `active` has the same behavior as the default. Requires ActivitySmith for iOS 1.16.0 or later.
+
+| Value | Behavior |
+| --- | --- |
+| `passive` | Appears quietly in the notification list, without sound or waking the screen. |
+| `active` | Normal delivery, subject to the device's notification settings and Focus. This is the default. |
+| `time-sensitive` | Can bypass Scheduled Summary and Focus when the user allows Time Sensitive Notifications for ActivitySmith. |
+
+Critical Alerts are not supported. See Apple's [interruption levels](https://developer.apple.com/documentation/usernotifications/unnotificationinterruptionlevel) for the system behavior.
+
+The SDK also exports these values as `PushInterruptionLevel.PASSIVE`, `PushInterruptionLevel.ACTIVE`, and `PushInterruptionLevel.TIME_SENSITIVE`.
+
+#### Passive
+
+```python
+activitysmith.notifications.send(
+    title="Daily summary",
+    message="All scheduled jobs completed successfully.",
+    interruption_level="passive",
+)
+```
+
+#### Active (default)
+
+```python
+activitysmith.notifications.send(
+    title="Deployment complete",
+    message="Your latest changes are live.",
+    interruption_level="active",
+)
+```
+
+Removing the interruption level from this example produces the same delivery behavior.
+
+#### Time Sensitive with a Custom Icon
+
+```python
+activitysmith.notifications.send(
+    title="Deployment approval needed",
+    message="Approve the production deployment before the window closes.",
+    icon="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+    interruption_level="time-sensitive",
+)
+```
+
+#### Request JSON
+
+The same fields go at the top level of the JSON body for `POST https://activitysmith.com/api/push-notification`.
+
+With a custom icon and Time Sensitive delivery:
+
+```json
+{
+  "title": "Deployment approval needed",
+  "message": "Approve the production deployment before the window closes.",
+  "icon": "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",
+  "interruption_level": "time-sensitive"
+}
+```
+
+For the app icon and default interruption level, omit both optional fields:
+
+```json
+{
+  "title": "Deployment complete",
+  "message": "Your latest changes are live."
+}
+```
+
+Use the exact strings `passive`, `active`, or `time-sensitive`. Other values, including `timeSensitive`, numbers, and `null`, return a validation error.
 
 ## Live Activities
 
