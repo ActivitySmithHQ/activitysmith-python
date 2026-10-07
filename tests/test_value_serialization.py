@@ -164,3 +164,48 @@ def test_prominent_value_serializes_without_losing_format(requests, value, metho
             getattr(activitysmith.live_activities, method)(*args, request)
     assert requests[-1]["content_state"]["value"] == value
     assert isinstance(requests[-1]["content_state"]["value"], str) == isinstance(value, str)
+
+
+@pytest.mark.parametrize("form", ["dict", "named"])
+def test_push_icon_serialization(requests, form):
+    client = ActivitySmith(api_key="test")
+    fields = {"title": "New Download", "icon": "https://cdn.example.com/avatar.png"}
+    with pytest.raises(RequestCaptured):
+        if form == "named":
+            client.notifications.send(**fields)
+        else:
+            client.notifications.send(fields)
+    assert requests[-1]["icon"] == "https://cdn.example.com/avatar.png"
+
+
+@pytest.mark.parametrize("level", ["passive", "active", "time-sensitive"])
+@pytest.mark.parametrize("form", ["dict", "named", "constant"])
+def test_push_interruption_level_serialization(requests, level, form):
+    from activitysmith import PushInterruptionLevel
+
+    client = ActivitySmith(api_key="test")
+    if form == "constant":
+        level = {"passive": PushInterruptionLevel.PASSIVE, "active": PushInterruptionLevel.ACTIVE,
+                 "time-sensitive": PushInterruptionLevel.TIME_SENSITIVE}[level]
+    fields = {"title": "Deploy", "interruption_level": level}
+    with pytest.raises(RequestCaptured):
+        if form == "dict":
+            client.notifications.send(fields)
+        else:
+            client.notifications.send(**fields)
+    assert requests[-1]["interruption_level"] == level
+
+
+def test_push_interruption_level_omitted_by_default(requests):
+    client = ActivitySmith(api_key="test")
+    with pytest.raises(RequestCaptured):
+        client.notifications.send(title="Deploy")
+    assert "interruption_level" not in requests[-1]
+
+
+@pytest.mark.parametrize("level", ["critical", "timeSensitive", "default"])
+def test_push_rejects_unsupported_interruption_level(requests, level):
+    client = ActivitySmith(api_key="test")
+    with pytest.raises(ValueError, match="interruption_level must be passive, active, or time-sensitive"):
+        client.notifications.send(title="Outage", interruption_level=level)
+    assert requests == []
