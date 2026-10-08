@@ -41,6 +41,8 @@ class TestPushNotificationRequest(unittest.TestCase):
                 title = '',
                 message = '',
                 subtitle = '',
+                icon = 'https:/',
+                interruption_level = 'passive',
                 media = 'https:/',
                 redirection = 'A5bTTFjjMRwg.Zbs8YayHLrJdgMvb:',
                 actions = [

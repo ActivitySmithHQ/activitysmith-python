@@ -17,24 +17,28 @@ import pprint
 import re  # noqa: F401
 import json
 
-from datetime import datetime
-from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
-from typing_extensions import Annotated
+from activitysmith_openapi.models.billing_blocked_error_trial_period import BillingBlockedErrorTrialPeriod
 from typing import Optional, Set
 from typing_extensions import Self
 
-class PushNotificationResponse(BaseModel):
+class BillingBlockedError(BaseModel):
     """
-    Apple APNs acceptance result. Acceptance does not confirm device delivery or presentation. Alerts remain eligible for APNs delivery retries for 24 hours; device settings and APNs storage policies still apply.
+    BillingBlockedError
     """ # noqa: E501
-    success: StrictBool = Field(description="True when APNs accepts the notification for at least one targeted device.")
-    devices_notified: Optional[StrictInt] = Field(default=None, description="Number of device tokens for which APNs accepted the notification, without confirming on-device delivery.")
-    users_notified: Optional[StrictInt] = None
-    effective_channel_slugs: Optional[List[StrictStr]] = None
-    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
-    timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "effective_channel_slugs", "tags", "timestamp"]
+    error: StrictStr
+    message: StrictStr
+    trial_period: Optional[BillingBlockedErrorTrialPeriod] = None
+    upgrade_url: StrictStr
+    __properties: ClassVar[List[str]] = ["error", "message", "trial_period", "upgrade_url"]
+
+    @field_validator('error')
+    def error_validate_enum(cls, value):
+        """Validates the enum"""
+        if value not in set(['trial_expired', 'trial_exhausted', 'billing_overage_cap_reached']):
+            raise ValueError("must be one of enum values ('trial_expired', 'trial_exhausted', 'billing_overage_cap_reached')")
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -54,7 +58,7 @@ class PushNotificationResponse(BaseModel):
 
     @classmethod
     def from_json(cls, json_str: str) -> Optional[Self]:
-        """Create an instance of PushNotificationResponse from a JSON string"""
+        """Create an instance of BillingBlockedError from a JSON string"""
         return cls.from_dict(json.loads(json_str))
 
     def to_dict(self) -> Dict[str, Any]:
@@ -75,11 +79,14 @@ class PushNotificationResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # override the default output from pydantic by calling `to_dict()` of trial_period
+        if self.trial_period:
+            _dict['trial_period'] = self.trial_period.to_dict()
         return _dict
 
     @classmethod
     def from_dict(cls, obj: Optional[Dict[str, Any]]) -> Optional[Self]:
-        """Create an instance of PushNotificationResponse from a dict"""
+        """Create an instance of BillingBlockedError from a dict"""
         if obj is None:
             return None
 
@@ -87,12 +94,10 @@ class PushNotificationResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "success": obj.get("success"),
-            "devices_notified": obj.get("devices_notified"),
-            "users_notified": obj.get("users_notified"),
-            "effective_channel_slugs": obj.get("effective_channel_slugs"),
-            "tags": obj.get("tags"),
-            "timestamp": obj.get("timestamp")
+            "error": obj.get("error"),
+            "message": obj.get("message"),
+            "trial_period": BillingBlockedErrorTrialPeriod.from_dict(obj["trial_period"]) if obj.get("trial_period") is not None else None,
+            "upgrade_url": obj.get("upgrade_url")
         })
         return _obj
 
