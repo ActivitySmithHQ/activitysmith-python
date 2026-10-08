@@ -267,7 +267,7 @@ def _build_push_request(
 
 
 class PushInterruptionLevel:
-    """Push Notification interruption levels. Critical Alerts are not supported."""
+    """Push Notification interruption levels."""
 
     PASSIVE = "passive"
     ACTIVE = "active"
