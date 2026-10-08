@@ -196,31 +196,6 @@ activitysmith.notifications.send(
 )
 ```
 
-#### Request JSON
-
-The same fields go at the top level of the JSON body for `POST https://activitysmith.com/api/push-notification`.
-
-With Time Sensitive delivery:
-
-```json
-{
-  "title": "🚨 checkout-api is down",
-  "message": "500 errors on 62% of requests. Customers can't complete payments.",
-  "interruption_level": "time-sensitive"
-}
-```
-
-For the default interruption level, omit the field:
-
-```json
-{
-  "title": "Deployment complete",
-  "message": "Your latest changes are live."
-}
-```
-
-Use the exact strings `passive`, `active`, or `time-sensitive`. Other values, including `timeSensitive`, numbers, and `null`, return a validation error.
-
 ## Live Activities
 
 Choose the Live Activity type that matches what you want to show:
