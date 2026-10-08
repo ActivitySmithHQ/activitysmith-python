@@ -46,6 +46,8 @@ activitysmith.notifications.send(
 
 ### Custom Push Notification Icons
 
+![Push Notifications with custom icons](https://cdn.activitysmith.com/features/push-notifications-with-custom-icons.png)
+
 Set `icon` to a publicly accessible HTTPS image URL to show an avatar or service logo alongside a smaller ActivitySmith app icon. With a custom icon, iOS may omit the subtitle from the notification. Requires ActivitySmith for iOS 1.16.0 or later.
 
 ```python
@@ -184,13 +186,12 @@ activitysmith.notifications.send(
 
 Removing the interruption level from this example produces the same delivery behavior.
 
-#### Time Sensitive with a Custom Icon
+#### Time Sensitive
 
 ```python
 activitysmith.notifications.send(
-    title="Regression: PaymentTimeout",
-    message="Resolved last week, now 38 events in the past hour.",
-    icon="https://cdn.activitysmith.com/integrations/icons/sentry.png",
+    title="🚨 checkout-api is down",
+    message="500 errors on 62% of requests. Customers can't complete payments.",
     interruption_level="time-sensitive",
 )
 ```
@@ -199,18 +200,17 @@ activitysmith.notifications.send(
 
 The same fields go at the top level of the JSON body for `POST https://activitysmith.com/api/push-notification`.
 
-With a custom icon and Time Sensitive delivery:
+With Time Sensitive delivery:
 
 ```json
 {
-  "title": "Regression: PaymentTimeout",
-  "message": "Resolved last week, now 38 events in the past hour.",
-  "icon": "https://cdn.activitysmith.com/integrations/icons/sentry.png",
+  "title": "🚨 checkout-api is down",
+  "message": "500 errors on 62% of requests. Customers can't complete payments.",
   "interruption_level": "time-sensitive"
 }
 ```
 
-For the app icon and default interruption level, omit both optional fields:
+For the default interruption level, omit the field:
 
 ```json
 {
