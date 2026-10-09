@@ -16,7 +16,7 @@ from activitysmith_openapi.models.metric_value_update_request import MetricValue
 
 from .normalization import normalize_live_activity_request, normalize_metric_request
 
-SDK_VERSION = "1.12.0"
+SDK_VERSION = "1.13.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -44,9 +44,17 @@ def _has_actions(request: Any) -> bool:
     return True
 
 
+_PUSH_INTERRUPTION_LEVELS = ("passive", "active", "time-sensitive")
+
+
 def _validate_push_request(request: Any) -> Any:
     if _has_media(request) and _has_actions(request):
         raise ValueError("ActivitySmith: media cannot be combined with actions")
+    level = _request_value(request, "interruption_level")
+    if hasattr(level, "value"):
+        level = level.value
+    if level is not None and level not in _PUSH_INTERRUPTION_LEVELS:
+        raise ValueError("ActivitySmith: interruption_level must be passive, active, or time-sensitive")
     return request
 
 
@@ -222,6 +230,8 @@ def _build_push_request(
     channels: Any | None = None,
     tags: Any | None = None,
     metadata: Any | None = None,
+    icon: Any | None = None,
+    interruption_level: Any | None = None,
 ) -> Any:
     request_fields = _compact_dict(
         {
@@ -235,6 +245,8 @@ def _build_push_request(
             "channels": channels,
             "tags": tags,
             "metadata": metadata,
+            "icon": icon,
+            "interruption_level": interruption_level,
         }
     )
 
@@ -252,6 +264,14 @@ def _build_push_request(
 
     normalized.update(request_fields)
     return normalized
+
+
+class PushInterruptionLevel:
+    """Push Notification interruption levels."""
+
+    PASSIVE = "passive"
+    ACTIVE = "active"
+    TIME_SENSITIVE = "time-sensitive"
 
 
 class LiveActivityColor:
@@ -390,6 +410,8 @@ class NotificationsResource:
         channels: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        icon: Any | None = None,
+        interruption_level: Any | None = None,
     ):
         request = _build_push_request(
             request,
@@ -403,6 +425,8 @@ class NotificationsResource:
             channels=channels,
             tags=tags,
             metadata=metadata,
+            icon=icon,
+            interruption_level=interruption_level,
         )
         normalized = normalize_metadata_request(_validate_push_request(_normalize_channels_target(request)))
         return self._api.send_push_notification(

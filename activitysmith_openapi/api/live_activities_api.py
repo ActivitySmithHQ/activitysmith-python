@@ -682,8 +682,9 @@ class LiveActivitiesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStreamPutResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -757,8 +758,9 @@ class LiveActivitiesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStreamPutResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -832,8 +834,9 @@ class LiveActivitiesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStreamPutResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -977,8 +980,9 @@ class LiveActivitiesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStartResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -1048,8 +1052,9 @@ class LiveActivitiesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStartResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -1119,8 +1124,9 @@ class LiveActivitiesApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "LiveActivityStartResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(

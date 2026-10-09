@@ -1,3 +1,7 @@
+## 1.13.0
+
+Adds custom icons and interruption levels for Push Notifications. Set `icon` to show a service logo or avatar on the notification, and `interruption_level` to deliver it as `passive`, `active`, or `time-sensitive`.
+
 ## 1.12.0
 
 Adds the new `value` Live Activity type.

@@ -44,6 +44,20 @@ activitysmith.notifications.send(
 )
 ```
 
+### Custom Push Notification Icons
+
+![Push Notifications with custom icons](https://cdn.activitysmith.com/features/push-notifications-with-custom-icons.png)
+
+Set `icon` to a publicly accessible HTTPS image URL to show an avatar or service logo alongside a smaller ActivitySmith app icon. With a custom icon, iOS may omit the subtitle from the notification.
+
+```python
+activitysmith.notifications.send(
+    title="MRR just crossed $10,000 🎉",
+    message="Up 18% this month from 31 new subscriptions.",
+    icon="https://cdn.activitysmith.com/integrations/icons/stripe.png",
+)
+```
+
 ### Rich Push Notifications with Media
 
 ![Rich Push Notification with image](https://cdn.activitysmith.com/features/rich-push-notification-with-image.png)
@@ -134,23 +148,85 @@ activitysmith.notifications.send(
 )
 ```
 
+### Push Notification Interruption Levels
+
+![Time Sensitive Push Notification](https://cdn.activitysmith.com/features/time-sensitive-push-notifications.png)
+
+Use `interruption_level` to choose how urgently iOS presents a Push Notification. Omit it for normal delivery. Explicit `active` has the same behavior as the default.
+
+| Value | Behavior |
+| --- | --- |
+| `passive` | Appears quietly in the notification list, without sound or waking the screen. |
+| `active` | Normal delivery, subject to the device's notification settings and Focus. This is the default. |
+| `time-sensitive` | Can bypass Scheduled Summary and Focus when the user allows Time Sensitive Notifications for ActivitySmith. |
+
+See Apple's [interruption levels](https://developer.apple.com/documentation/usernotifications/unnotificationinterruptionlevel) for the system behavior.
+
+The SDK also exports these values as `PushInterruptionLevel.PASSIVE`, `PushInterruptionLevel.ACTIVE`, and `PushInterruptionLevel.TIME_SENSITIVE`.
+
+#### Passive
+
+```python
+activitysmith.notifications.send(
+    title="Daily summary",
+    message="All scheduled jobs completed successfully.",
+    interruption_level="passive",
+)
+```
+
+#### Active (default)
+
+```python
+activitysmith.notifications.send(
+    title="Deployment complete",
+    message="Your latest changes are live.",
+    interruption_level="active",
+)
+```
+
+Removing the interruption level from this example produces the same delivery behavior.
+
+#### Time Sensitive
+
+```python
+activitysmith.notifications.send(
+    title="🚨 checkout-api is down",
+    message="500 errors on 62% of requests. Customers can't complete payments.",
+    interruption_level="time-sensitive",
+)
+```
+
 ## Live Activities
 
 Choose the Live Activity type that matches what you want to show:
 
-- ![Value Live Activity showing revenue with a growth badge](https://cdn.activitysmith.com/features/value-live-activity.png) **Value**: Show a single value on your Lock Screen, such as revenue, a queue count, or a temperature.
+![Value Live Activity showing revenue with a growth badge](https://cdn.activitysmith.com/features/value-live-activity.png)
 
-- ![Stats Live Activity with six labeled sales metrics](https://cdn.activitysmith.com/features/stats-live-activity.png) **Stats**: Show up to 8 labeled values on your Lock Screen, from revenue and orders to uptime and conversion.
+**Value**: Show a single value on your Lock Screen, such as revenue, a queue count, or a temperature.
 
-- ![Alert Live Activity showing a customer reactivation update](https://cdn.activitysmith.com/features/alert-live-activity.png) **Alert**: Show status updates with a clear message, badge, and icon. When you add an action button, `color` controls the button tint.
+![Stats Live Activity with six labeled sales metrics](https://cdn.activitysmith.com/features/stats-live-activity.png)
 
-- ![Metrics Live Activity with CPU and memory values](https://cdn.activitysmith.com/features/metrics-live-activity-start.png) **Metrics**: Track two related values with segmented bars, such as CPU and memory.
+**Stats**: Show up to 8 labeled values on your Lock Screen, from revenue and orders to uptime and conversion.
 
-- ![Segmented Progress Live Activity showing a workflow step](https://cdn.activitysmith.com/features/update-live-activity.png) **Segmented Progress**: Show progress through a known set of steps, like build, test, deploy, and verify.
+![Alert Live Activity showing a customer reactivation update](https://cdn.activitysmith.com/features/alert-live-activity.png)
 
-- ![Progress Live Activity showing percentage completion](https://cdn.activitysmith.com/features/progress-live-activity.png) **Progress**: Show percentage progress for jobs that move continuously toward completion.
+**Alert**: Show status updates with a clear message, badge, and icon. When you add an action button, `color` controls the button tint.
 
-- ![Timer Live Activity showing a benchmark run countdown](https://cdn.activitysmith.com/features/timer-live-activity.png) **Timer**: Count down from a duration, or count up from 00:00 while a job runs.
+![Metrics Live Activity with CPU and memory values](https://cdn.activitysmith.com/features/metrics-live-activity-start.png)
+
+**Metrics**: Track two related values with segmented bars, such as CPU and memory.
+
+![Segmented Progress Live Activity showing a workflow step](https://cdn.activitysmith.com/features/update-live-activity.png)
+
+**Segmented Progress**: Show progress through a known set of steps, like build, test, deploy, and verify.
+
+![Progress Live Activity showing percentage completion](https://cdn.activitysmith.com/features/progress-live-activity.png)
+
+**Progress**: Show percentage progress for jobs that move continuously toward completion.
+
+![Timer Live Activity showing a benchmark run countdown](https://cdn.activitysmith.com/features/timer-live-activity.png)
+
+**Timer**: Count down from a duration, or count up from 00:00 while a job runs.
 
 ### Start & Update Live Activity
 

@@ -56,7 +56,7 @@ class PushNotificationsApi:
     ) -> PushNotificationResponse:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional tags to organize and filter notification history.
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -93,8 +93,9 @@ class PushNotificationsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "PushNotificationResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -127,7 +128,7 @@ class PushNotificationsApi:
     ) -> ApiResponse[PushNotificationResponse]:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional tags to organize and filter notification history.
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -164,8 +165,9 @@ class PushNotificationsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "PushNotificationResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(
@@ -198,7 +200,7 @@ class PushNotificationsApi:
     ) -> RESTResponseType:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional tags to organize and filter notification history.
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -235,8 +237,9 @@ class PushNotificationsApi:
         _response_types_map: Dict[str, Optional[str]] = {
             '200': "PushNotificationResponse",
             '400': "BadRequestError",
+            '402': "BillingBlockedError",
             '403': "ForbiddenError",
-            '404': "NoRecipientsError",
+            '422': "NoRecipientsError",
             '429': "SendPushNotification429Response",
         }
         response_data = self.api_client.call_api(

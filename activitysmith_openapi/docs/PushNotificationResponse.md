@@ -1,12 +1,13 @@
 # PushNotificationResponse
 
+Apple APNs acceptance result. Acceptance does not confirm device delivery or presentation. Alerts remain eligible for APNs delivery retries for 24 hours; device settings and APNs storage policies still apply.
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**success** | **bool** |  | 
-**devices_notified** | **int** |  | [optional] 
+**success** | **bool** | True when APNs accepts the notification for at least one targeted device. | 
+**devices_notified** | **int** | Number of device tokens for which APNs accepted the notification, without confirming on-device delivery. | [optional] 
 **users_notified** | **int** |  | [optional] 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
