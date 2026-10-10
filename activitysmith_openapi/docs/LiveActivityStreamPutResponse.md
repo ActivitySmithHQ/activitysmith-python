@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **users_notified** | **int** |  | [optional] 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
+**warning** | **str** | Present on &#x60;updated&#x60; responses when the previous update to this stream was less than 2 minutes ago. The update is still sent, but iOS may throttle frequent Live Activity updates. | [optional] 
 **timestamp** | **datetime** |  | 
 
 ## Example

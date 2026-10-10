@@ -49,6 +49,7 @@ class TestLiveActivityStreamPutResponse(unittest.TestCase):
                 tags = [
                     'gB:9JLe6iL71-aa-.Ctq:dcsc.3-8:1gAa8Xa6u61ArrlGpCQjkQVRmfnjddwcDM0'
                     ],
+                warning = '',
                 timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
             )
         else:
