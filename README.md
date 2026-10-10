@@ -233,7 +233,7 @@ Choose the Live Activity type that matches what you want to show:
 Use a stable `stream_key` to identify the metric, job, deployment, or system you want to keep visible. The first `stream(...)` call starts the Live Activity. Later calls with the same `stream_key` update it.
 
 > [!WARNING]
-> iOS limits how often a Live Activity can update. If you send too many updates, iOS throttles them until the budget refills, which takes roughly an hour, even though the API still returns `200`. Send one or two updates every five minutes. [Learn more](https://activitysmith.com/docs/live-activity-stream#update-frequency-and-ios-limits)
+> iOS limits how often a Live Activity can update. Short bursts that end, like deployment steps, are fine. If one Live Activity keeps updating more often than every couple of minutes, iOS throttles it until the budget refills, roughly an hour, even though the API still returns `200`. [Learn more](https://activitysmith.com/docs/live-activity-stream#update-frequency-and-ios-limits)
 
 #### Value
 
