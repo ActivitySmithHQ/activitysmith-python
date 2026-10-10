@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **users_notified** | **int** |  | [optional] 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
+**warning** | **str** | Present on &#x60;updated&#x60; responses when the current Live Activity has received more than 12 updates and has averaged more than one update every 2 minutes since it started. The update is still sent, but iOS may throttle Live Activities that update this often. | [optional] 
 **timestamp** | **datetime** |  | 
 
 ## Example

@@ -38,8 +38,9 @@ class LiveActivityStreamPutResponse(BaseModel):
     users_notified: Optional[StrictInt] = None
     effective_channel_slugs: Optional[List[StrictStr]] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
+    warning: Optional[StrictStr] = Field(default=None, description="Present on `updated` responses when the current Live Activity has received more than 12 updates and has averaged more than one update every 2 minutes since it started. The update is still sent, but iOS may throttle Live Activities that update this often.")
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "previous_activity_id", "devices_notified", "devices_queued", "users_notified", "effective_channel_slugs", "tags", "timestamp"]
+    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "previous_activity_id", "devices_notified", "devices_queued", "users_notified", "effective_channel_slugs", "tags", "warning", "timestamp"]
 
     @field_validator('operation')
     def operation_validate_enum(cls, value):
@@ -114,6 +115,7 @@ class LiveActivityStreamPutResponse(BaseModel):
             "users_notified": obj.get("users_notified"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),
             "tags": obj.get("tags"),
+            "warning": obj.get("warning"),
             "timestamp": obj.get("timestamp")
         })
         return _obj
