@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -32,7 +32,13 @@ class LiveActivityEndResponse(BaseModel):
     devices_queued: Optional[StrictInt] = None
     devices_notified: Optional[StrictInt] = None
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "activity_id", "devices_queued", "devices_notified", "timestamp"]
+    ignored: Optional[StrictBool] = Field(default=None, description="True when the Live Activity had already ended and the request had no effect.")
+    message: Optional[StrictStr] = None
+    end_reason: Optional[StrictStr] = None
+    forced_completion: Optional[StrictBool] = Field(default=None, description="True when the Live Activity was marked complete without a confirmed APNs end delivery.")
+    warning: Optional[StrictStr] = None
+    errors: Optional[List[StrictStr]] = Field(default=None, description="Per-device delivery errors when some devices could not be reached.")
+    __properties: ClassVar[List[str]] = ["success", "activity_id", "devices_queued", "devices_notified", "timestamp", "ignored", "message", "end_reason", "forced_completion", "warning", "errors"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -73,6 +79,11 @@ class LiveActivityEndResponse(BaseModel):
             exclude=excluded_fields,
             exclude_none=True,
         )
+        # set to None if end_reason (nullable) is None
+        # and model_fields_set contains the field
+        if self.end_reason is None and "end_reason" in self.model_fields_set:
+            _dict['end_reason'] = None
+
         return _dict
 
     @classmethod
@@ -89,7 +100,13 @@ class LiveActivityEndResponse(BaseModel):
             "activity_id": obj.get("activity_id"),
             "devices_queued": obj.get("devices_queued"),
             "devices_notified": obj.get("devices_notified"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "ignored": obj.get("ignored"),
+            "message": obj.get("message"),
+            "end_reason": obj.get("end_reason"),
+            "forced_completion": obj.get("forced_completion"),
+            "warning": obj.get("warning"),
+            "errors": obj.get("errors")
         })
         return _obj
 

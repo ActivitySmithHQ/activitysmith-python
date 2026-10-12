@@ -11,6 +11,13 @@ Name | Type | Description | Notes
 **devices_queued** | **int** |  | [optional] 
 **devices_notified** | **int** |  | [optional] 
 **timestamp** | **datetime** |  | 
+**users_notified** | **int** |  | [optional] 
+**effective_channel_slugs** | **List[str]** |  | [optional] 
+**tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
+**operation** | **str** | Present when the update started a new Live Activity for a managed stream. | [optional] 
+**stream_key** | **str** |  | [optional] 
+**previous_activity_id** | **str** |  | [optional] 
+**errors** | **List[str]** | Per-device delivery errors when some devices could not be reached. | [optional] 
 
 ## Example
 

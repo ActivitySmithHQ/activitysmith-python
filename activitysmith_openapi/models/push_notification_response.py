@@ -29,12 +29,18 @@ class PushNotificationResponse(BaseModel):
     Apple APNs acceptance result. Acceptance does not confirm device delivery or presentation. Alerts remain eligible for APNs delivery retries for 24 hours; device settings and APNs storage policies still apply.
     """ # noqa: E501
     success: StrictBool = Field(description="True when APNs accepts the notification for at least one targeted device.")
+    notification_id: Optional[StrictStr] = Field(default=None, description="ID of this Push Notification. Pass it to `PUT /push-notification/{notification_id}` to replace the notification later.")
     devices_notified: Optional[StrictInt] = Field(default=None, description="Number of device tokens for which APNs accepted the notification, without confirming on-device delivery.")
     users_notified: Optional[StrictInt] = None
     effective_channel_slugs: Optional[List[StrictStr]] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "effective_channel_slugs", "tags", "timestamp"]
+    devices_targeted: Optional[StrictInt] = Field(default=None, description="Number of device tokens targeted.")
+    devices_deactivated: Optional[StrictInt] = Field(default=None, description="Number of device tokens deactivated because APNs reported them unregistered.")
+    devices_unregistered: Optional[StrictInt] = Field(default=None, description="Number of targeted device tokens APNs reported as unregistered.")
+    credential_test: Optional[StrictBool] = Field(default=None, description="True when the request was an integration connection test and no paired devices were available.")
+    message: Optional[StrictStr] = None
+    __properties: ClassVar[List[str]] = ["success", "notification_id", "devices_notified", "users_notified", "effective_channel_slugs", "tags", "timestamp", "devices_targeted", "devices_deactivated", "devices_unregistered", "credential_test", "message"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -88,11 +94,17 @@ class PushNotificationResponse(BaseModel):
 
         _obj = cls.model_validate({
             "success": obj.get("success"),
+            "notification_id": obj.get("notification_id"),
             "devices_notified": obj.get("devices_notified"),
             "users_notified": obj.get("users_notified"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),
             "tags": obj.get("tags"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "devices_targeted": obj.get("devices_targeted"),
+            "devices_deactivated": obj.get("devices_deactivated"),
+            "devices_unregistered": obj.get("devices_unregistered"),
+            "credential_test": obj.get("credential_test"),
+            "message": obj.get("message")
         })
         return _obj
 
