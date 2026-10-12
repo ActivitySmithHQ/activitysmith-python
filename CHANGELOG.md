@@ -1,3 +1,7 @@
+## 1.14.0
+
+Adds the ability to replace a Push Notification you already sent with a new one.
+
 ## 1.13.0
 
 Adds custom icons and interruption levels for Push Notifications. Set `icon` to show a service logo or avatar on the notification, and `interruption_level` to deliver it as `passive`, `active`, or `time-sensitive`.
