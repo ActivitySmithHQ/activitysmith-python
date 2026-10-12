@@ -7,11 +7,17 @@ Apple APNs acceptance result. Acceptance does not confirm device delivery or pre
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **bool** | True when APNs accepts the notification for at least one targeted device. | 
+**notification_id** | **str** | ID of this Push Notification. Pass it to &#x60;PUT /push-notification/{notification_id}&#x60; to replace the notification later. | [optional] 
 **devices_notified** | **int** | Number of device tokens for which APNs accepted the notification, without confirming on-device delivery. | [optional] 
 **users_notified** | **int** |  | [optional] 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 **timestamp** | **datetime** |  | 
+**devices_targeted** | **int** | Number of device tokens targeted. | [optional] 
+**devices_deactivated** | **int** | Number of device tokens deactivated because APNs reported them unregistered. | [optional] 
+**devices_unregistered** | **int** | Number of targeted device tokens APNs reported as unregistered. | [optional] 
+**credential_test** | **bool** | True when the request was an integration connection test and no paired devices were available. | [optional] 
+**message** | **str** |  | [optional] 
 
 ## Example
 

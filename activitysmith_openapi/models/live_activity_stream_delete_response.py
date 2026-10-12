@@ -18,7 +18,7 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr, field_validator
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -34,7 +34,12 @@ class LiveActivityStreamDeleteResponse(BaseModel):
     devices_queued: Optional[StrictInt] = None
     devices_notified: Optional[StrictInt] = None
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "devices_queued", "devices_notified", "timestamp"]
+    ignored: Optional[StrictBool] = Field(default=None, description="True when the stream was already ended and the request had no effect.")
+    message: Optional[StrictStr] = None
+    forced_completion: Optional[StrictBool] = None
+    warning: Optional[StrictStr] = None
+    errors: Optional[List[StrictStr]] = Field(default=None, description="Per-device delivery errors when some devices could not be reached.")
+    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "devices_queued", "devices_notified", "timestamp", "ignored", "message", "forced_completion", "warning", "errors"]
 
     @field_validator('operation')
     def operation_validate_enum(cls, value):
@@ -105,7 +110,12 @@ class LiveActivityStreamDeleteResponse(BaseModel):
             "activity_id": obj.get("activity_id"),
             "devices_queued": obj.get("devices_queued"),
             "devices_notified": obj.get("devices_notified"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "ignored": obj.get("ignored"),
+            "message": obj.get("message"),
+            "forced_completion": obj.get("forced_completion"),
+            "warning": obj.get("warning"),
+            "errors": obj.get("errors")
         })
         return _obj
 

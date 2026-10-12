@@ -16,6 +16,10 @@ from pydantic import validate_call, Field, StrictFloat, StrictStr, StrictInt
 from typing import Any, Dict, List, Optional, Tuple, Union
 from typing_extensions import Annotated
 
+from pydantic import Field
+from typing_extensions import Annotated
+from activitysmith_openapi.models.push_notification_replace_request import PushNotificationReplaceRequest
+from activitysmith_openapi.models.push_notification_replace_response import PushNotificationReplaceResponse
 from activitysmith_openapi.models.push_notification_request import PushNotificationRequest
 from activitysmith_openapi.models.push_notification_response import PushNotificationResponse
 
@@ -38,6 +42,314 @@ class PushNotificationsApi:
 
 
     @validate_call
+    def replace_push_notification(
+        self,
+        notification_id: Annotated[str, Field(min_length=1, strict=True, description="The `notification_id` returned when the Push Notification was sent.")],
+        push_notification_replace_request: PushNotificationReplaceRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> PushNotificationReplaceResponse:
+        """Replace a push notification
+
+        Replaces a Push Notification you already sent, using the `notification_id` from the send response. The replacement takes the original's place on the Lock Screen and in Notification Center instead of appearing as a second notification. It is delivered silently, with no sound or screen wake, to the same recipients as the original. Notification history is updated in place.
+
+        :param notification_id: The `notification_id` returned when the Push Notification was sent. (required)
+        :type notification_id: str
+        :param push_notification_replace_request: (required)
+        :type push_notification_replace_request: PushNotificationReplaceRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._replace_push_notification_serialize(
+            notification_id=notification_id,
+            push_notification_replace_request=push_notification_replace_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "PushNotificationReplaceResponse",
+            '400': "BadRequestError",
+            '402': "BillingBlockedError",
+            '403': "ForbiddenError",
+            '404': "NotFoundError",
+            '409': "NotFoundError",
+            '422': "NoRecipientsError",
+            '429': "SendPushNotification429Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        ).data
+
+
+    @validate_call
+    def replace_push_notification_with_http_info(
+        self,
+        notification_id: Annotated[str, Field(min_length=1, strict=True, description="The `notification_id` returned when the Push Notification was sent.")],
+        push_notification_replace_request: PushNotificationReplaceRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> ApiResponse[PushNotificationReplaceResponse]:
+        """Replace a push notification
+
+        Replaces a Push Notification you already sent, using the `notification_id` from the send response. The replacement takes the original's place on the Lock Screen and in Notification Center instead of appearing as a second notification. It is delivered silently, with no sound or screen wake, to the same recipients as the original. Notification history is updated in place.
+
+        :param notification_id: The `notification_id` returned when the Push Notification was sent. (required)
+        :type notification_id: str
+        :param push_notification_replace_request: (required)
+        :type push_notification_replace_request: PushNotificationReplaceRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._replace_push_notification_serialize(
+            notification_id=notification_id,
+            push_notification_replace_request=push_notification_replace_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "PushNotificationReplaceResponse",
+            '400': "BadRequestError",
+            '402': "BillingBlockedError",
+            '403': "ForbiddenError",
+            '404': "NotFoundError",
+            '409': "NotFoundError",
+            '422': "NoRecipientsError",
+            '429': "SendPushNotification429Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        response_data.read()
+        return self.api_client.response_deserialize(
+            response_data=response_data,
+            response_types_map=_response_types_map,
+        )
+
+
+    @validate_call
+    def replace_push_notification_without_preload_content(
+        self,
+        notification_id: Annotated[str, Field(min_length=1, strict=True, description="The `notification_id` returned when the Push Notification was sent.")],
+        push_notification_replace_request: PushNotificationReplaceRequest,
+        _request_timeout: Union[
+            None,
+            Annotated[StrictFloat, Field(gt=0)],
+            Tuple[
+                Annotated[StrictFloat, Field(gt=0)],
+                Annotated[StrictFloat, Field(gt=0)]
+            ]
+        ] = None,
+        _request_auth: Optional[Dict[StrictStr, Any]] = None,
+        _content_type: Optional[StrictStr] = None,
+        _headers: Optional[Dict[StrictStr, Any]] = None,
+        _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
+    ) -> RESTResponseType:
+        """Replace a push notification
+
+        Replaces a Push Notification you already sent, using the `notification_id` from the send response. The replacement takes the original's place on the Lock Screen and in Notification Center instead of appearing as a second notification. It is delivered silently, with no sound or screen wake, to the same recipients as the original. Notification history is updated in place.
+
+        :param notification_id: The `notification_id` returned when the Push Notification was sent. (required)
+        :type notification_id: str
+        :param push_notification_replace_request: (required)
+        :type push_notification_replace_request: PushNotificationReplaceRequest
+        :param _request_timeout: timeout setting for this request. If one
+                                 number provided, it will be total request
+                                 timeout. It can also be a pair (tuple) of
+                                 (connection, read) timeouts.
+        :type _request_timeout: int, tuple(int, int), optional
+        :param _request_auth: set to override the auth_settings for an a single
+                              request; this effectively ignores the
+                              authentication in the spec for a single request.
+        :type _request_auth: dict, optional
+        :param _content_type: force content-type for the request.
+        :type _content_type: str, Optional
+        :param _headers: set to override the headers for a single
+                         request; this effectively ignores the headers
+                         in the spec for a single request.
+        :type _headers: dict, optional
+        :param _host_index: set to override the host_index for a single
+                            request; this effectively ignores the host_index
+                            in the spec for a single request.
+        :type _host_index: int, optional
+        :return: Returns the result object.
+        """ # noqa: E501
+
+        _param = self._replace_push_notification_serialize(
+            notification_id=notification_id,
+            push_notification_replace_request=push_notification_replace_request,
+            _request_auth=_request_auth,
+            _content_type=_content_type,
+            _headers=_headers,
+            _host_index=_host_index
+        )
+
+        _response_types_map: Dict[str, Optional[str]] = {
+            '200': "PushNotificationReplaceResponse",
+            '400': "BadRequestError",
+            '402': "BillingBlockedError",
+            '403': "ForbiddenError",
+            '404': "NotFoundError",
+            '409': "NotFoundError",
+            '422': "NoRecipientsError",
+            '429': "SendPushNotification429Response",
+        }
+        response_data = self.api_client.call_api(
+            *_param,
+            _request_timeout=_request_timeout
+        )
+        return response_data.response
+
+
+    def _replace_push_notification_serialize(
+        self,
+        notification_id,
+        push_notification_replace_request,
+        _request_auth,
+        _content_type,
+        _headers,
+        _host_index,
+    ) -> RequestSerialized:
+
+        _host = None
+
+        _collection_formats: Dict[str, str] = {
+        }
+
+        _path_params: Dict[str, str] = {}
+        _query_params: List[Tuple[str, str]] = []
+        _header_params: Dict[str, Optional[str]] = _headers or {}
+        _form_params: List[Tuple[str, str]] = []
+        _files: Dict[str, Union[str, bytes]] = {}
+        _body_params: Optional[bytes] = None
+
+        # process the path parameters
+        if notification_id is not None:
+            _path_params['notification_id'] = notification_id
+        # process the query parameters
+        # process the header parameters
+        # process the form parameters
+        # process the body parameter
+        if push_notification_replace_request is not None:
+            _body_params = push_notification_replace_request
+
+
+        # set the HTTP header `Accept`
+        if 'Accept' not in _header_params:
+            _header_params['Accept'] = self.api_client.select_header_accept(
+                [
+                    'application/json'
+                ]
+            )
+
+        # set the HTTP header `Content-Type`
+        if _content_type:
+            _header_params['Content-Type'] = _content_type
+        else:
+            _default_content_type = (
+                self.api_client.select_header_content_type(
+                    [
+                        'application/json'
+                    ]
+                )
+            )
+            if _default_content_type is not None:
+                _header_params['Content-Type'] = _default_content_type
+
+        # authentication setting
+        _auth_settings: List[str] = [
+            'apiKeyAuth'
+        ]
+
+        return self.api_client.param_serialize(
+            method='PUT',
+            resource_path='/push-notification/{notification_id}',
+            path_params=_path_params,
+            query_params=_query_params,
+            header_params=_header_params,
+            body=_body_params,
+            post_params=_form_params,
+            files=_files,
+            auth_settings=_auth_settings,
+            collection_formats=_collection_formats,
+            _host=_host,
+            _request_auth=_request_auth
+        )
+
+
+
+
+    @validate_call
     def send_push_notification(
         self,
         push_notification_request: PushNotificationRequest,
@@ -56,7 +368,7 @@ class PushNotificationsApi:
     ) -> PushNotificationResponse:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -128,7 +440,7 @@ class PushNotificationsApi:
     ) -> ApiResponse[PushNotificationResponse]:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest
@@ -200,7 +512,7 @@ class PushNotificationsApi:
     ) -> RESTResponseType:
         """Send a push notification
 
-        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
+        Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
         :param push_notification_request: (required)
         :type push_notification_request: PushNotificationRequest

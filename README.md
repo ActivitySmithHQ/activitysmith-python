@@ -196,6 +196,25 @@ activitysmith.notifications.send(
 )
 ```
 
+### Replace a Push Notification
+
+Every send returns a `notification_id`. Pass it to `replace` to update a Push Notification you already sent, for example when an incident you alerted on is resolved. The replacement takes the old notification's place on the Lock Screen and in history instead of stacking a second one. It arrives silently, without sound or waking the screen, and goes to the same recipients as the original.
+
+Omit `metadata` or `tags` to keep their stored values.
+
+```python
+sent = activitysmith.notifications.send(
+    title="🚨 checkout-api is down",
+    message="500 errors on 62% of requests.",
+)
+
+activitysmith.notifications.replace(
+    sent.notification_id,
+    title="✅ checkout-api recovered",
+    message="Error rate is back to normal. Incident resolved.",
+)
+```
+
 ## Live Activities
 
 Choose the Live Activity type that matches what you want to show:

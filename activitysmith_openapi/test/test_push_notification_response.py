@@ -36,6 +36,7 @@ class TestPushNotificationResponse(unittest.TestCase):
         if include_optional:
             return PushNotificationResponse(
                 success = True,
+                notification_id = '',
                 devices_notified = 56,
                 users_notified = 56,
                 effective_channel_slugs = [
@@ -44,7 +45,12 @@ class TestPushNotificationResponse(unittest.TestCase):
                 tags = [
                     'gB:9JLe6iL71-aa-.Ctq:dcsc.3-8:1gAa8Xa6u61ArrlGpCQjkQVRmfnjddwcDM0'
                     ],
-                timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                devices_targeted = 56,
+                devices_deactivated = 56,
+                devices_unregistered = 56,
+                credential_test = True,
+                message = ''
             )
         else:
             return PushNotificationResponse(

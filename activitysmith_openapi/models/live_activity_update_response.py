@@ -18,8 +18,9 @@ import re  # noqa: F401
 import json
 
 from datetime import datetime
-from pydantic import BaseModel, ConfigDict, StrictBool, StrictInt, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional
+from typing_extensions import Annotated
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -32,7 +33,14 @@ class LiveActivityUpdateResponse(BaseModel):
     devices_queued: Optional[StrictInt] = None
     devices_notified: Optional[StrictInt] = None
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "activity_id", "devices_queued", "devices_notified", "timestamp"]
+    users_notified: Optional[StrictInt] = None
+    effective_channel_slugs: Optional[List[StrictStr]] = None
+    tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
+    operation: Optional[StrictStr] = Field(default=None, description="Present when the update started a new Live Activity for a managed stream.")
+    stream_key: Optional[StrictStr] = None
+    previous_activity_id: Optional[StrictStr] = None
+    errors: Optional[List[StrictStr]] = Field(default=None, description="Per-device delivery errors when some devices could not be reached.")
+    __properties: ClassVar[List[str]] = ["success", "activity_id", "devices_queued", "devices_notified", "timestamp", "users_notified", "effective_channel_slugs", "tags", "operation", "stream_key", "previous_activity_id", "errors"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -89,7 +97,14 @@ class LiveActivityUpdateResponse(BaseModel):
             "activity_id": obj.get("activity_id"),
             "devices_queued": obj.get("devices_queued"),
             "devices_notified": obj.get("devices_notified"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "users_notified": obj.get("users_notified"),
+            "effective_channel_slugs": obj.get("effective_channel_slugs"),
+            "tags": obj.get("tags"),
+            "operation": obj.get("operation"),
+            "stream_key": obj.get("stream_key"),
+            "previous_activity_id": obj.get("previous_activity_id"),
+            "errors": obj.get("errors")
         })
         return _obj
 

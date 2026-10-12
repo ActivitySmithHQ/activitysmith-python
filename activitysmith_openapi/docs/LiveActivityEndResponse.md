@@ -11,6 +11,12 @@ Name | Type | Description | Notes
 **devices_queued** | **int** |  | [optional] 
 **devices_notified** | **int** |  | [optional] 
 **timestamp** | **datetime** |  | 
+**ignored** | **bool** | True when the Live Activity had already ended and the request had no effect. | [optional] 
+**message** | **str** |  | [optional] 
+**end_reason** | **str** |  | [optional] 
+**forced_completion** | **bool** | True when the Live Activity was marked complete without a confirmed APNs end delivery. | [optional] 
+**warning** | **str** |  | [optional] 
+**errors** | **List[str]** | Per-device delivery errors when some devices could not be reached. | [optional] 
 
 ## Example
 
