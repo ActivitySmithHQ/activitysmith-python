@@ -35,7 +35,10 @@ class LiveActivityStartResponse(BaseModel):
     effective_channel_slugs: Optional[List[StrictStr]] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "activity_id", "effective_channel_slugs", "tags", "timestamp"]
+    ended_activity_id: Optional[StrictStr] = Field(default=None, description="Present when starting this Live Activity ended an older one to stay within the device limit.")
+    message: Optional[StrictStr] = None
+    errors: Optional[List[StrictStr]] = Field(default=None, description="Per-device delivery errors when some devices could not be reached.")
+    __properties: ClassVar[List[str]] = ["success", "devices_notified", "users_notified", "activity_id", "effective_channel_slugs", "tags", "timestamp", "ended_activity_id", "message", "errors"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -94,7 +97,10 @@ class LiveActivityStartResponse(BaseModel):
             "activity_id": obj.get("activity_id"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),
             "tags": obj.get("tags"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "ended_activity_id": obj.get("ended_activity_id"),
+            "message": obj.get("message"),
+            "errors": obj.get("errors")
         })
         return _obj
 

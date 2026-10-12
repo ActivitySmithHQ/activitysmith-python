@@ -13,6 +13,9 @@ Name | Type | Description | Notes
 **users_notified** | **int** | Deprecated compatibility alias for users_updated. | [optional] 
 **effective_channel_slugs** | **List[str]** |  | 
 **timestamp** | **datetime** |  | 
+**devices_targeted** | **int** | Number of device tokens targeted. | [optional] 
+**devices_deactivated** | **int** | Number of device tokens deactivated because APNs reported them unregistered. | [optional] 
+**devices_unregistered** | **int** | Number of targeted device tokens APNs reported as unregistered. | [optional] 
 
 ## Example
 

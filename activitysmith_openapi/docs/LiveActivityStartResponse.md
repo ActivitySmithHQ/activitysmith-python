@@ -13,6 +13,9 @@ Name | Type | Description | Notes
 **effective_channel_slugs** | **List[str]** |  | [optional] 
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
 **timestamp** | **datetime** |  | 
+**ended_activity_id** | **str** | Present when starting this Live Activity ended an older one to stay within the device limit. | [optional] 
+**message** | **str** |  | [optional] 
+**errors** | **List[str]** | Per-device delivery errors when some devices could not be reached. | [optional] 
 
 ## Example
 

@@ -41,7 +41,14 @@ class TestLiveActivityStreamDeleteResponse(unittest.TestCase):
                 activity_id = '',
                 devices_queued = 56,
                 devices_notified = 56,
-                timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f')
+                timestamp = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'),
+                ignored = True,
+                message = '',
+                forced_completion = True,
+                warning = '',
+                errors = [
+                    ''
+                    ]
             )
         else:
             return LiveActivityStreamDeleteResponse(

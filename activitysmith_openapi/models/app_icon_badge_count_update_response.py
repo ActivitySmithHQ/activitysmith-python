@@ -36,7 +36,10 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
     users_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for users_updated.")
     effective_channel_slugs: List[StrictStr]
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "badge", "devices_updated", "users_updated", "devices_notified", "users_notified", "effective_channel_slugs", "timestamp"]
+    devices_targeted: Optional[StrictInt] = Field(default=None, description="Number of device tokens targeted.")
+    devices_deactivated: Optional[StrictInt] = Field(default=None, description="Number of device tokens deactivated because APNs reported them unregistered.")
+    devices_unregistered: Optional[StrictInt] = Field(default=None, description="Number of targeted device tokens APNs reported as unregistered.")
+    __properties: ClassVar[List[str]] = ["success", "badge", "devices_updated", "users_updated", "devices_notified", "users_notified", "effective_channel_slugs", "timestamp", "devices_targeted", "devices_deactivated", "devices_unregistered"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -96,7 +99,10 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
             "devices_notified": obj.get("devices_notified"),
             "users_notified": obj.get("users_notified"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),
-            "timestamp": obj.get("timestamp")
+            "timestamp": obj.get("timestamp"),
+            "devices_targeted": obj.get("devices_targeted"),
+            "devices_deactivated": obj.get("devices_deactivated"),
+            "devices_unregistered": obj.get("devices_unregistered")
         })
         return _obj
 

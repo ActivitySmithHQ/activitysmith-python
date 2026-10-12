@@ -38,8 +38,13 @@ class LiveActivityStreamPutResponse(BaseModel):
     users_notified: Optional[StrictInt] = None
     effective_channel_slugs: Optional[List[StrictStr]] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
+    warning: Optional[StrictStr] = Field(default=None, description="Present on `updated` responses when the current Live Activity has received more than 12 updates and has averaged more than one update every 2 minutes since it started. The update is still sent, but iOS may throttle Live Activities that update this often.")
     timestamp: datetime
-    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "previous_activity_id", "devices_notified", "devices_queued", "users_notified", "effective_channel_slugs", "tags", "timestamp"]
+    ignored: Optional[StrictBool] = Field(default=None, description="True when the request had no effect.")
+    remote_push_sent: Optional[StrictBool] = None
+    message: Optional[StrictStr] = None
+    errors: Optional[List[StrictStr]] = Field(default=None, description="Per-device delivery errors when some devices could not be reached.")
+    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "previous_activity_id", "devices_notified", "devices_queued", "users_notified", "effective_channel_slugs", "tags", "warning", "timestamp", "ignored", "remote_push_sent", "message", "errors"]
 
     @field_validator('operation')
     def operation_validate_enum(cls, value):
@@ -114,7 +119,12 @@ class LiveActivityStreamPutResponse(BaseModel):
             "users_notified": obj.get("users_notified"),
             "effective_channel_slugs": obj.get("effective_channel_slugs"),
             "tags": obj.get("tags"),
-            "timestamp": obj.get("timestamp")
+            "warning": obj.get("warning"),
+            "timestamp": obj.get("timestamp"),
+            "ignored": obj.get("ignored"),
+            "remote_push_sent": obj.get("remote_push_sent"),
+            "message": obj.get("message"),
+            "errors": obj.get("errors")
         })
         return _obj
 

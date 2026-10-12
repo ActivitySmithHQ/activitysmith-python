@@ -4,15 +4,104 @@ All URIs are relative to *https://activitysmith.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**replace_push_notification**](PushNotificationsApi.md#replace_push_notification) | **PUT** /push-notification/{notification_id} | Replace a push notification
 [**send_push_notification**](PushNotificationsApi.md#send_push_notification) | **POST** /push-notification | Send a push notification
 
+
+# **replace_push_notification**
+> PushNotificationReplaceResponse replace_push_notification(notification_id, push_notification_replace_request)
+
+Replace a push notification
+
+Replaces a Push Notification you already sent, using the `notification_id` from the send response. The replacement takes the original's place on the Lock Screen and in Notification Center instead of appearing as a second notification. It is delivered silently, with no sound or screen wake, to the same recipients as the original. Notification history is updated in place.
+
+### Example
+
+* Bearer (API Key) Authentication (apiKeyAuth):
+
+```python
+import activitysmith_openapi
+from activitysmith_openapi.models.push_notification_replace_request import PushNotificationReplaceRequest
+from activitysmith_openapi.models.push_notification_replace_response import PushNotificationReplaceResponse
+from activitysmith_openapi.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to https://activitysmith.com/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = activitysmith_openapi.Configuration(
+    host = "https://activitysmith.com/api"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (API Key): apiKeyAuth
+configuration = activitysmith_openapi.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with activitysmith_openapi.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = activitysmith_openapi.PushNotificationsApi(api_client)
+    notification_id = 'notification_id_example' # str | The `notification_id` returned when the Push Notification was sent.
+    push_notification_replace_request = {"title":"✅ checkout-api recovered","message":"Error rate is back to normal. Incident resolved."} # PushNotificationReplaceRequest | 
+
+    try:
+        # Replace a push notification
+        api_response = api_instance.replace_push_notification(notification_id, push_notification_replace_request)
+        print("The response of PushNotificationsApi->replace_push_notification:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling PushNotificationsApi->replace_push_notification: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **notification_id** | **str**| The &#x60;notification_id&#x60; returned when the Push Notification was sent. | 
+ **push_notification_replace_request** | [**PushNotificationReplaceRequest**](PushNotificationReplaceRequest.md)|  | 
+
+### Return type
+
+[**PushNotificationReplaceResponse**](PushNotificationReplaceResponse.md)
+
+### Authorization
+
+[apiKeyAuth](../README.md#apiKeyAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Push notification replaced |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**400** | Bad request (invalid payload or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**402** | Billing access required |  -  |
+**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**404** | Push notification not found |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**409** | Push notification was sent before replacement support |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**422** | No recipients of the original Push Notification are still available |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **send_push_notification**
 > PushNotificationResponse send_push_notification(push_notification_request)
 
 Send a push notification
 
-Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a service logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
+Sends a push notification to devices matched by API key scope and optional target channels. Supports optional redirection URL, optional media preview or playback when the notification is expanded, and up to 4 interactive actions. `media` cannot be combined with `actions`. Optional `icon` shows a custom image, such as a logo or avatar, next to a smaller app icon. Optional `interruption_level` sets how urgently iOS presents the notification. Optional tags to organize and filter notification history.
 
 ### Example
 
