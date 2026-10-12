@@ -14,6 +14,10 @@ class FakePushNotificationsApi:
         self.calls.append(kwargs)
         return kwargs
 
+    def replace_push_notification(self, **kwargs):
+        self.calls.append(kwargs)
+        return kwargs
+
 
 class FakeLiveActivitiesApi:
     def __init__(self, _api_client):
@@ -834,3 +838,40 @@ def test_metrics_short_and_legacy_aliases(monkeypatch):
             "metric_value_update_request": {"value": 42},
         },
     ]
+
+
+def test_notifications_replace_and_alias(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    monkeypatch.setattr(client_module, "LiveActivitiesApi", FakeLiveActivitiesApi)
+    monkeypatch.setattr(client_module, "MetricsApi", FakeMetricsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    short = client.notifications.replace("pn1", title="Answered from desk", message="No input needed")
+    legacy = client.notifications.replace_push_notification("pn1", {"title": "Answered from desk"})
+
+    assert short == {
+        "notification_id": "pn1",
+        "push_notification_replace_request": {"title": "Answered from desk", "message": "No input needed"},
+    }
+    assert legacy == {
+        "notification_id": "pn1",
+        "push_notification_replace_request": {"title": "Answered from desk"},
+    }
+
+
+def test_notifications_replace_rejects_media_and_actions(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+    client = ActivitySmith(api_key="x")
+
+    try:
+        client.notifications.replace(
+            "pn1",
+            title="Done",
+            media="https://cdn.activitysmith.com/voice_over.mp3",
+            actions=[{"title": "Open", "type": "open_url", "url": "https://example.com"}],
+        )
+    except ValueError as error:
+        assert "media cannot be combined with actions" in str(error)
+    else:
+        raise AssertionError("expected ValueError")

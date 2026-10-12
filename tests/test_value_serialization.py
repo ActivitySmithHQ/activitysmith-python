@@ -209,3 +209,30 @@ def test_push_rejects_unsupported_interruption_level(requests, level):
     with pytest.raises(ValueError, match="interruption_level must be passive, active, or time-sensitive"):
         client.notifications.send(title="Outage", interruption_level=level)
     assert requests == []
+
+
+def test_push_replace_serialization(requests):
+    activitysmith = ActivitySmith(api_key="test")
+    with pytest.raises(RequestCaptured):
+        activitysmith.notifications.replace(
+            "Xk3pQ8mV2nR7tL9wB4yZ",
+            title="Answered from desk",
+            metadata={"attempts": 0, "resolved": False, "note": ""},
+            tags=[],
+        )
+    assert requests[-1] == {
+        "title": "Answered from desk",
+        "metadata": {"attempts": 0, "resolved": False, "note": ""},
+        "tags": [],
+    }
+
+
+def test_push_response_ignores_unknown_fields():
+    from activitysmith_openapi.models.push_notification_response import PushNotificationResponse
+
+    response = PushNotificationResponse.from_json(
+        '{"success": true, "notification_id": "pn1", "devices_targeted": 2, "future_field": 1, "timestamp": "2026-10-12T00:00:00Z"}'
+    )
+    assert response.notification_id == "pn1"
+    assert response.devices_targeted == 2
+

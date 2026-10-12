@@ -16,7 +16,7 @@ from activitysmith_openapi.models.metric_value_update_request import MetricValue
 
 from .normalization import normalize_live_activity_request, normalize_metric_request
 
-SDK_VERSION = "1.13.0"
+SDK_VERSION = "1.14.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -436,6 +436,49 @@ class NotificationsResource:
     # Backward-compatible alias.
     def send_push_notification(self, push_notification_request: Any | None = None, **fields: Any):
         return self.send(push_notification_request, **fields)
+
+    def replace(
+        self,
+        notification_id: str,
+        request: Any | None = None,
+        *,
+        title: Any | None = None,
+        message: Any | None = None,
+        subtitle: Any | None = None,
+        media: Any | None = None,
+        redirection: Any | None = None,
+        actions: Any | None = None,
+        tags: Any | None = None,
+        metadata: Any | None = None,
+        icon: Any | None = None,
+    ):
+        """Silently replace a sent Push Notification, using the notification_id returned by send()."""
+        request = _build_push_request(
+            request,
+            title=title,
+            message=message,
+            subtitle=subtitle,
+            media=media,
+            redirection=redirection,
+            actions=actions,
+            tags=tags,
+            metadata=metadata,
+            icon=icon,
+        )
+        normalized = normalize_metadata_request(_validate_push_request(request))
+        return self._api.replace_push_notification(
+            notification_id=notification_id,
+            push_notification_replace_request=normalized,
+        )
+
+    # Generated-style alias.
+    def replace_push_notification(
+        self,
+        notification_id: str,
+        push_notification_replace_request: Any | None = None,
+        **fields: Any,
+    ):
+        return self.replace(notification_id, push_notification_replace_request, **fields)
 
 
 class LiveActivitiesResource:
