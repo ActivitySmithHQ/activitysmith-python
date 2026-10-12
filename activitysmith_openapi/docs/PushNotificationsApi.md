@@ -47,7 +47,7 @@ with activitysmith_openapi.ApiClient(configuration) as api_client:
     # Create an instance of the API class
     api_instance = activitysmith_openapi.PushNotificationsApi(api_client)
     notification_id = 'notification_id_example' # str | The `notification_id` returned when the Push Notification was sent.
-    push_notification_replace_request = {"title":"Answered from desk ✅","message":"No input needed anymore"} # PushNotificationReplaceRequest | 
+    push_notification_replace_request = {"title":"✅ checkout-api recovered","message":"Error rate is back to normal. Incident resolved."} # PushNotificationReplaceRequest | 
 
     try:
         # Replace a push notification
