@@ -6,7 +6,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **error** | **str** |  | 
+**code** | **str** | no_paired_devices: the account has no active paired iOS devices; pair an iPhone with the ActivitySmith app. no_recipients_found: devices are paired, but none matched the targeted channels. | [optional] 
 **message** | **str** |  | 
+**app_store_url** | **str** | ActivitySmith App Store link. Present when code is no_paired_devices. | [optional] 
 **effective_channel_slugs** | **List[str]** |  | [optional] 
 
 ## Example

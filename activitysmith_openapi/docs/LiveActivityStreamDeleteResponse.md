@@ -16,7 +16,8 @@ Name | Type | Description | Notes
 **ignored** | **bool** | True when the stream was already ended and the request had no effect. | [optional] 
 **message** | **str** |  | [optional] 
 **forced_completion** | **bool** |  | [optional] 
-**warning** | **str** |  | [optional] 
+**delivered** | **bool** | Present when the stream had a current Live Activity. True when the end was sent to at least one device, or queued for a device that has not registered yet. False when no device received it, so the Live Activity may stay on the Lock Screen until iOS removes it or someone dismisses it. | [optional] 
+**warning** | **str** | Explains why the end may not have removed the Live Activity, for example because iOS had already ended a Live Activity that started more than 8 hours ago. | [optional] 
 **errors** | **List[str]** | Per-device delivery errors when some devices could not be reached. | [optional] 
 
 ## Example

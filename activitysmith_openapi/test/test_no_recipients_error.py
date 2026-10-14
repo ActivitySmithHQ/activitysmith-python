@@ -36,7 +36,9 @@ class TestNoRecipientsError(unittest.TestCase):
         if include_optional:
             return NoRecipientsError(
                 error = '',
+                code = 'no_paired_devices',
                 message = '',
+                app_store_url = '',
                 effective_channel_slugs = [
                     ''
                     ]
