@@ -36,11 +36,12 @@ class TestUpdateAppIconBadgeCount422Response(unittest.TestCase):
         if include_optional:
             return UpdateAppIconBadgeCount422Response(
                 error = '',
+                code = 'badge_device_disconnected',
                 message = '',
+                app_store_url = '',
                 effective_channel_slugs = [
                     ''
                     ],
-                code = 'badge_device_disconnected',
                 badge = 0,
                 devices_targeted = 56,
                 devices_updated = 56,
@@ -50,8 +51,8 @@ class TestUpdateAppIconBadgeCount422Response(unittest.TestCase):
         else:
             return UpdateAppIconBadgeCount422Response(
                 error = '',
-                message = '',
                 code = 'badge_device_disconnected',
+                message = '',
                 badge = 0,
                 devices_updated = 56,
         )
