@@ -45,6 +45,7 @@ class TestLiveActivityStreamDeleteResponse(unittest.TestCase):
                 ignored = True,
                 message = '',
                 forced_completion = True,
+                delivered = True,
                 warning = '',
                 errors = [
                     ''

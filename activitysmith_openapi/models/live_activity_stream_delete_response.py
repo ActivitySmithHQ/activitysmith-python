@@ -37,9 +37,10 @@ class LiveActivityStreamDeleteResponse(BaseModel):
     ignored: Optional[StrictBool] = Field(default=None, description="True when the stream was already ended and the request had no effect.")
     message: Optional[StrictStr] = None
     forced_completion: Optional[StrictBool] = None
-    warning: Optional[StrictStr] = None
+    delivered: Optional[StrictBool] = Field(default=None, description="Present when the stream had a current Live Activity. True when the end was sent to at least one device, or queued for a device that has not registered yet. False when no device received it, so the Live Activity may stay on the Lock Screen until iOS removes it or someone dismisses it.")
+    warning: Optional[StrictStr] = Field(default=None, description="Explains why the end may not have removed the Live Activity, for example because iOS had already ended a Live Activity that started more than 8 hours ago.")
     errors: Optional[List[StrictStr]] = Field(default=None, description="Per-device delivery errors when some devices could not be reached.")
-    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "devices_queued", "devices_notified", "timestamp", "ignored", "message", "forced_completion", "warning", "errors"]
+    __properties: ClassVar[List[str]] = ["success", "operation", "stream_key", "activity_id", "devices_queued", "devices_notified", "timestamp", "ignored", "message", "forced_completion", "delivered", "warning", "errors"]
 
     @field_validator('operation')
     def operation_validate_enum(cls, value):
@@ -114,6 +115,7 @@ class LiveActivityStreamDeleteResponse(BaseModel):
             "ignored": obj.get("ignored"),
             "message": obj.get("message"),
             "forced_completion": obj.get("forced_completion"),
+            "delivered": obj.get("delivered"),
             "warning": obj.get("warning"),
             "errors": obj.get("errors")
         })

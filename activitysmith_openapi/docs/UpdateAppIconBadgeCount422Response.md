@@ -6,9 +6,10 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **error** | **str** |  | 
-**message** | **str** |  | 
-**effective_channel_slugs** | **List[str]** |  | [optional] 
 **code** | **str** |  | 
+**message** | **str** |  | 
+**app_store_url** | **str** | ActivitySmith App Store link. Present when code is no_paired_devices. | [optional] 
+**effective_channel_slugs** | **List[str]** |  | [optional] 
 **badge** | **int** |  | 
 **devices_targeted** | **int** |  | [optional] 
 **devices_updated** | **int** |  | 

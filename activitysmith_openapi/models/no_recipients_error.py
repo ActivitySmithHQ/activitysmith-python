@@ -17,7 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictStr
+from pydantic import BaseModel, ConfigDict, Field, StrictStr
 from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
@@ -27,9 +27,11 @@ class NoRecipientsError(BaseModel):
     NoRecipientsError
     """ # noqa: E501
     error: StrictStr
+    code: Optional[StrictStr] = Field(default=None, description="Machine-readable reason. no_paired_devices: the account has no active paired iOS devices; pair an iPhone with the ActivitySmith app. no_recipients_found: devices are paired, but none matched the targeted channels. Treat unknown values as a generic no-delivery error.")
     message: StrictStr
+    app_store_url: Optional[StrictStr] = Field(default=None, description="ActivitySmith App Store link. Present when code is no_paired_devices.")
     effective_channel_slugs: Optional[List[StrictStr]] = None
-    __properties: ClassVar[List[str]] = ["error", "message", "effective_channel_slugs"]
+    __properties: ClassVar[List[str]] = ["error", "code", "message", "app_store_url", "effective_channel_slugs"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -83,7 +85,9 @@ class NoRecipientsError(BaseModel):
 
         _obj = cls.model_validate({
             "error": obj.get("error"),
+            "code": obj.get("code"),
             "message": obj.get("message"),
+            "app_store_url": obj.get("app_store_url"),
             "effective_channel_slugs": obj.get("effective_channel_slugs")
         })
         return _obj

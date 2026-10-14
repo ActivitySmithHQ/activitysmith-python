@@ -36,7 +36,9 @@ class TestNoRecipientsError(unittest.TestCase):
         if include_optional:
             return NoRecipientsError(
                 error = '',
+                code = '',
                 message = '',
+                app_store_url = '',
                 effective_channel_slugs = [
                     ''
                     ]
