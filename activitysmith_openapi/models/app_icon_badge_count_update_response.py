@@ -30,7 +30,7 @@ class AppIconBadgeCountUpdateResponse(BaseModel):
     """ # noqa: E501
     success: StrictBool
     badge: Annotated[int, Field(le=2147483647, strict=True, ge=0)]
-    devices_updated: StrictInt = Field(description="Number of devices whose App Icon Badge Count was updated.")
+    devices_updated: StrictInt = Field(description="Number of devices whose App Icon Badge was updated.")
     users_updated: StrictInt = Field(description="Number of account users with at least one updated device.")
     devices_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for devices_updated.")
     users_notified: Optional[StrictInt] = Field(default=None, description="Deprecated compatibility alias for users_updated.")
