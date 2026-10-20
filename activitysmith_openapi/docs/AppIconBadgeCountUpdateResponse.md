@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **bool** |  | 
 **badge** | **int** |  | 
-**devices_updated** | **int** | Number of devices whose App Icon Badge Count was updated. | 
+**devices_updated** | **int** | Number of devices whose App Icon Badge was updated. | 
 **users_updated** | **int** | Number of account users with at least one updated device. | 
 **devices_notified** | **int** | Deprecated compatibility alias for devices_updated. | [optional] 
 **users_notified** | **int** | Deprecated compatibility alias for users_updated. | [optional] 
