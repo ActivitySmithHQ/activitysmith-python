@@ -17,8 +17,8 @@ import pprint
 import re  # noqa: F401
 import json
 
-from pydantic import BaseModel, ConfigDict, StrictBool
-from typing import Any, ClassVar, Dict, List
+from pydantic import BaseModel, ConfigDict, Field, StrictBool
+from typing import Any, ClassVar, Dict, List, Optional
 from typing import Optional, Set
 from typing_extensions import Self
 
@@ -27,7 +27,8 @@ class MetricValueUpdateResponse(BaseModel):
     MetricValueUpdateResponse
     """ # noqa: E501
     success: StrictBool
-    __properties: ClassVar[List[str]] = ["success"]
+    created: Optional[StrictBool] = Field(default=None, description="true when this request created the metric because no metric used the key yet.")
+    __properties: ClassVar[List[str]] = ["success", "created"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -80,7 +81,8 @@ class MetricValueUpdateResponse(BaseModel):
             return cls.model_validate(obj)
 
         _obj = cls.model_validate({
-            "success": obj.get("success")
+            "success": obj.get("success"),
+            "created": obj.get("created")
         })
         return _obj
 

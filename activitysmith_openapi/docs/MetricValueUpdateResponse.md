@@ -6,6 +6,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **success** | **bool** |  | 
+**created** | **bool** | true when this request created the metric because no metric used the key yet. | [optional] 
 
 ## Example
 
