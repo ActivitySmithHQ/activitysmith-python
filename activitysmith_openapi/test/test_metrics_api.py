@@ -33,6 +33,13 @@ class TestMetricsApi(unittest.TestCase):
         """
         pass
 
+    def test_upsert_metric(self) -> None:
+        """Test case for upsert_metric
+
+        Create or update a widget metric
+        """
+        pass
+
 
 if __name__ == '__main__':
     unittest.main()

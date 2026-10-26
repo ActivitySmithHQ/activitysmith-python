@@ -54,9 +54,9 @@ class AppIconBadgesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> AppIconBadgeCountUpdateResponse:
-        """Set App Icon Badge Count
+        """Set App Icon Badge
 
-        Shows a number on the ActivitySmith app icon.
+        Shows a number on the ActivitySmith app icon. Requires Push Notifications enabled for ActivitySmith on the device.
 
         :param app_icon_badge_count_update_request: (required)
         :type app_icon_badge_count_update_request: AppIconBadgeCountUpdateRequest
@@ -127,9 +127,9 @@ class AppIconBadgesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> ApiResponse[AppIconBadgeCountUpdateResponse]:
-        """Set App Icon Badge Count
+        """Set App Icon Badge
 
-        Shows a number on the ActivitySmith app icon.
+        Shows a number on the ActivitySmith app icon. Requires Push Notifications enabled for ActivitySmith on the device.
 
         :param app_icon_badge_count_update_request: (required)
         :type app_icon_badge_count_update_request: AppIconBadgeCountUpdateRequest
@@ -200,9 +200,9 @@ class AppIconBadgesApi:
         _headers: Optional[Dict[StrictStr, Any]] = None,
         _host_index: Annotated[StrictInt, Field(ge=0, le=0)] = 0,
     ) -> RESTResponseType:
-        """Set App Icon Badge Count
+        """Set App Icon Badge
 
-        Shows a number on the ActivitySmith app icon.
+        Shows a number on the ActivitySmith app icon. Requires Push Notifications enabled for ActivitySmith on the device.
 
         :param app_icon_badge_count_update_request: (required)
         :type app_icon_badge_count_update_request: AppIconBadgeCountUpdateRequest

@@ -236,3 +236,30 @@ def test_push_response_ignores_unknown_fields():
     assert response.notification_id == "pn1"
     assert response.devices_targeted == 2
 
+
+
+def test_metric_create_serializes_definition(monkeypatch):
+    captured = []
+
+    def capture(self, method, url, header_params=None, body=None, post_params=None, **kwargs):
+        captured.append((method, url, body))
+        raise RequestCaptured
+
+    monkeypatch.setattr(ApiClient, "call_api", capture)
+    activitysmith = ActivitySmith(api_key="test")
+
+    with pytest.raises(RequestCaptured):
+        activitysmith.metrics.create("mrr", label="MRR", format="currency", currency_code="USD")
+    with pytest.raises(RequestCaptured):
+        activitysmith.metrics.create("latency", {"format": "unit", "unit": "ms"}, unit_spacing="space")
+    with pytest.raises(RequestCaptured):
+        activitysmith.metrics.create("deploy.success_rate")
+
+    assert [(method, url.rsplit("/api", 1)[1]) for method, url, _ in captured] == [
+        ("PUT", "/metrics/mrr"),
+        ("PUT", "/metrics/latency"),
+        ("PUT", "/metrics/deploy.success_rate"),
+    ]
+    assert captured[0][2] == {"label": "MRR", "format": "currency", "currency_code": "USD"}
+    assert captured[1][2] == {"format": "unit", "unit": "ms", "unit_spacing": "space"}
+    assert captured[2][2] is None

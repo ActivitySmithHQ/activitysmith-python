@@ -4,15 +4,15 @@ All URIs are relative to *https://activitysmith.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**update_app_icon_badge_count**](AppIconBadgesApi.md#update_app_icon_badge_count) | **POST** /badge | Set App Icon Badge Count
+[**update_app_icon_badge_count**](AppIconBadgesApi.md#update_app_icon_badge_count) | **POST** /badge | Set App Icon Badge
 
 
 # **update_app_icon_badge_count**
 > AppIconBadgeCountUpdateResponse update_app_icon_badge_count(app_icon_badge_count_update_request)
 
-Set App Icon Badge Count
+Set App Icon Badge
 
-Shows a number on the ActivitySmith app icon.
+Shows a number on the ActivitySmith app icon. Requires Push Notifications enabled for ActivitySmith on the device.
 
 ### Example
 
@@ -48,7 +48,7 @@ with activitysmith_openapi.ApiClient(configuration) as api_client:
     app_icon_badge_count_update_request = {"badge":8333} # AppIconBadgeCountUpdateRequest | 
 
     try:
-        # Set App Icon Badge Count
+        # Set App Icon Badge
         api_response = api_instance.update_app_icon_badge_count(app_icon_badge_count_update_request)
         print("The response of AppIconBadgesApi->update_app_icon_badge_count:\n")
         pprint(api_response)
@@ -82,13 +82,13 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | App Icon Badge Count updated |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**200** | App Icon Badge updated |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
 **400** | Bad request |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
 **402** | Billing access required |  -  |
 **403** | Forbidden |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
 **422** | No matching devices found, or a targeted device needs to reconnect |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
 **429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
-**502** | App Icon Badge Count could not be updated |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**502** | App Icon Badge could not be updated |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 

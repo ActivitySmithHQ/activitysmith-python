@@ -850,7 +850,19 @@ class MetricsResource:
             ),
         )
 
-    # Backward-compatible generated-style alias.
+    def create(self, key: str, definition: Any | None = None, **fields: Any):
+        """Create the metric, or update the fields sent for an existing one.
+
+        Omitted fields keep their current values, so it is safe to call on every start.
+        """
+        request = dict(definition or {})
+        request.update({name: value for name, value in fields.items() if value is not None})
+        return self._api.upsert_metric(key=key, metric_upsert_request=request or None)
+
+    # Backward-compatible generated-style aliases.
+    def upsert_metric(self, key: str, metric_upsert_request: Any | None = None):
+        return self._api.upsert_metric(key=key, metric_upsert_request=metric_upsert_request)
+
     def update_metric_value(self, key: str, metric_value_update_request: Any):
         return self._api.update_metric_value(
             key=key,
