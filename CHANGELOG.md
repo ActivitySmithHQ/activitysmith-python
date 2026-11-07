@@ -1,3 +1,7 @@
+## 1.15.0
+
+Adds Push Notification dismissal. Pass a `notification_id` to `notifications.dismiss` to clear a Push Notification you already sent from the Lock Screen and Notification Center. History keeps it. Also adds `metrics.create` to create a Lock Screen Widget metric and set its label and format, such as currency or percent, and `devices.list` to list the iPhones and iPads paired to your account.
+
 ## 1.14.0
 
 Adds the ability to replace a Push Notification you already sent with a new one.

@@ -18,6 +18,7 @@ __version__ = "1.14.0"
 
 # import apis into sdk package
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
+from activitysmith_openapi.api.devices_api import DevicesApi
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
@@ -34,6 +35,9 @@ from activitysmith_openapi.exceptions import ApiAttributeError
 from activitysmith_openapi.exceptions import ApiException
 
 # import models into sdk package
+from activitysmith_openapi.models.account_device import AccountDevice
+from activitysmith_openapi.models.account_device_list_response import AccountDeviceListResponse
+from activitysmith_openapi.models.account_device_list_response_meta import AccountDeviceListResponseMeta
 from activitysmith_openapi.models.activity_metric import ActivityMetric
 from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from activitysmith_openapi.models.alert_payload import AlertPayload
@@ -79,6 +83,7 @@ from activitysmith_openapi.models.not_found_error import NotFoundError
 from activitysmith_openapi.models.push_interruption_level import PushInterruptionLevel
 from activitysmith_openapi.models.push_notification_action import PushNotificationAction
 from activitysmith_openapi.models.push_notification_action_type import PushNotificationActionType
+from activitysmith_openapi.models.push_notification_dismiss_response import PushNotificationDismissResponse
 from activitysmith_openapi.models.push_notification_replace_request import PushNotificationReplaceRequest
 from activitysmith_openapi.models.push_notification_replace_response import PushNotificationReplaceResponse
 from activitysmith_openapi.models.push_notification_request import PushNotificationRequest

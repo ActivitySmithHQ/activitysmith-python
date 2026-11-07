@@ -26,6 +26,13 @@ class TestPushNotificationsApi(unittest.TestCase):
     def tearDown(self) -> None:
         pass
 
+    def test_dismiss_push_notification(self) -> None:
+        """Test case for dismiss_push_notification
+
+        Dismiss a push notification
+        """
+        pass
+
     def test_replace_push_notification(self) -> None:
         """Test case for replace_push_notification
 

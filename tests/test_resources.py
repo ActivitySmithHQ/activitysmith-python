@@ -18,6 +18,20 @@ class FakePushNotificationsApi:
         self.calls.append(kwargs)
         return kwargs
 
+    def dismiss_push_notification(self, **kwargs):
+        self.calls.append(kwargs)
+        return kwargs
+
+
+class FakeDevicesApi:
+    def __init__(self, _api_client):
+        self._api_client = _api_client
+        self.calls = []
+
+    def list_account_devices(self, **kwargs):
+        self.calls.append(kwargs)
+        return kwargs
+
 
 class FakeLiveActivitiesApi:
     def __init__(self, _api_client):
@@ -858,6 +872,37 @@ def test_notifications_replace_and_alias(monkeypatch):
         "notification_id": "pn1",
         "push_notification_replace_request": {"title": "Answered from desk"},
     }
+
+
+def test_notifications_dismiss_and_alias(monkeypatch):
+    monkeypatch.setattr(client_module, "PushNotificationsApi", FakePushNotificationsApi)
+
+    client = ActivitySmith(api_key="x")
+
+    short = client.notifications.dismiss("pn1")
+    legacy = client.notifications.dismiss_push_notification("pn1")
+
+    assert short == {"notification_id": "pn1"}
+    assert legacy == {"notification_id": "pn1"}
+    assert client.notifications._api.calls == [{"notification_id": "pn1"}, {"notification_id": "pn1"}]
+
+
+def test_devices_list_and_alias(monkeypatch):
+    monkeypatch.setattr(client_module, "DevicesApi", FakeDevicesApi)
+
+    client = ActivitySmith(api_key="x")
+
+    client.devices.list()
+    client.devices.list(include_inactive=True, limit=10)
+    client.devices.list(10, 20, True)
+    client.devices.list_account_devices(offset=5)
+
+    assert client.devices._api.calls == [
+        {"limit": None, "offset": None, "include_inactive": None},
+        {"limit": 10, "offset": None, "include_inactive": True},
+        {"limit": 10, "offset": 20, "include_inactive": True},
+        {"limit": None, "offset": 5, "include_inactive": None},
+    ]
 
 
 def test_notifications_replace_rejects_media_and_actions(monkeypatch):

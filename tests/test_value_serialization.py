@@ -1,10 +1,15 @@
+import json
 from copy import deepcopy
+from urllib.parse import parse_qs, urlsplit
 
 import pytest
 
 from activitysmith import ActivitySmith
 from activitysmith.client import content_state, metric
 from activitysmith_openapi.api_client import ApiClient
+from activitysmith_openapi.models.account_device_list_response import AccountDeviceListResponse
+from activitysmith_openapi.models.push_notification_dismiss_response import PushNotificationDismissResponse
+from activitysmith_openapi.rest import RESTClientObject, RESTResponse
 from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from activitysmith_openapi.models.metric_value_update_request_value import MetricValueUpdateRequestValue
 from activitysmith_openapi.models.metric_value_update_request import MetricValueUpdateRequest
@@ -263,3 +268,185 @@ def test_metric_create_serializes_definition(monkeypatch):
     assert captured[0][2] == {"label": "MRR", "format": "currency", "currency_code": "USD"}
     assert captured[1][2] == {"format": "unit", "unit": "ms", "unit_spacing": "space"}
     assert captured[2][2] is None
+
+
+class FakeHTTPResponse:
+    def __init__(self, status, body):
+        self.status = status
+        self.reason = "OK"
+        self.data = json.dumps(body).encode("utf-8")
+        self.headers = {"content-type": "application/json; charset=utf-8"}
+
+
+DEVICE = {
+    "user_email": "owner@example.com",
+    "device_id": "dev_1",
+    "device_type": "ios",
+    "is_active": True,
+    "token_status": {"push": True, "start_live_activity": True},
+    "app_version": "1.17.0",
+    "device_name": "Work iPhone",
+    "system_name": "iOS",
+    "system_version": "27.0",
+    "created_at": "2026-10-01T09:00:00Z",
+    "updated_at": "2026-11-07T09:00:00Z",
+}
+INACTIVE_DEVICE = dict(
+    DEVICE,
+    device_id="dev_2",
+    is_active=False,
+    token_status={"push": False, "start_live_activity": False},
+    device_name="Old iPad",
+    system_name="iPadOS",
+)
+
+
+def _fake_api_response(method, path, query):
+    if method == "POST" and path == "/push-notification":
+        return {
+            "success": True,
+            "notification_id": "Xk3pQ8mV2nR7tL9wB4yZ",
+            "devices_notified": 1,
+            "timestamp": "2026-11-07T09:00:00Z",
+        }
+    if method == "POST" and path.startswith("/push-notification/") and path.endswith("/dismiss"):
+        return {
+            "success": True,
+            "notification_id": path.split("/")[2],
+            "dismissed_at": "2026-11-07T09:01:00Z",
+        }
+    if method == "GET" and path == "/account/devices":
+        include_inactive = query.get("include_inactive") == ["true"]
+        devices = [DEVICE, INACTIVE_DEVICE] if include_inactive else [DEVICE]
+        return {
+            "devices": devices,
+            "meta": {
+                "total": len(devices),
+                "limit": int(query.get("limit", ["100"])[0]),
+                "offset": 0,
+                "has_more": False,
+                "next_offset": None,
+                "include_inactive": include_inactive,
+            },
+        }
+    if method == "PUT" and path.startswith("/metrics/"):
+        return {
+            "metric": {
+                "public_id": "met_1",
+                "key": path.split("/")[2],
+                "label": "MRR",
+                "format": "currency",
+                "currency_code": "USD",
+                "unit": None,
+                "unit_spacing": "none",
+                "latest_value": None,
+                "latest_value_at": None,
+                "created_at": "2026-11-07T09:00:00Z",
+                "updated_at": "2026-11-07T09:00:00Z",
+            }
+        }
+    if method == "POST" and path.startswith("/metrics/") and path.endswith("/value"):
+        return {"success": True}
+    raise AssertionError(f"unexpected request {method} {path}")
+
+
+@pytest.fixture
+def transport(monkeypatch):
+    """Mock the HTTP layer below the generated client, so nothing reaches the network."""
+    sent = []
+
+    def request(self, method, url, headers=None, body=None, post_params=None, _request_timeout=None):
+        parsed = urlsplit(url)
+        path = parsed.path.split("/api", 1)[1]
+        query = parse_qs(parsed.query)
+        sent.append({"method": method, "path": path, "query": query, "raw_query": parsed.query, "body": body})
+        return RESTResponse(FakeHTTPResponse(200, _fake_api_response(method, path, query)))
+
+    monkeypatch.setattr(RESTClientObject, "request", request)
+    return sent
+
+
+def test_push_dismiss_sends_post_and_returns_parsed_body(transport):
+    activitysmith = ActivitySmith(api_key="test")
+
+    result = activitysmith.notifications.dismiss("Xk3pQ8mV2nR7tL9wB4yZ")
+    alias = activitysmith.notifications.dismiss_push_notification("Xk3pQ8mV2nR7tL9wB4yZ")
+
+    assert [(r["method"], r["path"], r["body"]) for r in transport] == [
+        ("POST", "/push-notification/Xk3pQ8mV2nR7tL9wB4yZ/dismiss", None),
+        ("POST", "/push-notification/Xk3pQ8mV2nR7tL9wB4yZ/dismiss", None),
+    ]
+    assert isinstance(result, PushNotificationDismissResponse)
+    assert result.success is True
+    assert result.notification_id == "Xk3pQ8mV2nR7tL9wB4yZ"
+    assert result.dismissed_at.isoformat() == "2026-11-07T09:01:00+00:00"
+    assert alias == result
+
+
+def test_push_dismiss_rejects_empty_notification_id(transport):
+    activitysmith = ActivitySmith(api_key="test")
+    with pytest.raises(ValueError):
+        activitysmith.notifications.dismiss("")
+    assert transport == []
+
+
+def test_devices_list_sends_get_without_query(transport):
+    activitysmith = ActivitySmith(api_key="test")
+
+    result = activitysmith.devices.list()
+
+    assert [(r["method"], r["path"], r["raw_query"], r["body"]) for r in transport] == [
+        ("GET", "/account/devices", "", None),
+    ]
+    assert isinstance(result, AccountDeviceListResponse)
+    assert [device.device_id for device in result.devices] == ["dev_1"]
+    assert result.devices[0].token_status == {"push": True, "start_live_activity": True}
+    assert result.meta.next_offset is None
+
+
+def test_devices_list_sends_query_params(transport):
+    activitysmith = ActivitySmith(api_key="test")
+
+    result = activitysmith.devices.list(include_inactive=True, limit=10)
+    activitysmith.devices.list_account_devices(limit=5, offset=10, include_inactive=False)
+
+    assert transport[0]["method"] == "GET"
+    assert transport[0]["path"] == "/account/devices"
+    assert transport[0]["query"] == {"limit": ["10"], "include_inactive": ["true"]}
+    assert transport[1]["query"] == {"limit": ["5"], "offset": ["10"], "include_inactive": ["false"]}
+    assert [device.is_active for device in result.devices] == [True, False]
+    assert result.meta.include_inactive is True
+
+
+@pytest.mark.parametrize("fields", [{"limit": 0}, {"limit": 101}, {"offset": -1}, {"include_inactive": "yes"}])
+def test_devices_list_rejects_invalid_query_before_transport(transport, fields):
+    activitysmith = ActivitySmith(api_key="test")
+    with pytest.raises(ValueError):
+        activitysmith.devices.list(**fields)
+    assert transport == []
+
+
+def test_release_doc_examples_run_as_written(transport, capsys):
+    activitysmith = ActivitySmith(api_key="test")
+
+    sent = activitysmith.notifications.send(title="🙋 Agent needs your input", message="Approve the database migration?")
+    activitysmith.notifications.dismiss(sent.notification_id)
+    result = activitysmith.devices.list()
+    for device in result.devices:
+        print(device.device_name, device.system_name, device.is_active)
+    activitysmith.devices.list(include_inactive=True)
+    activitysmith.metrics.create("mrr", label="MRR", format="currency", currency_code="USD")
+    activitysmith.metrics.update("mrr", 12450)
+
+    assert [(r["method"], r["path"], r["raw_query"]) for r in transport] == [
+        ("POST", "/push-notification", ""),
+        ("POST", "/push-notification/Xk3pQ8mV2nR7tL9wB4yZ/dismiss", ""),
+        ("GET", "/account/devices", ""),
+        ("GET", "/account/devices", "include_inactive=true"),
+        ("PUT", "/metrics/mrr", ""),
+        ("POST", "/metrics/mrr/value", ""),
+    ]
+    assert transport[0]["body"] == {"title": "🙋 Agent needs your input", "message": "Approve the database migration?"}
+    assert transport[4]["body"] == {"label": "MRR", "format": "currency", "currency_code": "USD"}
+    assert transport[5]["body"] == {"value": 12450}
+    assert capsys.readouterr().out == "Work iPhone iOS True\n"
