@@ -4,9 +4,93 @@ All URIs are relative to *https://activitysmith.com/api*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**dismiss_push_notification**](PushNotificationsApi.md#dismiss_push_notification) | **POST** /push-notification/{notification_id}/dismiss | Dismiss a push notification
 [**replace_push_notification**](PushNotificationsApi.md#replace_push_notification) | **PUT** /push-notification/{notification_id} | Replace a push notification
 [**send_push_notification**](PushNotificationsApi.md#send_push_notification) | **POST** /push-notification | Send a push notification
 
+
+# **dismiss_push_notification**
+> PushNotificationDismissResponse dismiss_push_notification(notification_id)
+
+Dismiss a push notification
+
+Clears a Push Notification you already sent from the Lock Screen and Notification Center on every device it was sent to, using the `notification_id` from the send response. Notification history keeps it.  Devices clear the notification in the background, which can take a moment or wait until the ActivitySmith app next opens. A successful response means the dismissal was recorded, not that every device has cleared it yet. Devices running an ActivitySmith app version before 1.17.0 show a silent notification titled \"Push Notification dismissed\" in its place until the user clears it.  Calling this again for the same notification returns the same response and sends nothing. A dismissed notification cannot be replaced.
+
+### Example
+
+* Bearer (API Key) Authentication (apiKeyAuth):
+
+```python
+import activitysmith_openapi
+from activitysmith_openapi.models.push_notification_dismiss_response import PushNotificationDismissResponse
+from activitysmith_openapi.rest import ApiException
+from pprint import pprint
+
+# Defining the host is optional and defaults to https://activitysmith.com/api
+# See configuration.py for a list of all supported configuration parameters.
+configuration = activitysmith_openapi.Configuration(
+    host = "https://activitysmith.com/api"
+)
+
+# The client must configure the authentication and authorization parameters
+# in accordance with the API server security policy.
+# Examples for each auth method are provided below, use the example that
+# satisfies your auth use case.
+
+# Configure Bearer authorization (API Key): apiKeyAuth
+configuration = activitysmith_openapi.Configuration(
+    access_token = os.environ["BEARER_TOKEN"]
+)
+
+# Enter a context with an instance of the API client
+with activitysmith_openapi.ApiClient(configuration) as api_client:
+    # Create an instance of the API class
+    api_instance = activitysmith_openapi.PushNotificationsApi(api_client)
+    notification_id = 'notification_id_example' # str | The `notification_id` returned when the Push Notification was sent.
+
+    try:
+        # Dismiss a push notification
+        api_response = api_instance.dismiss_push_notification(notification_id)
+        print("The response of PushNotificationsApi->dismiss_push_notification:\n")
+        pprint(api_response)
+    except Exception as e:
+        print("Exception when calling PushNotificationsApi->dismiss_push_notification: %s\n" % e)
+```
+
+
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **notification_id** | **str**| The &#x60;notification_id&#x60; returned when the Push Notification was sent. | 
+
+### Return type
+
+[**PushNotificationDismissResponse**](PushNotificationDismissResponse.md)
+
+### Authorization
+
+[apiKeyAuth](../README.md#apiKeyAuth)
+
+### HTTP request headers
+
+ - **Content-Type**: Not defined
+ - **Accept**: application/json
+
+### HTTP response details
+
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+**200** | Push notification dismissal recorded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**402** | Billing access required |  -  |
+**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**404** | Push notification not found |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**409** | Push notification was sent before dismissal support |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **replace_push_notification**
 > PushNotificationReplaceResponse replace_push_notification(notification_id, push_notification_replace_request)
@@ -85,14 +169,14 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Push notification replaced |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**400** | Bad request (invalid payload or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**200** | Push notification replaced |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**400** | Bad request (invalid payload or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
 **402** | Billing access required |  -  |
-**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**404** | Push notification not found |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**409** | Push notification was sent before replacement support |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**422** | No recipients of the original Push Notification are still available |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
+**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**404** | Push notification not found |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**409** | Push notification cannot be replaced (sent before replacement support, or dismissed) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**422** | No recipients of the original Push Notification are still available |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
@@ -171,12 +255,12 @@ Name | Type | Description  | Notes
 
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
-**200** | Push notification sent |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**400** | Bad request (invalid payload or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
+**200** | Push notification sent |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**400** | Bad request (invalid payload or channel targeting input) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
 **402** | Billing access required |  -  |
-**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**422** | No paired devices on the account, or no devices matched the effective channel target |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  |
-**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Each feature has an independent IP limit of 600 requests per 60 seconds. Independent account limits per 60 seconds are: Push Notifications 60, badges 60, Live Activities 300, and metric updates 300. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
+**403** | Forbidden (API key scope or channel assignment violation) |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**422** | No paired devices on the account, or no devices matched the effective channel target |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  |
+**429** | Rate limit exceeded |  * RateLimit - Current request quotas using IETF draft-8 structured fields. Each named policy includes r (remaining requests) and t (seconds until reset). Multiple policies may apply. <br>  * RateLimit-Policy - Each named policy includes q (request quota) and w (window in seconds). Listing devices has an IP limit of 600 requests and an account limit of 60 requests per 60 seconds. <br>  * Retry-After - Seconds to wait before retrying after a request-rate 429. Live Activity capacity errors are separate and require freeing device capacity; they do not provide a timed retry guarantee. <br>  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
