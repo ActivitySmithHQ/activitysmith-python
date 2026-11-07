@@ -11,12 +11,13 @@ from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
 from activitysmith_openapi.api.metrics_api import MetricsApi
 from activitysmith_openapi.api.push_notifications_api import PushNotificationsApi
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
+from activitysmith_openapi.api.devices_api import DevicesApi
 
 from activitysmith_openapi.models.metric_value_update_request import MetricValueUpdateRequest
 
 from .normalization import normalize_live_activity_request, normalize_metric_request
 
-SDK_VERSION = "1.14.0"
+SDK_VERSION = "1.15.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -480,6 +481,17 @@ class NotificationsResource:
     ):
         return self.replace(notification_id, push_notification_replace_request, **fields)
 
+    def dismiss(self, notification_id: str):
+        """Clear a sent Push Notification from the Lock Screen and Notification Center.
+
+        Pass the notification_id returned by send(). History keeps the notification.
+        """
+        return self._api.dismiss_push_notification(notification_id=notification_id)
+
+    # Generated-style alias.
+    def dismiss_push_notification(self, notification_id: str):
+        return self.dismiss(notification_id)
+
 
 class LiveActivitiesResource:
     TYPE_SEGMENTED_PROGRESS = "segmented_progress"
@@ -870,6 +882,33 @@ class MetricsResource:
         )
 
 
+class DevicesResource:
+    def __init__(self, api: DevicesApi) -> None:
+        self._api = api
+
+    def list(
+        self,
+        limit: int | None = None,
+        offset: int | None = None,
+        include_inactive: bool | None = None,
+    ):
+        """List the iPhones and iPads paired to the account, active devices first."""
+        return self._api.list_account_devices(
+            limit=limit,
+            offset=offset,
+            include_inactive=include_inactive,
+        )
+
+    # Generated-style alias.
+    def list_account_devices(
+        self,
+        limit: int | None = None,
+        offset: int | None = None,
+        include_inactive: bool | None = None,
+    ):
+        return self.list(limit=limit, offset=offset, include_inactive=include_inactive)
+
+
 @dataclass
 class ActivitySmith:
     api_key: str
@@ -887,6 +926,7 @@ class ActivitySmith:
         self.notifications = NotificationsResource(PushNotificationsApi(api_client))
         self.live_activities = LiveActivitiesResource(LiveActivitiesApi(api_client))
         self.metrics = MetricsResource(MetricsApi(api_client))
+        self.devices = DevicesResource(DevicesApi(api_client))
         self._app_icon_badges = AppIconBadgesApi(api_client)
 
     def badge_count(self, value: int, *, channels: Any | None = None):
