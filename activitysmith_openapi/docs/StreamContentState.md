@@ -6,7 +6,7 @@ Current state for a managed Live Activity stream. Include type on the first PUT,
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**title** | **str** |  | 
+**title** | **str** | Title shown on the Live Activity. Send an empty string to show no title. | 
 **subtitle** | **str** |  | [optional] 
 **number_of_steps** | **int** | Use for segmented_progress. | [optional] 
 **current_step** | **int** | Use for segmented_progress. Set 0 when no segment is complete yet. Must be less than or equal to number_of_steps when number_of_steps is provided. | [optional] 
