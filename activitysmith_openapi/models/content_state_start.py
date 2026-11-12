@@ -31,7 +31,7 @@ class ContentStateStart(BaseModel):
     """
     Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer include duration_seconds for countdowns, or set counts_down false without duration_seconds for an open-ended elapsed timer. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
     """ # noqa: E501
-    title: StrictStr
+    title: StrictStr = Field(description="Title shown on the Live Activity. Send an empty string to show no title.")
     subtitle: Optional[StrictStr] = None
     number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. This value can be increased or decreased later when updating or ending the same activity.")
     current_step: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Current completed step count. Use for type=segmented_progress. Set 0 when the activity has started but no segment is complete yet. Must be less than or equal to number_of_steps.")

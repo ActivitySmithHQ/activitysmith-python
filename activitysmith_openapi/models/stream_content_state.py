@@ -31,7 +31,7 @@ class StreamContentState(BaseModel):
     """
     Current state for a managed Live Activity stream. Include type on the first PUT, and whenever the stream may need to start a fresh activity. Supports segmented_progress, progress, metrics, stats, alert, timer, and value types. For timer, send duration_seconds to start or reset a bounded timer; omit duration_seconds on later updates to preserve the existing timer window.
     """ # noqa: E501
-    title: StrictStr
+    title: StrictStr = Field(description="Title shown on the Live Activity. Send an empty string to show no title.")
     subtitle: Optional[StrictStr] = None
     number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Use for segmented_progress.")
     current_step: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Use for segmented_progress. Set 0 when no segment is complete yet. Must be less than or equal to number_of_steps when number_of_steps is provided.")

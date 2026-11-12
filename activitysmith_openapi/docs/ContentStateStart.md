@@ -6,7 +6,7 @@ Start payload requires title and type. For segmented_progress include number_of_
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**title** | **str** |  | 
+**title** | **str** | Title shown on the Live Activity. Send an empty string to show no title. | 
 **subtitle** | **str** |  | [optional] 
 **number_of_steps** | **int** | Total number of steps. Use for type&#x3D;segmented_progress. This value can be increased or decreased later when updating or ending the same activity. | [optional] 
 **current_step** | **int** | Current completed step count. Use for type&#x3D;segmented_progress. Set 0 when the activity has started but no segment is complete yet. Must be less than or equal to number_of_steps. | [optional] 

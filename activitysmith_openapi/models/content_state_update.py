@@ -31,7 +31,7 @@ class ContentStateUpdate(BaseModel):
     """
     Update payload requires title. For segmented_progress include current_step and optionally number_of_steps. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer, omit duration_seconds to preserve the current timer window or send duration_seconds to reset the timer from the update request time. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. Type is optional when updating an existing activity. You can increase or decrease number_of_steps during updates.
     """ # noqa: E501
-    title: StrictStr
+    title: StrictStr = Field(description="Title shown on the Live Activity. Send an empty string to show no title.")
     subtitle: Optional[StrictStr] = None
     number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. Optional on update, and safe to change if the workflow gains or loses steps.")
     current_step: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Current completed step count. Use for type=segmented_progress. Set 0 when no segment is complete yet. Must be less than or equal to number_of_steps when number_of_steps is provided.")
