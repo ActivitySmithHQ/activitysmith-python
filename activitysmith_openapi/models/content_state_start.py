@@ -17,6 +17,7 @@ import pprint
 import re  # noqa: F401
 import json
 
+from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field, StrictBool, StrictFloat, StrictInt, StrictStr, field_validator
 from typing import Any, ClassVar, Dict, List, Optional, Union
 from typing_extensions import Annotated
@@ -29,16 +30,18 @@ from typing_extensions import Self
 
 class ContentStateStart(BaseModel):
     """
-    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer include duration_seconds for countdowns, or set counts_down false without duration_seconds for an open-ended elapsed timer. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
+    Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer include duration_seconds or timer_end_at for countdowns, or set counts_down false without them for an open-ended elapsed timer. Add timer_start_at for a timer that started earlier. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
     """ # noqa: E501
-    title: StrictStr
+    title: StrictStr = Field(description="Title shown on the Live Activity. Send an empty string to show no title.")
     subtitle: Optional[StrictStr] = None
     number_of_steps: Optional[Annotated[int, Field(strict=True, ge=1)]] = Field(default=None, description="Total number of steps. Use for type=segmented_progress. This value can be increased or decreased later when updating or ending the same activity.")
     current_step: Optional[Annotated[int, Field(strict=True, ge=0)]] = Field(default=None, description="Current completed step count. Use for type=segmented_progress. Set 0 when the activity has started but no segment is complete yet. Must be less than or equal to number_of_steps.")
     percentage: Optional[Union[Annotated[float, Field(le=100, strict=True, ge=0)], Annotated[int, Field(le=100, strict=True, ge=0)]]] = Field(default=None, description="Progress percentage (0–100). Use for type=progress. Takes precedence over value/upper_limit if both are provided.")
     value: Optional[LiveActivityValue] = Field(default=None, description="For type=value, the required prominent readout (string or finite number); strings preserve exact formatting. For type=progress, a numeric progress value used with upper_limit.")
     upper_limit: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Maximum progress value. Use with value for type=progress.")
-    duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Timer duration in seconds. For type=timer countdowns, required on start when counts_down is true or omitted.")
+    duration_seconds: Optional[Union[StrictFloat, StrictInt]] = Field(default=None, description="Timer duration in seconds. For type=timer countdowns, required on start when counts_down is true or omitted, unless you send timer_end_at. Counts from timer_start_at when you send it.")
+    timer_start_at: Optional[datetime] = Field(default=None, description="Use with type=timer. ISO 8601 date and time when the timer started. It can be in the past, so a countdown that started earlier shows the time already gone in its progress bar. Defaults to the request time. Must not be in the future.")
+    timer_end_at: Optional[datetime] = Field(default=None, description="Use with type=timer. ISO 8601 date and time when the countdown ends. Must be after timer_start_at, or in the future when timer_start_at is omitted. Send duration_seconds or timer_end_at, not both.")
     counts_down: Optional[StrictBool] = Field(default=True, description="Use with type=timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer.")
     is_running: Optional[StrictBool] = Field(default=True, description="Use with type=timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume.")
     metrics: Optional[Annotated[List[ActivityMetric], Field(min_length=1, max_length=8)]] = Field(default=None, description="Use for type=metrics or type=stats.")
@@ -49,7 +52,7 @@ class ContentStateStart(BaseModel):
     color: Optional[StrictStr] = Field(default=None, description="Optional. Accent color for progress, segmented_progress, metrics, timer, and value Live Activities. For Alert Live Activities, this tints action and secondary_action buttons when included.")
     step_color: Optional[StrictStr] = Field(default=None, description="Optional. Overrides color for the current step. Only applies to type=segmented_progress.")
     step_colors: Optional[List[StrictStr]] = Field(default=None, description="Optional. Colors for completed steps. When used with segmented_progress, the array length should match current_step.")
-    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "duration_seconds", "counts_down", "is_running", "metrics", "message", "icon", "badge", "type", "color", "step_color", "step_colors"]
+    __properties: ClassVar[List[str]] = ["title", "subtitle", "number_of_steps", "current_step", "percentage", "value", "upper_limit", "duration_seconds", "timer_start_at", "timer_end_at", "counts_down", "is_running", "metrics", "message", "icon", "badge", "type", "color", "step_color", "step_colors"]
 
     @field_validator('type')
     def type_validate_enum(cls, value):
@@ -164,6 +167,8 @@ class ContentStateStart(BaseModel):
             "value": LiveActivityValue.from_dict(obj["value"]) if obj.get("value") is not None else None,
             "upper_limit": obj.get("upper_limit"),
             "duration_seconds": obj.get("duration_seconds"),
+            "timer_start_at": obj.get("timer_start_at"),
+            "timer_end_at": obj.get("timer_end_at"),
             "counts_down": obj.get("counts_down") if obj.get("counts_down") is not None else True,
             "is_running": obj.get("is_running") if obj.get("is_running") is not None else True,
             "metrics": [ActivityMetric.from_dict(_item) for _item in obj["metrics"]] if obj.get("metrics") is not None else None,
