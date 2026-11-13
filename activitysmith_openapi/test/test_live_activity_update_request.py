@@ -51,6 +51,8 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
                     value = null, 
                     upper_limit = 1.337, 
                     duration_seconds = 1.337, 
+                    timer_start_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
+                    timer_end_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                     counts_down = True, 
                     is_running = True, 
                     metrics = [
@@ -91,6 +93,8 @@ class TestLiveActivityUpdateRequest(unittest.TestCase):
                     value = null, 
                     upper_limit = 1.337, 
                     duration_seconds = 1.337, 
+                    timer_start_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
+                    timer_end_at = datetime.datetime.strptime('2013-10-20 19:20:30.00', '%Y-%m-%d %H:%M:%S.%f'), 
                     counts_down = True, 
                     is_running = True, 
                     metrics = [

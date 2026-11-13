@@ -6,14 +6,16 @@ Update payload requires title. For segmented_progress include current_step and o
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**title** | **str** |  | 
+**title** | **str** | Title shown on the Live Activity. Send an empty string to show no title. | 
 **subtitle** | **str** |  | [optional] 
 **number_of_steps** | **int** | Total number of steps. Use for type&#x3D;segmented_progress. Optional on update, and safe to change if the workflow gains or loses steps. | [optional] 
 **current_step** | **int** | Current completed step count. Use for type&#x3D;segmented_progress. Set 0 when no segment is complete yet. Must be less than or equal to number_of_steps when number_of_steps is provided. | [optional] 
 **percentage** | **float** | Progress percentage (0–100). Use for type&#x3D;progress. Takes precedence over value/upper_limit if both are provided. | [optional] 
 **value** | [**LiveActivityValue**](LiveActivityValue.md) | For type&#x3D;value, the required prominent readout (string or finite number); strings preserve exact formatting. For type&#x3D;progress, a numeric progress value used with upper_limit. | [optional] 
 **upper_limit** | **float** | Maximum progress value. Use with value for type&#x3D;progress. | [optional] 
-**duration_seconds** | **float** | Timer duration in seconds. For type&#x3D;timer, sending duration_seconds resets the timer window from the update request time; omit it to preserve the existing timer window. | [optional] 
+**duration_seconds** | **float** | Timer duration in seconds. For type&#x3D;timer, sending duration_seconds resets the timer window from the update request time, or from timer_start_at when you send it. Omit it to preserve the existing timer window. | [optional] 
+**timer_start_at** | **datetime** | Use with type&#x3D;timer. ISO 8601 date and time when the timer started. It can be in the past, so a countdown that started earlier shows the time already gone in its progress bar. Defaults to the request time. Must not be in the future. | [optional] 
+**timer_end_at** | **datetime** | Use with type&#x3D;timer. ISO 8601 date and time when the countdown ends. Must be after timer_start_at, or in the future when timer_start_at is omitted. Send duration_seconds or timer_end_at, not both. Send timer_end_at alone to move the end and keep the current start. | [optional] 
 **counts_down** | **bool** | Use with type&#x3D;timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer. | [optional] [default to True]
 **is_running** | **bool** | Use with type&#x3D;timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume. | [optional] [default to True]
 **metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for type&#x3D;metrics or type&#x3D;stats. | [optional] 
