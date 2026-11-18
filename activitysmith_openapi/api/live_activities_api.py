@@ -642,7 +642,7 @@ class LiveActivitiesApi:
     ) -> LiveActivityStreamPutResponse:
         """Start a new Live Activity or update an existing one
 
-        Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer; omit duration_seconds on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
+        Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer, and timer_start_at when the timer started earlier, for example to show time already gone in the progress bar. Omit them on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
 
         :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
         :type stream_key: str
@@ -718,7 +718,7 @@ class LiveActivitiesApi:
     ) -> ApiResponse[LiveActivityStreamPutResponse]:
         """Start a new Live Activity or update an existing one
 
-        Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer; omit duration_seconds on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
+        Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer, and timer_start_at when the timer started earlier, for example to show time already gone in the progress bar. Omit them on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
 
         :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
         :type stream_key: str
@@ -794,7 +794,7 @@ class LiveActivitiesApi:
     ) -> RESTResponseType:
         """Start a new Live Activity or update an existing one
 
-        Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer; omit duration_seconds on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
+        Use a stable stream_key for each ongoing thing you want to show as a Live Activity. Send the latest content_state whenever it changes, and ActivitySmith will keep the Live Activity in sync. For timer streams, send duration_seconds to start or reset the timer, and timer_start_at when the timer started earlier, for example to show time already gone in the progress bar. Omit them on later updates to preserve the existing timer window. Use secondary_action for a second button on alert, progress, segmented_progress, and value Live Activities. Optional tags to organize and filter notification history. On later stream updates, omit tags to keep the current tags, send tags again to replace them, or send an empty array to clear them.
 
         :param stream_key: Stable identifier for one ongoing thing. Allowed characters: letters, numbers, underscores, and hyphens. (required)
         :type stream_key: str
