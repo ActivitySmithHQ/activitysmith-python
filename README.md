@@ -196,6 +196,26 @@ activitysmith.notifications.send(
 )
 ```
 
+### Push Notification Sounds
+
+Use `sound` to choose the sound a Push Notification plays. Omit it to play the Push Notifications sound picked in the ActivitySmith app under Settings > Sounds.
+
+| Value | Behavior |
+| --- | --- |
+| `default` | Plays the sound picked on the device. This is the same as omitting `sound`. |
+| `none` | Plays no sound. |
+| A sound name | Plays one of the sounds bundled with the app: `arrive`, `bell`, `bells`, `bitflip`, `bloom`, `callout`, `chime`, `coin`, `corrupt`, `crest`, `cue`, `ding`, `drop`, `ember`, `emblem`, `flourish`, `glimmer`, `glint`, `glitch`, `lantern`, `nightfall`, `nudge`, `pixel`, `pop`, `signal`, `streak`, `tally`, `wand`, `whoosh`, or `zip`. |
+
+Passive Push Notifications play no sound.
+
+```python
+activitysmith.notifications.send(
+    title="💸 New sale",
+    message="Pro plan, $29/month",
+    sound="coin",
+)
+```
+
 ### Replace a Push Notification
 
 Every send returns a `notification_id`. Pass it to `replace` to update a Push Notification you already sent, for example when an incident you alerted on is resolved. The replacement takes the old notification's place on the Lock Screen and in history instead of stacking a second one. It arrives silently, without sound or waking the screen, and goes to the same recipients as the original.
@@ -606,6 +626,25 @@ activitysmith.live_activities.stream(
 )
 ```
 
+### Live Activity Sounds
+
+Starting a Live Activity plays the Live Activities sound picked in the ActivitySmith app. Updates and ends are silent. Set `sound` on a start, update, or end to choose its sound, with the same values as [Push Notification Sounds](#push-notification-sounds). A sound on an update or end also expands the Live Activity on the Lock Screen, so use it for moments that need attention, such as a failed step.
+
+```python
+activitysmith.live_activities.stream(
+    "deploy-api",
+    content_state=content_state(
+        title="Deploying API",
+        subtitle="Step 3 failed",
+        type="segmented_progress",
+        number_of_steps=4,
+        current_step=3,
+        color="red",
+    ),
+    sound="glitch",
+)
+```
+
 ## Lock Screen Widgets
 
 ![Lock screen widgets](https://cdn.activitysmith.com/features/lock-screen-widgets.png)
@@ -697,7 +736,7 @@ Values can be strings, numbers, or booleans. Metadata supports up to 50 entries 
 
 ## Tags
 
-Use Tags to organize and filter Push Notification and Live Activity history. Tags are created automatically when you first use them. Sending Tags requires SDK version 1.10.0 or later.
+Use Tags to organize and filter Push Notification and Live Activity history. Tags are created automatically when you first use them.
 
 ```python
 activitysmith.notifications.send(
