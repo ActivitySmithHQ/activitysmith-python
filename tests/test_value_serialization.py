@@ -216,6 +216,49 @@ def test_push_rejects_unsupported_interruption_level(requests, level):
     assert requests == []
 
 
+@pytest.mark.parametrize("method", ["send", "start", "update", "end", "stream", "end_stream"])
+@pytest.mark.parametrize("sound", ["chime", "default", "none"])
+@pytest.mark.parametrize("form", ["dict", "named", "legacy"])
+def test_sound_serialization(requests, method, sound, form):
+    client = ActivitySmith(api_key="test")
+    fields = {"title": "Deploy"} if method == "send" else {"content_state": {"title": "Deploy", "type": "progress"}}
+    if method in ("update", "end"):
+        fields["activity_id"] = "activity-1"
+    fields["sound"] = sound
+    resource = client.notifications if method == "send" else client.live_activities
+    legacy = {
+        "send": "send_push_notification",
+        "start": "start_live_activity",
+        "update": "update_live_activity",
+        "end": "end_live_activity",
+        "stream": "reconcile_live_activity_stream",
+        "end_stream": "end_live_activity_stream",
+    }
+    args = ["deploy"] if method in ("stream", "end_stream") else []
+    with pytest.raises(RequestCaptured):
+        if form == "named":
+            getattr(resource, method)(*args, **fields)
+        elif form == "legacy":
+            getattr(resource, legacy[method])(*args, **fields)
+        else:
+            getattr(resource, method)(*args, fields)
+    assert requests[-1]["sound"] == sound
+    assert "sound" not in requests[-1].get("content_state", {})
+
+
+@pytest.mark.parametrize("method", ["send", "start", "update", "end", "stream", "end_stream"])
+def test_sound_omitted_by_default(requests, method):
+    client = ActivitySmith(api_key="test")
+    fields = {"title": "Deploy"} if method == "send" else {"content_state": {"title": "Deploy", "type": "progress"}}
+    if method in ("update", "end"):
+        fields["activity_id"] = "activity-1"
+    resource = client.notifications if method == "send" else client.live_activities
+    args = ["deploy"] if method in ("stream", "end_stream") else []
+    with pytest.raises(RequestCaptured):
+        getattr(resource, method)(*args, **fields)
+    assert "sound" not in requests[-1]
+
+
 def test_push_replace_serialization(requests):
     activitysmith = ActivitySmith(api_key="test")
     with pytest.raises(RequestCaptured):

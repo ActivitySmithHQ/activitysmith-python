@@ -233,6 +233,7 @@ def _build_push_request(
     metadata: Any | None = None,
     icon: Any | None = None,
     interruption_level: Any | None = None,
+    sound: Any | None = None,
 ) -> Any:
     request_fields = _compact_dict(
         {
@@ -248,6 +249,7 @@ def _build_push_request(
             "metadata": metadata,
             "icon": icon,
             "interruption_level": interruption_level,
+            "sound": sound,
         }
     )
 
@@ -318,6 +320,7 @@ def _build_live_activity_request(
     channels: Any | None = None,
     tags: Any | None = None,
     metadata: Any | None = None,
+    sound: Any | None = None,
 ) -> Any:
     content_state_fields = _compact_dict(
         {
@@ -352,6 +355,7 @@ def _build_live_activity_request(
             "channels": channels,
             "tags": tags,
             "metadata": metadata,
+            "sound": sound,
         }
     )
 
@@ -413,6 +417,7 @@ class NotificationsResource:
         metadata: Any | None = None,
         icon: Any | None = None,
         interruption_level: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_push_request(
             request,
@@ -428,6 +433,7 @@ class NotificationsResource:
             metadata=metadata,
             icon=icon,
             interruption_level=interruption_level,
+            sound=sound,
         )
         normalized = normalize_metadata_request(_validate_push_request(_normalize_channels_target(request)))
         return self._api.send_push_notification(
@@ -559,6 +565,7 @@ class LiveActivitiesResource:
         channels: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -586,6 +593,7 @@ class LiveActivitiesResource:
             channels=channels,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.start_live_activity(
             live_activity_start_request=_normalize_channels_target(request)
@@ -617,6 +625,7 @@ class LiveActivitiesResource:
         secondary_action: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -642,6 +651,7 @@ class LiveActivitiesResource:
             secondary_action=secondary_action,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.update_live_activity(live_activity_update_request=request)
 
@@ -672,6 +682,7 @@ class LiveActivitiesResource:
         secondary_action: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -698,6 +709,7 @@ class LiveActivitiesResource:
             secondary_action=secondary_action,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.end_live_activity(live_activity_end_request=request)
 
@@ -730,6 +742,7 @@ class LiveActivitiesResource:
         channels: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -757,6 +770,7 @@ class LiveActivitiesResource:
             channels=channels,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.reconcile_live_activity_stream(
             stream_key=stream_key,
@@ -791,6 +805,7 @@ class LiveActivitiesResource:
         alert: Any | None = None,
         tags: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
+        sound: str | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -817,6 +832,7 @@ class LiveActivitiesResource:
             alert=alert,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.end_live_activity_stream(
             stream_key=stream_key,
