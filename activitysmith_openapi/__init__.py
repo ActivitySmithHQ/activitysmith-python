@@ -17,6 +17,7 @@
 __version__ = "1.15.0"
 
 # import apis into sdk package
+from activitysmith_openapi.api.account_api import AccountApi
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 from activitysmith_openapi.api.devices_api import DevicesApi
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
@@ -38,6 +39,9 @@ from activitysmith_openapi.exceptions import ApiException
 from activitysmith_openapi.models.account_device import AccountDevice
 from activitysmith_openapi.models.account_device_list_response import AccountDeviceListResponse
 from activitysmith_openapi.models.account_device_list_response_meta import AccountDeviceListResponseMeta
+from activitysmith_openapi.models.account_response import AccountResponse
+from activitysmith_openapi.models.account_response_plan import AccountResponsePlan
+from activitysmith_openapi.models.account_response_trial import AccountResponseTrial
 from activitysmith_openapi.models.activity_metric import ActivityMetric
 from activitysmith_openapi.models.activity_metric_value import ActivityMetricValue
 from activitysmith_openapi.models.alert_payload import AlertPayload

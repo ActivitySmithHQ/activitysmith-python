@@ -1,6 +1,7 @@
 # flake8: noqa
 
 # import apis into api package
+from activitysmith_openapi.api.account_api import AccountApi
 from activitysmith_openapi.api.app_icon_badges_api import AppIconBadgesApi
 from activitysmith_openapi.api.devices_api import DevicesApi
 from activitysmith_openapi.api.live_activities_api import LiveActivitiesApi
