@@ -30,7 +30,7 @@ class PushNotificationAction(BaseModel):
     """ # noqa: E501
     title: StrictStr = Field(description="Button title displayed in iOS expanded notification UI.")
     type: PushNotificationActionType
-    url: StrictStr = Field(description="Action URL. For open_url, use HTTP, HTTPS, Shortcuts, or an installed app’s custom URL scheme, such as spotify:// or spotify:track:123. Custom app schemes require iOS 1.13.4 build 2 or later; no web fallback is provided. Internal and executable schemes are blocked. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
+    url: StrictStr = Field(description="Action URL. For open_url, use HTTP, HTTPS, Shortcuts, or an installed app’s custom URL scheme, such as spotify:// or spotify:track:123. Custom app schemes have no web fallback. Internal and executable schemes are blocked. For webhook, use an HTTPS URL called by the ActivitySmith backend.")
     method: Optional[PushNotificationWebhookMethod] = Field(default=PushNotificationWebhookMethod.POST, description="Webhook HTTP method. Used only when type=webhook.")
     body: Optional[Dict[str, Any]] = Field(default=None, description="Optional webhook payload body. Used only when type=webhook.")
     additional_properties: Dict[str, Any] = {}
