@@ -36,7 +36,8 @@ class LiveActivityEndRequest(BaseModel):
     content_state: ContentStateEnd
     action: Optional[LiveActivityAction] = None
     secondary_action: Optional[LiveActivityAction] = Field(default=None, description="Optional secondary action button. Supported for alert, progress, segmented_progress, and value Live Activities. Uses the same open_url, shortcuts://, and webhook shapes as action.")
-    __properties: ClassVar[List[str]] = ["metadata", "activity_id", "tags", "content_state", "action", "secondary_action"]
+    sound: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=50)]] = Field(default=None, description="Optional sound for the end. Ends are silent unless you set one. A sound also expands the Live Activity on the Lock Screen. Sounds bundled with the ActivitySmith app: `arrive`, `bell`, `bells`, `bitflip`, `bloom`, `callout`, `chime`, `coin`, `corrupt`, `crest`, `cue`, `ding`, `drop`, `ember`, `emblem`, `flourish`, `glimmer`, `glint`, `glitch`, `lantern`, `nightfall`, `nudge`, `pixel`, `pop`, `signal`, `streak`, `tally`, `wand`, `whoosh`, `zip`. Use `default` for the sound picked on the device, or `none` for no sound.")
+    __properties: ClassVar[List[str]] = ["metadata", "activity_id", "tags", "content_state", "action", "secondary_action", "sound"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -115,7 +116,8 @@ class LiveActivityEndRequest(BaseModel):
             "tags": obj.get("tags"),
             "content_state": ContentStateEnd.from_dict(obj["content_state"]) if obj.get("content_state") is not None else None,
             "action": LiveActivityAction.from_dict(obj["action"]) if obj.get("action") is not None else None,
-            "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None
+            "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None,
+            "sound": obj.get("sound")
         })
         return _obj
 

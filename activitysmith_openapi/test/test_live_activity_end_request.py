@@ -78,7 +78,8 @@ class TestLiveActivityEndRequest(unittest.TestCase):
                     },
                 secondary_action = {
                     'key' : null
-                    }
+                    },
+                sound = '0'
             )
         else:
             return LiveActivityEndRequest(

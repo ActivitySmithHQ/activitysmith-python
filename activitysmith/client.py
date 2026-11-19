@@ -1,7 +1,9 @@
 from __future__ import annotations
+
 from .normalization import normalize_metadata_request
 
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Any
 
 from activitysmith_openapi.configuration import Configuration
@@ -17,7 +19,7 @@ from activitysmith_openapi.models.metric_value_update_request import MetricValue
 
 from .normalization import normalize_live_activity_request, normalize_metric_request
 
-SDK_VERSION = "1.15.0"
+SDK_VERSION = "1.16.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
@@ -188,6 +190,8 @@ def content_state(
     upper_limit: int | float | None = None,
     duration_seconds: int | float | None = None,
     counts_down: bool | None = None,
+    timer_start_at: str | datetime | None = None,
+    timer_end_at: str | datetime | None = None,
     color: str | None = None,
     step_color: str | None = None,
     auto_dismiss_seconds: int | None = None,
@@ -209,6 +213,8 @@ def content_state(
             "upper_limit": upper_limit,
             "duration_seconds": duration_seconds,
             "counts_down": counts_down,
+            "timer_start_at": timer_start_at,
+            "timer_end_at": timer_end_at,
             "color": color,
             "step_color": step_color,
             "auto_dismiss_seconds": auto_dismiss_seconds,
@@ -233,6 +239,7 @@ def _build_push_request(
     metadata: Any | None = None,
     icon: Any | None = None,
     interruption_level: Any | None = None,
+    sound: Any | None = None,
 ) -> Any:
     request_fields = _compact_dict(
         {
@@ -248,6 +255,7 @@ def _build_push_request(
             "metadata": metadata,
             "icon": icon,
             "interruption_level": interruption_level,
+            "sound": sound,
         }
     )
 
@@ -307,6 +315,8 @@ def _build_live_activity_request(
     upper_limit: Any | None = None,
     duration_seconds: Any | None = None,
     counts_down: Any | None = None,
+    timer_start_at: Any | None = None,
+    timer_end_at: Any | None = None,
     color: Any | None = None,
     step_color: Any | None = None,
     auto_dismiss_seconds: Any | None = None,
@@ -318,6 +328,7 @@ def _build_live_activity_request(
     channels: Any | None = None,
     tags: Any | None = None,
     metadata: Any | None = None,
+    sound: Any | None = None,
 ) -> Any:
     content_state_fields = _compact_dict(
         {
@@ -335,6 +346,8 @@ def _build_live_activity_request(
             "upper_limit": upper_limit,
             "duration_seconds": duration_seconds,
             "counts_down": counts_down,
+            "timer_start_at": timer_start_at,
+            "timer_end_at": timer_end_at,
             "color": color,
             "step_color": step_color,
             "auto_dismiss_seconds": auto_dismiss_seconds,
@@ -352,6 +365,7 @@ def _build_live_activity_request(
             "channels": channels,
             "tags": tags,
             "metadata": metadata,
+            "sound": sound,
         }
     )
 
@@ -413,6 +427,7 @@ class NotificationsResource:
         metadata: Any | None = None,
         icon: Any | None = None,
         interruption_level: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_push_request(
             request,
@@ -428,6 +443,7 @@ class NotificationsResource:
             metadata=metadata,
             icon=icon,
             interruption_level=interruption_level,
+            sound=sound,
         )
         normalized = normalize_metadata_request(_validate_push_request(_normalize_channels_target(request)))
         return self._api.send_push_notification(
@@ -550,6 +566,8 @@ class LiveActivitiesResource:
         upper_limit: Any | None = None,
         duration_seconds: Any | None = None,
         counts_down: Any | None = None,
+        timer_start_at: Any | None = None,
+        timer_end_at: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
@@ -559,6 +577,7 @@ class LiveActivitiesResource:
         channels: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -577,6 +596,8 @@ class LiveActivitiesResource:
             upper_limit=upper_limit,
             duration_seconds=duration_seconds,
             counts_down=counts_down,
+            timer_start_at=timer_start_at,
+            timer_end_at=timer_end_at,
             color=color,
             step_color=step_color,
             action=action,
@@ -586,6 +607,7 @@ class LiveActivitiesResource:
             channels=channels,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.start_live_activity(
             live_activity_start_request=_normalize_channels_target(request)
@@ -611,12 +633,15 @@ class LiveActivitiesResource:
         upper_limit: Any | None = None,
         duration_seconds: Any | None = None,
         counts_down: Any | None = None,
+        timer_start_at: Any | None = None,
+        timer_end_at: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
         secondary_action: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -636,12 +661,15 @@ class LiveActivitiesResource:
             upper_limit=upper_limit,
             duration_seconds=duration_seconds,
             counts_down=counts_down,
+            timer_start_at=timer_start_at,
+            timer_end_at=timer_end_at,
             color=color,
             step_color=step_color,
             action=action,
             secondary_action=secondary_action,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.update_live_activity(live_activity_update_request=request)
 
@@ -672,6 +700,7 @@ class LiveActivitiesResource:
         secondary_action: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -698,6 +727,7 @@ class LiveActivitiesResource:
             secondary_action=secondary_action,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.end_live_activity(live_activity_end_request=request)
 
@@ -721,6 +751,8 @@ class LiveActivitiesResource:
         upper_limit: Any | None = None,
         duration_seconds: Any | None = None,
         counts_down: Any | None = None,
+        timer_start_at: Any | None = None,
+        timer_end_at: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         action: Any | None = None,
@@ -730,6 +762,7 @@ class LiveActivitiesResource:
         channels: Any | None = None,
         tags: Any | None = None,
         metadata: Any | None = None,
+        sound: Any | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -748,6 +781,8 @@ class LiveActivitiesResource:
             upper_limit=upper_limit,
             duration_seconds=duration_seconds,
             counts_down=counts_down,
+            timer_start_at=timer_start_at,
+            timer_end_at=timer_end_at,
             color=color,
             step_color=step_color,
             action=action,
@@ -757,6 +792,7 @@ class LiveActivitiesResource:
             channels=channels,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.reconcile_live_activity_stream(
             stream_key=stream_key,
@@ -783,6 +819,8 @@ class LiveActivitiesResource:
         upper_limit: Any | None = None,
         duration_seconds: Any | None = None,
         counts_down: Any | None = None,
+        timer_start_at: Any | None = None,
+        timer_end_at: Any | None = None,
         color: Any | None = None,
         step_color: Any | None = None,
         auto_dismiss_minutes: Any | None = None,
@@ -791,6 +829,7 @@ class LiveActivitiesResource:
         alert: Any | None = None,
         tags: list[str] | None = None,
         metadata: dict[str, Any] | None = None,
+        sound: str | None = None,
     ):
         request = _build_live_activity_request(
             request,
@@ -809,6 +848,8 @@ class LiveActivitiesResource:
             upper_limit=upper_limit,
             duration_seconds=duration_seconds,
             counts_down=counts_down,
+            timer_start_at=timer_start_at,
+            timer_end_at=timer_end_at,
             color=color,
             step_color=step_color,
             auto_dismiss_minutes=auto_dismiss_minutes,
@@ -817,6 +858,7 @@ class LiveActivitiesResource:
             alert=alert,
             tags=tags,
             metadata=metadata,
+            sound=sound,
         )
         return self._api.end_live_activity_stream(
             stream_key=stream_key,

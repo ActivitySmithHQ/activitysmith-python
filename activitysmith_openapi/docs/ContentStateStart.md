@@ -1,19 +1,21 @@
 # ContentStateStart
 
-Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer include duration_seconds for countdowns, or set counts_down false without duration_seconds for an open-ended elapsed timer. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
+Start payload requires title and type. For segmented_progress include number_of_steps and current_step. For progress include percentage or value with upper_limit. For metrics and stats include a non-empty metrics array. For value include a string or number in value; strings preserve currency, units, and other formatting. For alert include message. For timer include duration_seconds or timer_end_at for countdowns, or set counts_down false without them for an open-ended elapsed timer. Add timer_start_at for a timer that started earlier. Optional icon is supported by all Live Activity types. Optional badge is supported by alert, progress, segmented_progress, and value. For segmented_progress, number_of_steps is not locked and can be changed in later update or end calls.
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**title** | **str** |  | 
+**title** | **str** | Title shown on the Live Activity. Send an empty string to show no title. | 
 **subtitle** | **str** |  | [optional] 
 **number_of_steps** | **int** | Total number of steps. Use for type&#x3D;segmented_progress. This value can be increased or decreased later when updating or ending the same activity. | [optional] 
 **current_step** | **int** | Current completed step count. Use for type&#x3D;segmented_progress. Set 0 when the activity has started but no segment is complete yet. Must be less than or equal to number_of_steps. | [optional] 
 **percentage** | **float** | Progress percentage (0–100). Use for type&#x3D;progress. Takes precedence over value/upper_limit if both are provided. | [optional] 
 **value** | [**LiveActivityValue**](LiveActivityValue.md) | For type&#x3D;value, the required prominent readout (string or finite number); strings preserve exact formatting. For type&#x3D;progress, a numeric progress value used with upper_limit. | [optional] 
 **upper_limit** | **float** | Maximum progress value. Use with value for type&#x3D;progress. | [optional] 
-**duration_seconds** | **float** | Timer duration in seconds. For type&#x3D;timer countdowns, required on start when counts_down is true or omitted. | [optional] 
+**duration_seconds** | **float** | Timer duration in seconds. For type&#x3D;timer countdowns, required on start when counts_down is true or omitted, unless you send timer_end_at. Counts from timer_start_at when you send it. | [optional] 
+**timer_start_at** | **datetime** | Use with type&#x3D;timer. ISO 8601 date and time when the timer started. It can be in the past, so a countdown that started earlier shows the time already gone in its progress bar. Defaults to the request time. Must not be in the future. | [optional] 
+**timer_end_at** | **datetime** | Use with type&#x3D;timer. ISO 8601 date and time when the countdown ends. Must be after timer_start_at, or in the future when timer_start_at is omitted. Send duration_seconds or timer_end_at, not both. | [optional] 
 **counts_down** | **bool** | Use with type&#x3D;timer. When true or omitted, the timer counts down from duration_seconds. Set false for an elapsed timer; omit duration_seconds for an open-ended elapsed timer. | [optional] [default to True]
 **is_running** | **bool** | Use with type&#x3D;timer. Defaults to true. Set false to pause/freeze via API; set true on a paused timer to resume. | [optional] [default to True]
 **metrics** | [**List[ActivityMetric]**](ActivityMetric.md) | Use for type&#x3D;metrics or type&#x3D;stats. | [optional] 
