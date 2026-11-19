@@ -493,3 +493,32 @@ def test_release_doc_examples_run_as_written(transport, capsys):
     assert transport[4]["body"] == {"label": "MRR", "format": "currency", "currency_code": "USD"}
     assert transport[5]["body"] == {"value": 12450}
     assert capsys.readouterr().out == "Work iPhone iOS True\n"
+
+
+@pytest.mark.parametrize("method", ["start", "update", "stream", "end_stream"])
+@pytest.mark.parametrize("form", ["dict", "named", "helper"])
+@pytest.mark.parametrize("kind", ["string", "datetime"])
+def test_timer_window_serialization(requests, method, form, kind):
+    from datetime import datetime, timezone
+
+    start = "2026-11-19T01:00:00Z" if kind == "string" else datetime(2026, 11, 19, 1, 0, tzinfo=timezone.utc)
+    end = "2026-11-19T02:00:00Z" if kind == "string" else datetime(2026, 11, 19, 2, 0, tzinfo=timezone.utc)
+    client = ActivitySmith(api_key="test")
+    state = {"title": "Nightly backup", "type": "timer", "timer_start_at": start, "timer_end_at": end}
+    if form == "helper":
+        state = content_state("Nightly backup", type="timer", timer_start_at=start, timer_end_at=end)
+    args = ["backup"] if method in ("stream", "end_stream") else []
+    with pytest.raises(RequestCaptured):
+        if form == "named":
+            kwargs = dict(state)
+            if method == "update":
+                kwargs["activity_id"] = "activity-1"
+            getattr(client.live_activities, method)(*args, **kwargs)
+        else:
+            request = {"content_state": state}
+            if method == "update":
+                request["activity_id"] = "activity-1"
+            getattr(client.live_activities, method)(*args, request)
+    sent = requests[-1]["content_state"]
+    assert datetime.fromisoformat(sent["timer_start_at"].replace("Z", "+00:00")) == datetime(2026, 11, 19, 1, 0, tzinfo=timezone.utc)
+    assert datetime.fromisoformat(sent["timer_end_at"].replace("Z", "+00:00")) == datetime(2026, 11, 19, 2, 0, tzinfo=timezone.utc)
