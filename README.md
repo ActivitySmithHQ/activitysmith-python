@@ -424,6 +424,21 @@ For a countdown, send `duration_seconds`. You can update `title`, `subtitle`, `c
 
 To start at 00:00 and count up, set `counts_down=False` and leave out `duration_seconds`.
 
+To count down to a set time, send `timer_end_at` instead of `duration_seconds`. If the timer started earlier, also send `timer_start_at`. The progress bar then shows the time already gone.
+
+```python
+activitysmith.live_activities.stream(
+    "nightly-backup",
+    content_state=content_state(
+        title="Nightly Backup",
+        subtitle="uploading archive",
+        type="timer",
+        timer_start_at="2026-11-19T01:00:00Z",
+        timer_end_at="2026-11-19T02:00:00Z",
+    ),
+)
+```
+
 ### End Live Activity
 
 Call `end_stream(...)` with the same `stream_key` to dismiss the Live Activity. You can include final values before it is removed. Set `auto_dismiss_seconds` to dismiss it after a delay in seconds, or `auto_dismiss_minutes` for minutes. Use `0` for immediate dismissal. Seconds take precedence if both are set.
