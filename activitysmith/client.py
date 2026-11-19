@@ -19,7 +19,7 @@ from activitysmith_openapi.models.metric_value_update_request import MetricValue
 
 from .normalization import normalize_live_activity_request, normalize_metric_request
 
-SDK_VERSION = "1.15.0"
+SDK_VERSION = "1.16.0"
 SDK_HEADER_NAME = "X-ActivitySmith-SDK"
 SDK_HEADER_VALUE = f"python-v{SDK_VERSION}"
 
