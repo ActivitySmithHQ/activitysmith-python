@@ -39,7 +39,8 @@ class LiveActivityStartRequest(BaseModel):
     alert: Optional[AlertPayload] = None
     target: Optional[ChannelTarget] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
-    __properties: ClassVar[List[str]] = ["metadata", "content_state", "action", "secondary_action", "alert", "target", "tags"]
+    sound: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=50)]] = Field(default=None, description="Optional sound for the start. Omit it to play the Live Activities sound picked on the device. Sounds bundled with the ActivitySmith app: `arrive`, `bell`, `bells`, `bitflip`, `bloom`, `callout`, `chime`, `coin`, `corrupt`, `crest`, `cue`, `ding`, `drop`, `ember`, `emblem`, `flourish`, `glimmer`, `glint`, `glitch`, `lantern`, `nightfall`, `nudge`, `pixel`, `pop`, `signal`, `streak`, `tally`, `wand`, `whoosh`, `zip`. Use `default` for the sound picked on the device, or `none` for no sound. Bundled sounds and `none` need iOS app 1.19.0 or later. Older apps play the iOS default sound instead.")
+    __properties: ClassVar[List[str]] = ["metadata", "content_state", "action", "secondary_action", "alert", "target", "tags", "sound"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -125,7 +126,8 @@ class LiveActivityStartRequest(BaseModel):
             "secondary_action": LiveActivityAction.from_dict(obj["secondary_action"]) if obj.get("secondary_action") is not None else None,
             "alert": AlertPayload.from_dict(obj["alert"]) if obj.get("alert") is not None else None,
             "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None,
-            "tags": obj.get("tags")
+            "tags": obj.get("tags"),
+            "sound": obj.get("sound")
         })
         return _obj
 

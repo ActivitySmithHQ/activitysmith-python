@@ -40,7 +40,8 @@ class LiveActivityStreamRequest(BaseModel):
     channels: Optional[Annotated[List[StrictStr], Field(min_length=1)]] = Field(default=None, description="Channel slugs. When omitted, API key scope determines recipients.")
     target: Optional[ChannelTarget] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
-    __properties: ClassVar[List[str]] = ["metadata", "content_state", "action", "secondary_action", "alert", "channels", "target", "tags"]
+    sound: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=50)]] = Field(default=None, description="Optional sound for this call. A call that starts a Live Activity plays the Live Activities sound picked on the device unless you set one. Updates are silent unless you set one. A sound on an update also expands the Live Activity on the Lock Screen. Sounds bundled with the ActivitySmith app: `arrive`, `bell`, `bells`, `bitflip`, `bloom`, `callout`, `chime`, `coin`, `corrupt`, `crest`, `cue`, `ding`, `drop`, `ember`, `emblem`, `flourish`, `glimmer`, `glint`, `glitch`, `lantern`, `nightfall`, `nudge`, `pixel`, `pop`, `signal`, `streak`, `tally`, `wand`, `whoosh`, `zip`. Use `default` for the sound picked on the device, or `none` for no sound. Bundled sounds and `none` need iOS app 1.19.0 or later. Older apps play the iOS default sound instead.")
+    __properties: ClassVar[List[str]] = ["metadata", "content_state", "action", "secondary_action", "alert", "channels", "target", "tags", "sound"]
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -127,7 +128,8 @@ class LiveActivityStreamRequest(BaseModel):
             "alert": AlertPayload.from_dict(obj["alert"]) if obj.get("alert") is not None else None,
             "channels": obj.get("channels"),
             "target": ChannelTarget.from_dict(obj["target"]) if obj.get("target") is not None else None,
-            "tags": obj.get("tags")
+            "tags": obj.get("tags"),
+            "sound": obj.get("sound")
         })
         return _obj
 

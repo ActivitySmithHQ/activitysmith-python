@@ -52,7 +52,7 @@ class TestPushNotificationRequest(unittest.TestCase):
                     ],
                 payload = None,
                 badge = 56,
-                sound = '',
+                sound = '0',
                 target = activitysmith_openapi.models.channel_target.ChannelTarget(
                     channels = [
                         ''

@@ -14,6 +14,7 @@ Name | Type | Description | Notes
 **channels** | **List[str]** | Channel slugs. When omitted, API key scope determines recipients. | [optional] 
 **target** | [**ChannelTarget**](ChannelTarget.md) |  | [optional] 
 **tags** | **List[str]** | Optional tags to organize and filter notification history. | [optional] 
+**sound** | **str** | Optional sound for this call. A call that starts a Live Activity plays the Live Activities sound picked on the device unless you set one. Updates are silent unless you set one. A sound on an update also expands the Live Activity on the Lock Screen. Sounds bundled with the ActivitySmith app: &#x60;arrive&#x60;, &#x60;bell&#x60;, &#x60;bells&#x60;, &#x60;bitflip&#x60;, &#x60;bloom&#x60;, &#x60;callout&#x60;, &#x60;chime&#x60;, &#x60;coin&#x60;, &#x60;corrupt&#x60;, &#x60;crest&#x60;, &#x60;cue&#x60;, &#x60;ding&#x60;, &#x60;drop&#x60;, &#x60;ember&#x60;, &#x60;emblem&#x60;, &#x60;flourish&#x60;, &#x60;glimmer&#x60;, &#x60;glint&#x60;, &#x60;glitch&#x60;, &#x60;lantern&#x60;, &#x60;nightfall&#x60;, &#x60;nudge&#x60;, &#x60;pixel&#x60;, &#x60;pop&#x60;, &#x60;signal&#x60;, &#x60;streak&#x60;, &#x60;tally&#x60;, &#x60;wand&#x60;, &#x60;whoosh&#x60;, &#x60;zip&#x60;. Use &#x60;default&#x60; for the sound picked on the device, or &#x60;none&#x60; for no sound. Bundled sounds and &#x60;none&#x60; need iOS app 1.19.0 or later. Older apps play the iOS default sound instead. | [optional] 
 
 ## Example
 

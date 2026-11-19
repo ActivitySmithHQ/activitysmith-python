@@ -42,7 +42,7 @@ class PushNotificationRequest(BaseModel):
     actions: Optional[Annotated[List[PushNotificationAction], Field(max_length=4)]] = Field(default=None, description="Optional interactive actions shown when users expand the notification. Cannot be combined with `media`.")
     payload: Optional[Dict[str, Any]] = None
     badge: Optional[StrictInt] = None
-    sound: Optional[StrictStr] = None
+    sound: Optional[Annotated[str, Field(min_length=1, strict=True, max_length=50)]] = Field(default=None, description="Optional sound for this Push Notification. Omit it to play the Push Notifications sound picked on the device. Passive Push Notifications play no sound. Sounds bundled with the ActivitySmith app: `arrive`, `bell`, `bells`, `bitflip`, `bloom`, `callout`, `chime`, `coin`, `corrupt`, `crest`, `cue`, `ding`, `drop`, `ember`, `emblem`, `flourish`, `glimmer`, `glint`, `glitch`, `lantern`, `nightfall`, `nudge`, `pixel`, `pop`, `signal`, `streak`, `tally`, `wand`, `whoosh`, `zip`. Use `default` for the sound picked on the device, or `none` for no sound. Bundled sounds and `none` need iOS app 1.19.0 or later. Older apps play the iOS default sound instead.")
     target: Optional[ChannelTarget] = None
     tags: Optional[List[Annotated[str, Field(min_length=1, strict=True, max_length=64)]]] = Field(default=None, description="Optional tags to organize and filter notification history.")
     additional_properties: Dict[str, Any] = {}
